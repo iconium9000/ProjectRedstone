@@ -1,0 +1,22 @@
+{
+  "name": "projectredstone",
+  "version": "0.0.0",
+  "description": "Simple 2d redstone sandbox",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iconium9000/ProjectRedstone.git"
+  },
+  "keywords": [
+    "redstone"
+  ],
+  "author": "ic90",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iconium9000/ProjectRedstone/issues"
+  },
+  "homepage": "https://github.com/iconium9000/ProjectRedstone#readme"
+}

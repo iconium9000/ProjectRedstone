@@ -1,0 +1,30 @@
+INSTRUCTIONS
+
+folderTree:
+	app.js
+	package.json
+	node_modules
+		express
+		socket.io
+	server
+		serverFile.js
+	client
+		js
+			clientFile.js
+			shardeFile.js
+		img
+		index.html
+install
+	npm init
+	npm install express
+	npm install socket.io
+express
+	var express = require('express')
+	var app = express()
+	var serv = require('http').Server(app)
+	app.get('/', function(req, res) {
+		res.sendFile(__dirname + '/client/index.html')
+	})
+	app.use('/client',express.static(__dirname + '/client'))
+
+	serv.listen(2000)
