@@ -7,7 +7,7 @@ module.exports = apInitA => {
 
   var usrInfo = {}
 
-  var saveData = () => {}
+  var saveData = () => ['this', 'is', 'a', 'test']
 
   var apIO = apInitA.caleInit.apIO = {
     init: apInitB => {
