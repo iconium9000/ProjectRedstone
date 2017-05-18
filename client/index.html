@@ -1,3 +1,48 @@
+<canvas id="canvas" style="boarder:1px solid #000000" cursor="none">
+	Your browser does not support canvas element
+</canvas>
+
 <script>
-  console.log('hello world')
+	console.log('index.html: init')
+	module = {}
+</script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.js"></script>
+
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script>
+	var pkgs = {}
+	pkgs.socket = io()
+</script>
+
+<script src="client/functions.js"></script>
+<script>
+	pkgs.functions = module.exports
+</script>
+
+<script src="client/point.js"></script>
+<script>
+	pkgs.point = module.exports
+</script>
+
+<script src="client/client.js"></script>
+<script>
+	pkgs.client = module.exports
+</script>
+
+<script src="client/game.js"></script>
+<script>
+	pkgs.game = module.exports
+</script>
+
+<script>
+	pkgs.game({
+		fu: pkgs.functions,
+		pt: pkgs.point,
+		cale: pkgs.client,
+		caleInit: {
+			functions: pkgs.functions,
+			socket: io()
+		}
+	})
 </script>

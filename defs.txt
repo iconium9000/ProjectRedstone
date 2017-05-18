@@ -1,0 +1,239 @@
+msg obj: arg fr apRcv(msg) & spSnd(msg)
+  ky[str]: msg ky
+  sndr[str]: sndr of msg
+  rcvr[str]: rcvrs of msg
+  msg[obj]: msg to snd to al usrs
+
+apIO obj: ownd by ap usd to io w ap cale
+  init(apInitB): init ap pt2 cald by cale
+  tick(usrIO): cald evry tk by cale
+  apRcv(msg): snds msgs to ap frm cale
+  apSnd(msg): snds msg to calr frm ap
+
+usrIO obj: md by clnt, snt to ap
+  mws:
+    x,y,z: pt crds
+    isDn: bol
+    hsDn: bol
+    usUp: bol
+    prv:
+      x, y, z: prv pt crds
+      isDn: bol - prv pt isDn
+  kys:
+    isDn: mp char -> bol
+    hsDn: mp char -> bol (rst evy tk)
+    hsUp: mp char -> bol (rst evy tk)
+  evts:
+    now: tim @ tk strt
+    dt: tim @ (tk str - prv tk)
+    lst: tim @ lst tk strt
+    tk: num tks fm ap strt
+  dsply:
+    cnvs: canvas
+    g: cnvs gfx ctx
+    w: wndo width
+    h: wndo height
+
+usrInfo obj:
+  usrs[ky mp]: ky mp
+  usr{id, nam, pp}:
+
+apInitA obj: init ap pt1 cald by brsr o srvr
+  ... pkgs fr ap (functions.js, points.js, etc)
+  cale: clnt ap o srvr ap init fun
+  caleInit: cale init obj (c srvrInit o clntInit)
+    ... c srvrInit o clntInit
+
+apInitB obj: init ap pt2 cald by clnt o srvr
+  calr:
+    'srvr' if cld by srvr
+    'clnt' if cld by clnt
+  prcs: if cald by srvr
+  wndo: if cald by clnt
+  usrIO: if cald by clnt
+    ... c usrIO
+  usrInfo: usr info
+    ... c usrInfo
+
+srvrInit obj: inits srvr.js
+  port: port number
+  dirname: directory name
+  entryFolder: entry folder name (example: '<filepath>/client')
+  index: index name (example: '/index.html')
+  functions: functions.js export
+  apIO: funs fr io w ap
+    ... c apIO
+
+clntInit obj: inits clnt.js
+  functions: functions.js export
+  socket: socket.id export
+  apIO: funs fr io w ap
+    ... c apIO
+
+METHODS
+srvr start
+  gt pkgs fr ap pr ap spec
+  mk apInitA frm pkgs fr ap
+  gt pkgs fr srvr pr srvr spec
+  mk srvrInit frm pkgs pr srvr spec
+  ad srvr pkg to apInitA as cale
+  ad srvrInit to apInitA as caleInit
+  init ap w apInitA
+
+clnt start
+  gt pkgs fr ap pr ap spec
+  mk apInitA frm pkgs fr ap
+  gt pkgs fr clnt pr clnt spec
+  mk clntInit frm pkgs pr clnt spec
+  ad clnt pkg to apInitA as cale
+  ad clntInit to apInitA as caleInit
+  init ap w apInitA
+
+usrInfo init(nam, id, op)
+  mk usrs ky mp
+  if id == null
+    gt id w fu.randKey(usrs)
+  mk usr {nam, id, op}
+  mk usrInfo {usrs, usr}
+  rtrn usrInfo
+
+srvr init(srvrInit)
+  gt exp frm 'express'
+  gt serv frm 'http' & exp
+  gt sktIO frm 'socket' & serv
+
+  cpy fu frm srvrInit functions
+
+  init sktIO/exp(srvr)
+    ... [native]
+
+  mk usrInfo[obj]
+    usrs[ky mp]
+    usr {nam: 'server', id: 'srvr', op: true}
+    def usr as usrs @ usr id
+
+  mk usrMsgMp[ky mp]
+
+  def rcvMsg(msg) in usrMsgMp @ 'srvr'
+    if msg ky is 'nw usr'
+      ad msg to usrInfo usrs @ msg id
+      log `new usr ${msg nam}`
+    if msg ky is 'rmv usr'
+      rmv msg id frm usrInfo usrs
+      log `new usr ${msg nam}`
+    else
+      cal srvrInit apIO apRcv(msg)
+
+  def apSnd(msg) in srvrInit apIO
+    cal sndMsg(msg)
+
+  def sndMsg(msg)
+    mk msgMp[ky mp:str:bol]
+    gt rcvrs frm splt msg rcvr
+    fr al rcvrs
+      if 'all': st msgMp @ al usr ids to true
+      if 'sndr': st msgMp @ msg sndr to true
+      if 'srvr': st msgMp @ srvr id to true
+      if 'ops': st msgMp @ al usr ids to true if usr is opd
+      if '<id>': st msgMp @ <id> to true
+      if '-sndr': st msgMp @ msg sndr id to false
+      if '-srvr': st msgMp @ srvr id to false
+      if '-ops': st msgMp @ al usr ids to false if usr is opd
+      if '-<id>': st msgMp @ <id> to false
+    fr ech msgMp elmt id
+      if msgMp @ elmt id
+        cal fun(msg) in usrMsgMp @ elmt id
+
+  lstn fr stdIn @ 'data' d =>
+    gt trm frm fu strsplit d
+    mk msg
+      ky: trm ky
+      sndr: usrInfo usr id
+      rcvr: 'all'
+      msg: trm msg
+    cal sndMsg
+
+  mk apInitB
+    calr: 'srvr'
+    prcs: srvr process
+    usrInfo: usrInfo
+
+  init ap(apInitB) p2
+  skt on 'connection' skt => skt on 'handShake' nam => srvrClntInit(skt, nam)
+  log 'Server is Active'
+
+srvrClntInit(skt, nam)
+  mk clntUsr
+    nam
+    id: fu randKey(usrInfo usrs)
+    op: true
+  ad clntUsr to usrInfo usrs @ clntUsr id
+  mk clntUsrInfo
+    usrs: frm usrInfo usrs
+    usr: clntUsr
+  def clntRcv(msg)
+    skt snd msg @ 'msg'
+  ad clntRcv(msg) to usrMsgMp @ clntUsr id
+  skt on 'msg' msg => cal sndMsg(msg)
+  skt on 'disconnect' msg =>
+    mk msg{ky: 'rmv usr', sndr: clntUsr id, rcvr: 'all', msg: clntUsr}
+    cal sndMsg(msg)
+  mk msg{ky: 'nw usr', sndr: clntUsr id, rcvr: 'all', clntUsr}
+  cal sndMsg(msg)
+  skt snd usrInfo @ 'handShake'
+
+clnt init(clntInit)
+  gt fu frm clntInit
+  gt skt frm clntInit
+  mk usrIO w usrIO(fu)
+  mk reqFrame(window) frm fu
+  mk tick()
+    cal usrIO dsply()
+    cal clntInit apIO tick(usrIO)
+    cal usrIO mws()
+    cal usrIO kys()
+    cal usrIO evnts()
+    cal reqFrame(tick)
+  skt on 'handShake' usrInfo =>
+    clr crsr
+    mk apSnd(msg) in clntInit apIO
+      skt snd msg to srvr @ 'msg'
+    skt on 'msg' msg =>
+      if msg ky is 'nw usr'
+        log `new usr: '${msg nam}'`
+        cpy msg to usrInfo usrs @ msg id
+      if msg ky is 'rmv usr'
+        log `rmv usr: '${msg nam}'`
+        rmv msg id frm usrInfo usrs
+      else
+        cal clntInit apIO apRcv(msg)
+    mk apInitB
+      calr: 'clnt'
+      wndo: window
+      usrIO
+      usrInfo
+    init clntInit apIO init(apInitB)
+    cal tick()
+
+  snd nam rqst to usr @ 'prompt'
+  usr on 'prompt' gt nam frm usr => snd nam to clnt @ 'prompt'
+  clnt on 'prompt' nam => snd w skt to srvr nam @ 'handShake'
+
+ap init(apInitA) p1
+  gt ap pkgs frm apInitA
+    ... [native]
+  def init(apInitB)
+  def tick(usrIO)
+  def apRcv(msg)
+  mk apIO in apInitA caleInit
+    init(apInitB)
+    tick(usrIO)
+    apRcv(msg)
+  cal apInitA cale(apInitA caleInit)
+
+ap init(apInitB) p2
+  [init ap]
+
+DEF KYS
+  'nw usr'
+  'rmv usr'

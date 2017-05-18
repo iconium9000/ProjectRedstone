@@ -1,0 +1,972 @@
+{
+	"&": {
+		"nam": "&",
+		"pos": "cnjtn",
+		"def": "and"
+	},
+	"@": {
+		"nam": "@",
+		"pos": "ptr",
+		"def": "at/to depending on ctx"
+	},
+	"acpt": {
+		"nam": "acpt",
+		"pos": "vrb",
+		"def": "accept",
+		"usg": [
+			"usg: <ownr> acpt"
+		]
+	},
+	"ad": {
+		"nam": "ad",
+		"pos": "vrb",
+		"def": "add"
+	},
+	"add": {
+		"nam": "add",
+		"pos": "vrb",
+		"def": "added"
+	},
+	"adj": {
+		"nam": "adj",
+		"pos": "nun",
+		"def": "adjective"
+	},
+	"adv": {
+		"nam": "adv",
+		"pos": "nun",
+		"def": "adverb"
+	},
+	"advj": {
+		"nam": "advj",
+		"pos": "nun",
+		"def": "adverb/adjective"
+	},
+	"aftr": {
+		"nam": "aftr",
+		"pos": "prptn",
+		"def": "after"
+	},
+	"al": {
+		"nam": "al",
+		"pos": "adj",
+		"def": "all"
+	},
+	"alw": {
+		"nam": "alw",
+		"pos": "adj/adv",
+		"def": "always"
+	},
+	"alws": {
+		"nam": "alws",
+		"pos": "adv",
+		"def": "always"
+	},
+	"ap": {
+		"nam": "ap",
+		"pos": "nun",
+		"def": "app"
+	},
+	"ary": {
+		"nam": "ary",
+		"pos": "nun",
+		"def": "array"
+	},
+	"bol": {
+		"nam": "bol",
+		"pos": "nun",
+		"def": "boolean"
+	},
+	"brsr": {
+		"nam": "brsr",
+		"pos": "nun",
+		"def": "browser"
+	},
+	"c": {
+		"nam": "c",
+		"pos": "vrb",
+		"def": "see"
+	},
+	"cal": {
+		"nam": "cal",
+		"pos": "vrb",
+		"def": "call"
+	},
+	"cald": {
+		"nam": "cald",
+		"pos": "vrb",
+		"def": "called"
+	},
+	"cale": {
+		"nam": "cale",
+		"pos": "nun",
+		"def": "callee"
+	},
+	"calr": {
+		"nam": "calr",
+		"pos": "nun",
+		"def": "caller"
+	},
+	"char": {
+		"nam": "char",
+		"pos": "nun",
+		"def": "character"
+	},
+	"clnt": {
+		"nam": "clnt",
+		"pos": "nun",
+		"def": "client"
+	},
+	"clnts": {
+		"nam": "clnts",
+		"pos": "nun",
+		"def": "clients"
+	},
+	"clr": {
+		"nam": "clr",
+		"pos": "vrb",
+		"def": "clear"
+	},
+	"cn": {
+		"nam": "cn",
+		"pos": "vrb",
+		"def": "can"
+	},
+	"cnjtn": {
+		"nam": "cnjtn",
+		"pos": "nun",
+		"def": "conjunction"
+	},
+	"cnt": {
+		"nam": "cnt",
+		"pos": "vrb",
+		"def": "can not"
+	},
+	"cnvs": {
+		"nam": "cnvs",
+		"pos": "nun",
+		"def": "canvas"
+	},
+	"cpy": {
+		"nam": "cpy",
+		"pos": "vrb",
+		"def": "copy",
+		"usg": [
+			"usg: <ownr> cpy <nam> frm <og ownr>"
+		]
+	},
+	"crd": {
+		"nam": "crd",
+		"pos": "nun",
+		"def": "coordinante"
+	},
+	"crsr": {
+		"nam": "crsr",
+		"pos": "nun",
+		"def": "cursor"
+	},
+	"crt": {
+		"nam": "crt",
+		"pos": "vrb",
+		"def": "create"
+	},
+	"ctx": {
+		"nam": "ctx",
+		"pos": "nun",
+		"def": "context"
+	},
+	"d": {
+		"nam": "d",
+		"pos": "sfx",
+		"def": "past tense",
+		"usg": [
+			"usg: <sbj> <vrb>d <obj> in past"
+		]
+	},
+	"def": {
+		"nam": "def",
+		"pos": "vrb",
+		"def": "define",
+		"usg": [
+			"usg: def<word to define>"
+		]
+	},
+	"dft": {
+		"nam": "dft",
+		"pos": "adj",
+		"def": "default"
+	},
+	"dlt": {
+		"nam": "dlt",
+		"pos": "vrb",
+		"def": "delete"
+	},
+	"dprct": {
+		"nam": "dprct",
+		"pos": "vrb",
+		"def": "deprecate"
+	},
+	"dprctd": {
+		"nam": "dprctd",
+		"pos": "nun/vrb",
+		"def": "deprecated"
+	},
+	"ds": {
+		"nam": "ds",
+		"pos": "vrb",
+		"def": "does"
+	},
+	"dsply": {
+		"nam": "dsply",
+		"pos": "nun",
+		"def": "display"
+	},
+	"dt": {
+		"nam": "dt",
+		"pos": "nun",
+		"def": "change in time"
+	},
+	"e": {
+		"nam": "e",
+		"pos": "sfx",
+		"def": "*ee",
+		"usg": [
+			"usg: <vrb>e, <nun> tht ds <vrb>"
+		]
+	},
+	"ech": {
+		"nam": "ech",
+		"pos": "pnun",
+		"def": "each"
+	},
+	"elmt": {
+		"nam": "elmt",
+		"pos": "nun",
+		"def": "element"
+	},
+	"emt": {
+		"nam": "emt",
+		"pos": "vrb",
+		"def": "emit"
+	},
+	"emtr": {
+		"nam": "emtr",
+		"pos": "nun",
+		"def": "emitter"
+	},
+	"emtrs": {
+		"nam": "emtrs",
+		"pos": "nun",
+		"def": "emitters"
+	},
+	"entr": {
+		"nam": "entr",
+		"pos": "vrb",
+		"def": "enter"
+	},
+	"enum": {
+		"nam": "enum",
+		"pos": "vrb",
+		"def": "enumerate"
+	},
+	"evnt": {
+		"nam": "evnt",
+		"pos": "nun",
+		"def": "event"
+	},
+	"evry": {
+		"nam": "evry",
+		"pos": "?",
+		"def": "every"
+	},
+	"evy": {
+		"nam": "evy",
+		"pos": "ptr",
+		"def": "every"
+	},
+	"exct": {
+		"nam": "exct",
+		"pos": "vrb",
+		"def": "execute"
+	},
+	"fr": {
+		"nam": "fr",
+		"pos": "vrb",
+		"def": "for"
+	},
+	"frm": {
+		"nam": "frm",
+		"pos": "nun/vrb",
+		"def": "vrb 'from' vrb frm rqrs obj otrws is nun 'form'"
+	},
+	"fun": {
+		"nam": "fun",
+		"pos": "nun",
+		"def": "function"
+	},
+	"gfx": {
+		"nam": "gfx",
+		"pos": "nun",
+		"def": "graphics"
+	},
+	"grmr": {
+		"nam": "grmr",
+		"pos": "nun",
+		"def": "grammar"
+	},
+	"gt": {
+		"nam": "gt",
+		"pos": "vrb",
+		"def": "get"
+	},
+	"hd": {
+		"nam": "hd",
+		"pos": "vrb",
+		"def": "had"
+	},
+	"hdsk": {
+		"nam": "hdsk",
+		"pos": "nun",
+		"def": "handshake"
+	},
+	"hmn": {
+		"nam": "hmn",
+		"pos": "nun",
+		"def": "human"
+	},
+	"hs": {
+		"nam": "hs",
+		"pos": "vrb",
+		"def": "has"
+	},
+	"hsDn": {
+		"nam": "hsDn",
+		"pos": "vrbNun",
+		"def": "hasDown"
+	},
+	"hsUp": {
+		"nam": "hsUp",
+		"pos": "nunVrb",
+		"def": "hasUp"
+	},
+	"hv": {
+		"nam": "hv",
+		"pos": "vrb",
+		"def": "have"
+	},
+	"idx": {
+		"nam": "idx",
+		"pos": "nun",
+		"def": "index"
+	},
+	"imprt": {
+		"nam": "imprt",
+		"pos": "nun/vrb",
+		"def": "import"
+	},
+	"incld": {
+		"nam": "incld",
+		"pos": "vrb",
+		"def": "include"
+	},
+	"info": {
+		"nam": "info",
+		"pos": "nun",
+		"def": "information"
+	},
+	"init": {
+		"nam": "init",
+		"pos": "vrb",
+		"def": "initilize"
+	},
+	"int": {
+		"nam": "int",
+		"pos": "nun",
+		"def": "integer"
+	},
+	"intrfc": {
+		"nam": "intrfc",
+		"pos": "nun/vrb",
+		"def": "interface"
+	},
+	"io": {
+		"nam": "io",
+		"pos": "nun",
+		"def": "input/output"
+	},
+	"isnt": {
+		"nam": "isnt",
+		"pos": "vrb",
+		"def": "is not"
+	},
+	"ky": {
+		"nam": "ky",
+		"pos": "nun",
+		"def": "key for key maps for various data storage methods"
+	},
+	"kys": {
+		"nam": "kys",
+		"pos": "nun",
+		"def": "keys"
+	},
+	"lk": {
+		"nam": "lk",
+		"pos": "adj",
+		"def": "like/similar to"
+	},
+	"lnk": {
+		"nam": "lnk",
+		"pos": "nun/vrb",
+		"def": "link"
+	},
+	"lsn": {
+		"nam": "lsn",
+		"pos": "vrb",
+		"def": "listen"
+	},
+	"lst": {
+		"nam": "lst",
+		"pos": "nun/vrb",
+		"def": "last"
+	},
+	"md": {
+		"nam": "md",
+		"pos": "vrb",
+		"def": "made"
+	},
+	"mdfy": {
+		"nam": "mdfy",
+		"pos": "nun",
+		"def": "modify"
+	},
+	"mk": {
+		"nam": "mk",
+		"pos": "vrb",
+		"def": "make",
+		"usg": [
+			"usg: <mkr> mk <nam of nw obj> {<obj init>}",
+			"usg: <mkr> mk <nam of nw obj> {<obj init>} in <nw ownr>"
+		]
+	},
+	"mltpl": {
+		"nam": "mltpl",
+		"pos": "adj",
+		"def": "multiple"
+	},
+	"mng": {
+		"nam": "mng",
+		"pos": "vrb",
+		"def": "manage"
+	},
+	"mngs": {
+		"nam": "mngs",
+		"pos": "vrb",
+		"def": "manages"
+	},
+	"mod": {
+		"nam": "mod",
+		"pos": "nun",
+		"def": "moderator"
+	},
+	"mp": {
+		"nam": "mp",
+		"pos": "nun",
+		"def": "map"
+	},
+	"msg": {
+		"nam": "msg",
+		"pos": "nun",
+		"def": "message"
+	},
+	"mws": {
+		"nam": "mws",
+		"pos": "nun",
+		"def": "mouse"
+	},
+	"nam": {
+		"nam": "nam",
+		"pos": "nun",
+		"def": "name"
+	},
+	"ng": {
+		"nam": "ng",
+		"pos": "sfx",
+		"def": "*ing",
+		"usg": [
+			"usg: <vrb>ng, <nun>ng"
+		]
+	},
+	"nt": {
+		"nam": "nt",
+		"pos": "adv",
+		"def": "not"
+	},
+	"ntwk": {
+		"nam": "ntwk",
+		"pos": "nun",
+		"def": "network"
+	},
+	"num": {
+		"nam": "num",
+		"pos": "nun",
+		"def": "number"
+	},
+	"nun": {
+		"nam": "nun",
+		"pos": "nun",
+		"def": "noun"
+	},
+	"nvr": {
+		"nam": "nvr",
+		"pos": "adj",
+		"def": "never"
+	},
+	"nw": {
+		"nam": "nw",
+		"pos": "nun",
+		"def": "now"
+	},
+	"o": {
+		"nam": "o",
+		"pos": "cnjtn",
+		"def": "or"
+	},
+	"obj": {
+		"nam": "obj",
+		"pos": "nun",
+		"def": "object"
+	},
+	"of": {
+		"nam": "of",
+		"pos": "ptr",
+		"def": "of"
+	},
+	"og": {
+		"nam": "og",
+		"pos": "adj",
+		"def": "original"
+	},
+	"op": {
+		"nam": "op",
+		"pos": "nun",
+		"def": "operator"
+	},
+	"opd": {
+		"nam": "opd",
+		"pos": "adj",
+		"def": "opped",
+		"usg": [
+			"<nun> is opd if it hs mod prvlgs"
+		]
+	},
+	"optl": {
+		"nam": "optl",
+		"pos": "adj",
+		"def": "optional"
+	},
+	"optn": {
+		"nam": "optn",
+		"pos": "nun",
+		"def": "option"
+	},
+	"optns": {
+		"nam": "optns",
+		"pos": "nun",
+		"def": "options"
+	},
+	"ordr": {
+		"nam": "ordr",
+		"pos": "adj",
+		"def": "order"
+	},
+	"ot": {
+		"nam": "ot",
+		"pos": "adv",
+		"def": "out"
+	},
+	"otrws": {
+		"nam": "otrws",
+		"pos": "?",
+		"def": "otherwise"
+	},
+	"ovr": {
+		"nam": "ovr",
+		"pos": "adj/adv",
+		"def": "over"
+	},
+	"ownr": {
+		"nam": "ownr",
+		"pos": "nun",
+		"def": "owner"
+	},
+	"pkgs": {
+		"nam": "pkgs",
+		"pos": "nun",
+		"def": "packages"
+	},
+	"pos": {
+		"nam": "pos",
+		"pos": "nun",
+		"def": "part of speech"
+	},
+	"prcs": {
+		"nam": "prcs",
+		"pos": "nun",
+		"def": "process"
+	},
+	"prnt": {
+		"nam": "prnt",
+		"pos": "vrb",
+		"def": "print"
+	},
+	"prptn": {
+		"nam": "prptn",
+		"pos": "nun",
+		"def": "preposition"
+	},
+	"prv": {
+		"nam": "prv",
+		"pos": "adj",
+		"def": "previous"
+	},
+	"prvlg": {
+		"nam": "prvlg",
+		"pos": "nun",
+		"def": "privilege"
+	},
+	"prvlgs": {
+		"nam": "prvlgs",
+		"pos": "nun",
+		"def": "privileges"
+	},
+	"pt": {
+		"nam": "pt",
+		"pos": "nun/vrb",
+		"def": "point"
+	},
+	"ptr": {
+		"nam": "ptr",
+		"pos": "nun",
+		"def": "pointer",
+		"usg": [
+			"usg: <sub> <ptr> <obj>",
+			"xmpl: mk in rcvr"
+		]
+	},
+	"r": {
+		"nam": "r",
+		"pos": "sfx",
+		"def": "nouns a verb",
+		"usg": [
+			"usg: <vrb>r = nun that <vrb>s"
+		]
+	},
+	"rcv": {
+		"nam": "rcv",
+		"pos": "vrb",
+		"def": "receive"
+	},
+	"rcvr": {
+		"nam": "rcvr",
+		"pos": "nun",
+		"def": "receiver"
+	},
+	"rcvs": {
+		"nam": "rcvs",
+		"pos": "vrb",
+		"def": "receives"
+	},
+	"rmv": {
+		"nam": "rmv",
+		"pos": "vrb",
+		"def": "remove"
+	},
+	"rply": {
+		"nam": "rply",
+		"pos": "vrb",
+		"def": "reply"
+	},
+	"rplyr": {
+		"nam": "rplyr",
+		"pos": "nun",
+		"def": "replier"
+	},
+	"rplyrs": {
+		"nam": "rplyrs",
+		"pos": "nun",
+		"def": "repliers"
+	},
+	"rqr": {
+		"nam": "rqr",
+		"pos": "vrb",
+		"def": "rquire"
+	},
+	"rqst": {
+		"nam": "rqst",
+		"pos": "vrb",
+		"def": "request"
+	},
+	"rqstr": {
+		"nam": "rqstr",
+		"pos": "nun",
+		"def": "requester"
+	},
+	"rqsts": {
+		"nam": "rqsts",
+		"pos": "vrb",
+		"def": "requests"
+	},
+	"rst": {
+		"nam": "rst",
+		"pos": "vrb",
+		"def": "reset"
+	},
+	"rtrn": {
+		"nam": "rtrn",
+		"pos": "vrb",
+		"def": "return"
+	},
+	"s": {
+		"nam": "s",
+		"pos": "sfx",
+		"def": "if noun make plural, if verb purpose tense",
+		"usg": [
+			"usg: <nun>s is mltpl <nun>",
+			"usg: <sbjct> <vrb>s <obj>"
+		]
+	},
+	"sbjt": {
+		"nam": "sbjt",
+		"pos": "nun",
+		"def": "subject"
+	},
+	"sfx": {
+		"nam": "sfx",
+		"pos": "nun",
+		"def": "suffix",
+		"usg": [
+			"usg: <wrd><sfx> mdfys wrd"
+		]
+	},
+	"shrt": {
+		"nam": "shrt",
+		"pos": "adj",
+		"def": "short version of common words"
+	},
+	"sid": {
+		"nam": "sid",
+		"pos": "nun/adj",
+		"def": "side"
+	},
+	"skt": {
+		"nam": "skt",
+		"pos": "nun",
+		"def": "socket"
+	},
+	"slct": {
+		"nam": "slct",
+		"pos": "vrb",
+		"def": "select"
+	},
+	"slctd": {
+		"nam": "slctd",
+		"pos": "adj",
+		"def": "selected"
+	},
+	"snd": {
+		"nam": "snd",
+		"pos": "vrb",
+		"def": "send"
+	},
+	"sndr": {
+		"nam": "sndr",
+		"pos": "nun",
+		"def": "sender"
+	},
+	"snds": {
+		"nam": "snds",
+		"pos": "vrb",
+		"def": "sends"
+	},
+	"sngl": {
+		"nam": "sngl",
+		"pos": "adj",
+		"def": "single"
+	},
+	"snt": {
+		"nam": "snt",
+		"pos": "vrb",
+		"def": "sent"
+	},
+	"spec": {
+		"nam": "spec",
+		"pos": "nun",
+		"def": "specification"
+	},
+	"srvr": {
+		"nam": "srvr",
+		"pos": "nun",
+		"def": "server"
+	},
+	"st": {
+		"nam": "st",
+		"pos": "vrb",
+		"def": "set"
+	},
+	"std": {
+		"nam": "std",
+		"pos": "adj/nun",
+		"def": "standard"
+	},
+	"strt": {
+		"nam": "strt",
+		"pos": "nun/vrb",
+		"def": "start"
+	},
+	"sts": {
+		"nam": "sts",
+		"pos": "nun",
+		"def": "status"
+	},
+	"t": {
+		"nam": "t",
+		"pos": "sfx",
+		"def": "nots a verb",
+		"usg": [
+			"usg: <verb>t, sm as: <verb>can/is not"
+		]
+	},
+	"thn": {
+		"nam": "thn",
+		"pos": "adv",
+		"def": "then"
+	},
+	"thru": {
+		"nam": "thru",
+		"pos": "prptn/adv",
+		"def": "through"
+	},
+	"ths": {
+		"nam": "ths",
+		"pos": "nun",
+		"def": "this"
+	},
+	"tht": {
+		"nam": "tht",
+		"pos": "ptr",
+		"def": "that"
+	},
+	"tim": {
+		"nam": "tim",
+		"pos": "nun/vrb",
+		"def": "tim"
+	},
+	"tk": {
+		"nam": "tk",
+		"pos": "nun",
+		"def": "tick"
+	},
+	"tkn": {
+		"nam": "tkn",
+		"pos": "nun",
+		"def": "token"
+	},
+	"tks": {
+		"nam": "tks",
+		"pos": "nun",
+		"def": "ticks"
+	},
+	"tn": {
+		"nam": "tn",
+		"pos": "sfx",
+		"def": "*tion"
+	},
+	"tsk": {
+		"nam": "tsk",
+		"pos": "nun",
+		"def": "task"
+	},
+	"unq": {
+		"nam": "unq",
+		"pos": "adj",
+		"def": "unique"
+	},
+	"updt": {
+		"nam": "updt",
+		"pos": "vrb",
+		"def": "update"
+	},
+	"updtr": {
+		"nam": "updtr",
+		"pos": "nun",
+		"def": "updater"
+	},
+	"us": {
+		"nam": "us",
+		"pos": "vrb/nun",
+		"def": "if vrb ‘use’, if nun ‘lk we’"
+	},
+	"usg": {
+		"nam": "usg",
+		"pos": "nun",
+		"def": "usage",
+		"usg": [
+			"usg: usg: <example of usg>"
+		]
+	},
+	"usr": {
+		"nam": "usr",
+		"pos": "nun",
+		"def": "user - hmn tht uss clnt"
+	},
+	"usrs": {
+		"nam": "usrs",
+		"pos": "nun",
+		"def": "users"
+	},
+	"vlu": {
+		"nam": "vlu",
+		"pos": "nun",
+		"def": "value"
+	},
+	"vrb": {
+		"nam": "vrb",
+		"pos": "nun",
+		"def": "verb"
+	},
+	"w": {
+		"nam": "w",
+		"pos": "ptr",
+		"def": "with"
+	},
+	"wndo": {
+		"nam": "wndo",
+		"pos": "nun",
+		"def": "window"
+	},
+	"wo": {
+		"nam": "wo",
+		"pos": "ptr",
+		"def": "without"
+	},
+	"wrd": {
+		"nam": "wrd",
+		"pos": "nun",
+		"def": "word"
+	},
+	"x,y,z": {
+		"nam": "x,y,z",
+		"pos": "smbl",
+		"def": "pt crds"
+	},
+	"xmpl": {
+		"nam": "xmpl",
+		"pos": "nun",
+		"def": "example"
+	},
+	"xmpls": {
+		"nam": "xmpls",
+		"pos": "nun",
+		"def": "examples"
+	}
+}
