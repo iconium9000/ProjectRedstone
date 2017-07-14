@@ -23,7 +23,7 @@ usrIO obj: md by clnt, snt to ap
     isDn: mp char -> bol
     hsDn: mp char -> bol (rst evy tk)
     hsUp: mp char -> bol (rst evy tk)
-  evts:
+  evnts:
     now: tim @ tk strt
     dt: tim @ (tk str - prv tk)
     lst: tim @ lst tk strt
@@ -36,7 +36,12 @@ usrIO obj: md by clnt, snt to ap
 
 usrInfo obj:
   usrs[ky mp]: ky mp
-  usr{id, nam, pp}:
+  usr{id, nam, pp}
+  msg
+    ky: 'nw usr'
+    sndr: usr id
+    rcvr: 'all'
+    msg: usr{id, nam, pp}
 
 apInitA obj: init ap pt1 cald by brsr o srvr
   ... pkgs fr ap (functions.js, points.js, etc)
@@ -101,32 +106,24 @@ srvr init(srvrInit)
   gt exp frm 'express'
   gt serv frm 'http' & exp
   gt sktIO frm 'socket' & serv
-
   cpy fu frm srvrInit functions
-
   init sktIO/exp(srvr)
     ... [native]
-
   mk usrInfo[obj]
     usrs[ky mp]
     usr {nam: 'server', id: 'srvr', op: true}
     def usr as usrs @ usr id
-
   mk usrMsgMp[ky mp]
-
   def rcvMsg(msg) in usrMsgMp @ 'srvr'
+    cal srvrInit apIO apRcv(msg)
     if msg ky is 'nw usr'
       ad msg to usrInfo usrs @ msg id
       log `new usr ${msg nam}`
     if msg ky is 'rmv usr'
       rmv msg id frm usrInfo usrs
       log `new usr ${msg nam}`
-    else
-      cal srvrInit apIO apRcv(msg)
-
   def apSnd(msg) in srvrInit apIO
     cal sndMsg(msg)
-
   def sndMsg(msg)
     mk msgMp[ky mp:str:bol]
     gt rcvrs frm splt msg rcvr
@@ -164,7 +161,7 @@ srvr init(srvrInit)
 
 srvrClntInit(skt, nam)
   mk clntUsr
-    nam
+    nam: nam
     id: fu randKey(usrInfo usrs)
     op: true
   ad clntUsr to usrInfo usrs @ clntUsr id
@@ -180,6 +177,7 @@ srvrClntInit(skt, nam)
     cal sndMsg(msg)
   mk msg{ky: 'nw usr', sndr: clntUsr id, rcvr: 'all', clntUsr}
   cal sndMsg(msg)
+  ad msg to clntUsrInfo
   skt snd usrInfo @ 'handShake'
 
 clnt init(clntInit)
@@ -199,20 +197,20 @@ clnt init(clntInit)
     mk apSnd(msg) in clntInit apIO
       skt snd msg to srvr @ 'msg'
     skt on 'msg' msg =>
+      cal clntInit apIO apRcv(msg)
       if msg ky is 'nw usr'
         log `new usr: '${msg nam}'`
         cpy msg to usrInfo usrs @ msg id
       if msg ky is 'rmv usr'
         log `rmv usr: '${msg nam}'`
         rmv msg id frm usrInfo usrs
-      else
-        cal clntInit apIO apRcv(msg)
     mk apInitB
       calr: 'clnt'
       wndo: window
       usrIO
       usrInfo
     init clntInit apIO init(apInitB)
+    cal clntInit apIO apSnd(usrInfo msg)
     cal tick()
 
   snd nam rqst to usr @ 'prompt'

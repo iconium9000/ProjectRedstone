@@ -1,0 +1,65 @@
+<canvas id="canvas" style="boarder:1px solid #000000" cursor="none">Your browser does not support canvas element
+</canvas>
+<script>
+  var module = {}
+</script>
+<script src="client/functions.js"></script>
+<script src="client/point.js"></script>
+<script>
+  document.body.style.backgroundColor = 'black'
+
+
+  var reqFrame = fu.reqFrame(window)
+
+  var canvas = document.getElementById('canvas')
+  var g = canvas.getContext('2d')
+
+  var n = fu.noise1
+  var nary = [n(100, 200), n(20, 100), n(300, 400), n(200, 200)] //, n(40, 40)]
+
+  var n = x => {
+    var f = 0
+    nary.forEach(s => f += s(x))
+    return f
+  }
+
+  var n2 = fu.noise2
+  var n2ary = [
+    [n2(60, 50), n2(300, 200)], // n2(10, 10), n2(200, 200)],
+    [n2(65, 50), n2(200, 120)], // n2(10, 10), n2(200, 200)],
+    [n2(70, 50), n2(350, 140)]
+  ] //, n2(10, 10), n2(200, 200)]]
+  var ns = (c, x, y) => {
+    var f = 0
+    n2ary[c].forEach(s => f += s(x, y))
+    return f
+  }
+
+  function fill(i, w, x, y, r, g, b, a) {
+    x = Math.floor(x)
+    y = Math.floor(y)
+    var idx = (x + w * y) * 4
+    i[idx + 0] = r
+    i[idx + 1] = g
+    i[idx + 2] = b
+    i[idx + 3] = a
+  }
+
+  // function tick() {
+  var w = canvas.width = window.innerWidth - 20
+  var h = canvas.height = window.innerHeight - 22
+  for (var i = 0; i < w; i += 1) {
+    var image = g.getImageData(i, 0, 1, h)
+    for (var j = 0; j < h; j += 1) {
+      image.data[j * 4 + 0] = ns(0, i, j)
+      image.data[j * 4 + 1] = ns(1, i, j)
+      image.data[j * 4 + 2] = ns(2, i, j)
+      image.data[j * 4 + 3] = 0x100
+    }
+    // for (var j = 0; j < h; j += 1) {
+    //
+    // }
+    // console.log(image.data)
+    g.putImageData(image, i, 0)
+  }
+</script>

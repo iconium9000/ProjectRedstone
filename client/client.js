@@ -45,6 +45,10 @@ module.exports = clntInit => {
 
     // skt on 'msg' msg =>
     skt.on('msg', msg => {
+
+      // cal clntInit apIO apRcv(msg)*/
+      clntInit.apIO.apRcv(msg)
+
       switch (msg.ky) {
 
         case 'nw usr':
@@ -53,8 +57,8 @@ module.exports = clntInit => {
             log `new usr: '${msg nam}'`
             cpy msg to usrInfo usrs @ msg id */
 
-          console.log(`new user: '${msg.nam}'`)
-          usrInfo.usrs[msg.id] = msg
+          console.log(`new user: '${msg.msg.nam}'`)
+          usrInfo.usrs[msg.msg.id] = msg.msg
           break
 
         case 'rmv usr':
@@ -63,16 +67,10 @@ module.exports = clntInit => {
             log `rmv usr: '${msg nam}'`
             rmv msg id frm usrInfo usrs */
 
-          console.log(`rmv user: '${msg.nam}'`)
-          delete usrInfo.usrs[msg.id]
+          console.log(`rmv user: '${msg.msg.nam}'`)
+          delete usrInfo.usrs[msg.msg.id]
           break
 
-        default:
-          /*
-          else
-            cal clntInit apIO apRcv(msg)*/
-
-          clntInit.apIO.apRcv(msg)
       }
     })
 
@@ -91,6 +89,9 @@ module.exports = clntInit => {
 
     // init clntInit apIO init(apInitB)
     clntInit.apIO.init(apInitB)
+
+    // cal clntInit apIO apSnd(usrInfo msg)
+    clntInit.apIO.apRcv(usrInfo.msg)
 
     // cal tick()
     tick()
@@ -122,8 +123,8 @@ function getUsrIO(fu) {
     var e = display
     e.cnvs = e.cnvs || document.getElementById('canvas')
     e.g = e.g || e.cnvs.getContext('2d')
-    e.width = e.cnvs.width = window.innerWidth - 20
-    e.height = e.cnvs.height = window.innerHeight - 22
+    e.w = e.cnvs.width = window.innerWidth - 20
+    e.h = e.cnvs.height = window.innerHeight - 22
   }
 
   function mouse() {
@@ -140,7 +141,13 @@ function getUsrIO(fu) {
   var setMouse = e => {
     mouse.x = e.clientX - 7
     mouse.y = e.clientY - 7
+    mouse.z = 0
   }
+
+  keys()
+  events()
+  display()
+  mouse()
 
   $(document).mousemove(e => {
     setMouse(e)

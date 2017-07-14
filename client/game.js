@@ -1,50 +1,63 @@
-console.log("game.js: init")
+// greed
 
 module.exports = apInitA => {
-  var fs = apInitA.fs
+
   var fu = apInitA.fu
   var pt = apInitA.pt
 
-  var usrInfo = {}
+  var plrs = []
 
-  var saveData = () => {}
+  var apIO_init = apInitB => {
+
+
+  }
+
+  var apIO_tick = clntTick => {
+
+  }
+
+  var apIO_apRcv = rcvMsg => {
+
+    var ky = rcvMsg.ky
+    var sndr = rcvMsg.sndr
+    var rcvr = rcvMsg.rcvr
+    var msg = rcvMsg.msg
+
+    switch (ky) {
+      case 'nw usr':
+
+        plrs[msg.id] = {
+          name: msg.name,
+          score: 0
+        }
+
+        console.log(plrs)
+
+        break
+
+      case 'rmv usr':
+
+        // TODO
+
+        delete plrs[msg.id]
+
+        break
+    }
+  }
 
   var apIO = apInitA.caleInit.apIO = {
-    init: apInitB => {
-      usrInfo.usrs = apInitB.usrInfo.usrs
-      usrInfo.usr = apInitB.usrInfo.usr
-      usrInfo.calr = apInitB.calr
+    init: apIO_init,
+    tick: apIO_tick,
+    apRcv: apIO_apRcv
+  }
 
-      if (apInitB.calr == 'clnt') {
-        document.body.style.backgroundColor = 'black'
-      }
-    },
-    tick: usrIO => {
-      var g = usrIO.dsply.g
-
-      g.fillStyle = 'white'
-      pt.fillCircle(g, usrIO.mws, 10)
-    },
-    apRcv: msg => {
-      var ky = msg.ky
-      var sndr = usrInfo.usrs[msg.sndr]
-      var rcvr = msg.rcvr
-      var msg = msg.msg
-
-      switch (ky) {
-        case 'msg':
-          console.log(`${sndr.nam}: '${msg}'`)
-          break
-
-        case 'save':
-          if (usrInfo.calr == 'srvr') {
-            fs.writeFile('data.txt', JSON.stringify(saveData(), null, '\t'))
-          }
-          console.log(`'${sndr.nam}' saved Level!`)
-          break
-      }
-
-    }
+  function sndMsg(ky,sndr,rcvr,msg) {
+    apIO.sndMsg({
+      ky: ky,
+      sndr: sndr,
+      rcvr: rcvr,
+      msg: msg
+    })
   }
 
   apInitA.cale(apInitA.caleInit)

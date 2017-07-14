@@ -1,0 +1,90 @@
+<canvas id="canvas" style="boarder:1px solid #000000" cursor="none">Your browser does not support canvas element
+</canvas>
+<script>
+  var module = {}
+</script>
+<script src="client/functions.js"></script>
+<script src="client/point.js"></script>
+<script>
+  document.body.style.backgroundColor = 'black'
+
+  var reqFrame = fu.reqFrame(window)
+  var w, h, cntr
+
+  var canvas = document.getElementById('canvas')
+  var g = canvas.getContext('2d')
+  display()
+
+  var n = 3
+  var dt = 1e-3
+  var pts = []
+
+
+  var p = pts[0] = pt.zero()
+  p.q = 0
+  p.r = 20
+  p.v = pt.zero()
+  p.a = pt.zero()
+
+  {
+    var k = 2 * Math.PI / n
+    var K = Math.pow(2, -1.5)
+    for (var i = 1; i < n; ++i) {
+      p.q += K / Math.sqrt(1 - Math.cos(k * i))
+    }
+  }
+
+  for (var i = 1; i <= n; ++i) {
+    var p = pts[i] = pt.angle(2 * Math.PI * i / n)
+    p.q = -1
+    p.r = 10
+    p.v = pt.scale(pt.inverse(p), -1)
+    p.a = pt.zero()
+  }
+
+  tick()
+
+  function tick() {
+    display()
+    cntr = pt.point(w / 2, h / 2)
+
+    pts.forEach(p => {
+      g.fillStyle = p.q > 0 ? 'green' : p.q == 0 ? 'white' : 'red'
+      pt.fillCircle(g, pt.sum(cntr, pt.scale(p, 60)), p.r)
+    })
+
+    for (var i = 0; i < n; ++i) {
+      var a = pts[i]
+      for (var j = i + 1; j <= n; ++j) {
+        var b = pts[j]
+
+        var t = pt.sub(b, a)
+        t = pt.scale(t, a.q * b.q / Math.pow(pt.length(t), 3))
+        pt.sube(a.a, t)
+        pt.sume(b.a, t)
+      }
+    }
+
+    var B = pt.point(0, 0, 1e-3)
+
+    pts.forEach(p => {
+      pt.sube(p.a, pt.cross(pt.scale(p.v, p.q), B))
+
+      pt.sume(p.v, pt.scale(p.a, dt))
+      pt.sume(p, pt.scale(p.v, dt))
+    })
+
+    g.fillStyle = 'white'
+    for (var i = 0; i <= n; ++i) {
+      var p = pts[i]
+      g.fillText(pt.length(p.a), 20, i * 20 + 20)
+    }
+
+    reqFrame(tick)
+  }
+
+  function display() {
+    w = canvas.width = window.innerWidth - 20
+    h = canvas.height = window.innerHeight - 22
+  }
+</script>

@@ -33,18 +33,18 @@ module.exports = srvrInit => {
   }
   /*
   def rcvMsg(msg) in usrMsgMp @ 'srvr'
+    cal srvrInit apIO apRcv(msg)
     if msg ky is 'nw usr'
       ad msg to usrInfo usrs @ msg id
       log `new usr ${msg nam}`
     if msg ky is 'rmv usr'
       rmv msg id frm usrInfo usrs
-      log `new usr ${msg nam}`
-    else
-      cal srvrInit apIO apRcv(msg) */
+      log `new usr ${msg nam}` */
   var usrMsgMp = {
     'srvr': msg => {
-      switch (msg.ky) {
+      srvrInit.apIO.apRcv(msg)
 
+      switch (msg.ky) {
         case 'nw usr':
           usrInfo.usrs[msg.id] = msg
           console.log(`new user ${msg.msg.nam}`)
@@ -55,15 +55,13 @@ module.exports = srvrInit => {
           console.log(`rmv user ${msg.msg.nam}`)
           break
 
-        default:
-          srvrInit.apIO.apRcv(msg)
       }
     }
   }
   /*
   // cpy apSnd(msg) in srvrInit apIO
   //   cal sndMsg(msg) */
-  srvrInit.apIO.apSnd = msg => sndMsg(msg)
+  srvrInit.apIO.apSnd = sndMsg
 
   /*
   def sndMsg(msg, sndUsr)
@@ -86,8 +84,8 @@ module.exports = srvrInit => {
     var msgMp = {}
     msg.rcvr.split(' ').forEach(tkn => {
       var ad = tkn[0] != '-'
-      if (ad) {
-        tkn = tkn.replace(/-/g, '')
+      if (!ad) {
+        tkn = tkn.replace('-', '')
       }
 
       switch (tkn) {
@@ -96,7 +94,7 @@ module.exports = srvrInit => {
           break
 
         case 'sndr':
-          msgMp[sndUsr.id] = ad
+          msgMp[msg.sndr] = ad
           break
 
         case 'ops':
@@ -112,6 +110,7 @@ module.exports = srvrInit => {
           break
       }
     })
+
     for (var i in msgMp) {
       if (msgMp[i] && usrMsgMp[i]) {
         usrMsgMp[i](msg)
@@ -209,13 +208,19 @@ module.exports = srvrInit => {
     /*
     mk msg{ky: 'nw usr', sndr: clntUsr id, rcvr: 'all', clntUsr}
     cal sndMsg(msg) */
-    sndMsg({
+    var msg = {
       ky: 'nw usr',
       sndr: clntUsr.id,
       rcvr: 'all',
       msg: clntUsr
-    })
+    }
 
+    sndMsg(msg)
+
+    // ad msg to clntUsrInfo
+    clntUsrInfo.msg = msg
+
+    // skt snd usrInfo @ 'handShake'
     skt.emit('handShake', clntUsrInfo)
   }
 

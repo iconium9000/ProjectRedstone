@@ -1,5 +1,6 @@
 var fs = require('fs')
 var fu = require('./client/functions.js')
+var pt = require('point.js')
 
 var dic = JSON.parse(fs.readFileSync('dic.json').toString())
 var mod, wrd
