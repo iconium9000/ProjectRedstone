@@ -184,13 +184,13 @@ var pt = module.exports = {
 
   drawCircle: function(g, c, r) {
     g.beginPath()
-    g.arc(c.x, c.y, r || c.r, r || c.r, 0, 2 * Math.PI)
+    g.arc(c.x, c.y, r || c.r, 0, 2 * Math.PI)
     g.stroke()
   },
 
   fillCircle: function(g, c, r) {
     g.beginPath()
-    g.arc(c.x, c.y, r || c.r, r || c.r, 0, 2 * Math.PI)
+    g.arc(c.x, c.y, r || c.r, 0, 2 * Math.PI)
     g.fill()
   },
 

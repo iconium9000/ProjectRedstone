@@ -1,47 +1,47 @@
-// greed
+console.log('game.js init (mazeGame)')
+
 
 module.exports = apInitA => {
 
   var fu = apInitA.fu
   var pt = apInitA.pt
 
-  var plrs = []
+  var plrIf = new Object
 
-  var apIO_init = apInitB => {
-
-
+  function sndMsg(ky,sndr,rcvr,msg) {
+    apIO.apSnd({
+      ky: ky,
+      sndr: sndr,
+      rcvr: rcvr,
+      msg: msg
+    })
   }
 
-  var apIO_tick = clntTick => {
+  var apIO_init = apInitB => {
+    plrIf.usr = apInitB.usrInfo.usr
+
+    if (apInitB.calr == 'srvr') {
+      plrIf.srvr = true
+
+    } else {
+      plrIf.clnt = true
+      document.body.style.backgroundColor = 'black'
+      sndMsg('rqst update',plrIf.usr.id,'srvr')
+    }
+  }
+
+  var apIO_tick = usrIO => {
 
   }
 
   var apIO_apRcv = rcvMsg => {
-
     var ky = rcvMsg.ky
     var sndr = rcvMsg.sndr
     var rcvr = rcvMsg.rcvr
     var msg = rcvMsg.msg
 
     switch (ky) {
-      case 'nw usr':
 
-        plrs[msg.id] = {
-          name: msg.name,
-          score: 0
-        }
-
-        console.log(plrs)
-
-        break
-
-      case 'rmv usr':
-
-        // TODO
-
-        delete plrs[msg.id]
-
-        break
     }
   }
 
@@ -51,15 +51,7 @@ module.exports = apInitA => {
     apRcv: apIO_apRcv
   }
 
-  function sndMsg(ky,sndr,rcvr,msg) {
-    apIO.sndMsg({
-      ky: ky,
-      sndr: sndr,
-      rcvr: rcvr,
-      msg: msg
-    })
-  }
-
   apInitA.cale(apInitA.caleInit)
+  console.log('hello world')
 
 }

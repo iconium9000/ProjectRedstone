@@ -101,7 +101,16 @@ module.exports = clntInit => {
   snd nam rqst to usr @ 'prompt'
   usr on 'prompt' gt nam frm usr => snd nam to clnt @ 'prompt'
   clnt on 'prompt' nam => snd w skt to srvr nam @ 'handShake' */
-  skt.emit('handShake', prompt('What is your name?', 'Johnny Appleseed'))
+
+  var nam = document.cookie.length ?
+    document.cookie.split('=')[1] :
+    'Johnny Appleseed'
+
+  nam = prompt('What is your name?',nam)
+  console.log(document.cookie)
+  fu.setCookie('nam',nam,2)
+
+  skt.emit('handShake', nam)
 }
 
 function getUsrIO(fu) {

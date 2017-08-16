@@ -1,6 +1,6 @@
 // splix
 
-console.log('game.js init')
+console.log('game.js init (splix)')
 
 
 module.exports = apInitA => {
