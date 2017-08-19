@@ -213,8 +213,10 @@ clnt init(clntInit)
     cal clntInit apIO apSnd(usrInfo msg)
     cal tick()
 
+  get prv nam frm cookie
   snd nam rqst to usr @ 'prompt'
   usr on 'prompt' gt nam frm usr => snd nam to clnt @ 'prompt'
+  sav nam to cookie
   clnt on 'prompt' nam => snd w skt to srvr nam @ 'handShake'
 
 ap init(apInitA) p1
