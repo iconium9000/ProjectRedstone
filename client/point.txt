@@ -1,0 +1,172 @@
+point(x, y, z)
+zero()
+equal(a,b)
+rand()
+angle(a)
+apply(obj, p)
+tan(p)
+sqr(p)
+length(p)
+dist(a, b)
+unit(p)
+copy(a)
+set(p, c)
+sum(a, b)
+sume(p, ps)
+sub(a, b)
+sube(p, ps)
+dot(a, b)
+cross(a, b)
+scale(p, s)
+factor(p, f)
+pow(p, f)
+mod(p, f)
+math(f, p)
+inverse(p)
+drawLine(g, a, b)
+drawCircle(g, c, r)
+fillCircle(g, c, r)
+drawRect(g, c, r)
+fillRect(g, c, r)
+aryToPt2(ary)
+aryToPt3(ary)
+ptToPt2(parse) => (pt2)
+ptToPt3(parse) => (pt3)
+strToPt2(parse)
+strToPt3(parse)
+strFrmPt2: parse => pt2 => `${parse(pt2.x)},${parse(pt2.y)}`,
+strFrmPt3: parse => pt3 => `${parse(pt3.x)},${parse(pt3.y)},${parse(pt3.z)}`
+draw(g, c)
+drawProjLine(g, l, ax)
+planeBump(c, p)
+bump(a, b)
+
+// --------------------------------------------
+proj(p, ax)
+ax
+  d: planeDist
+  p2: x, y, z
+  p3: x, y, z
+  x
+  	p2: x, y, z
+  	p3: x, y, z
+  y
+  	p2: x, y, z
+  	p3: x, y, z
+  z
+  	p2: x, y, z
+  	p3: x, y, z
+l
+  a: x, y, z
+  b: x, y, z
+
+// --------------------------------------------
+midPoint(l3, ax)
+camAngle(ax, pl, cam, fcs, spd)
+ax:
+    ax, ay
+    x
+      x, y, z
+    y
+      x, y, z
+    z
+      x, y, z
+pl
+  x, y, z -> axis origin
+cam
+  up, dn, rt, lf -> optional camera controls
+fcs
+  x, y, z -> optional point to look at
+spd
+  rotationSpeed * dt -> camera Rotation speed
+//
+
+c
+	x: x cord
+	y: y cord
+	z: z cord
+	a: force angle
+	v: velocity
+		x: vx cord
+		y: vy cord
+		z: vz cord
+	c: color
+	lc: line color
+
+k
+	bp [{x,y,z,n{x,y,z}}...]	// boundPlanes
+	float dt 					        // deltaT
+	float fc 					        // force
+	float dg					        // dragSpeed
+	float rs 				        	// rotateSpeed
+	fs {x,y,z} 			       		// focus
+
+	if singleKey
+		if force evaluates to true
+			accelerate in the c.a direction
+		else roate at rate k.rs
+	else
+		if focus (k.fs) evaluates to true
+			point a at
+		if force (k.fc) evaluates to true
+			accelerate in the c.a direction
+		if r.rs evaluates to true
+			rotate at rate k.rs
+}
+*/
+move(c, k)
+
+pt.solveConstants = {
+  operators: [
+    ['(', ')', '[', ']', '{', '}'],
+    ['^'],
+    ['*', '/'],
+    ['+', '-', '++', '--'],
+    ['>', '<', '>=', '<=', '==', '!='],
+    ['?', ':'],
+    ['=', '^=', '*=', '/=', '+=', '-='],
+    [',', ' ']
+  ],
+  opChars: {},
+
+  types: {
+    's': [],
+    'xy': '2d var',
+    'xyz': '3d var'
+
+}
+
+var sc = pt.solveConstants
+for (var i in sc.operators) {
+  var subI = sc.operators[i]
+  for (var j in subI) {
+    var subJ = subI[j]
+    for (var k in subJ) {
+      var c = subJ[k]
+      sc.opChars[c] = c
+
+
+}
+
+
+pt.push1 = (a, b) => {
+  var u = pt.sub(b, a)
+  var l = pt.length(u)
+  pt.set(b, pt.sum(a, pt.scale(u, (a.r + b.r) / l)))
+}
+
+pt.push2 = (a, b) => {
+  var cp = pt.scale(pt.sum(pt.scale(a, b.r), pt.scale(b, a.r)), 1 / (a.r + b.r))
+  pt.set(a, pt.sum(cp, pt.scale(pt.sub(a, cp), a.r / pt.dist(a, cp))))
+  pt.set(b, pt.sum(cp, pt.scale(pt.sub(b, cp), b.r / pt.dist(b, cp))))
+}
+
+pt.solve = function(input) {
+
+
+
+}
+
+pt.vectTest = function() {
+  console.log('hello')
+}

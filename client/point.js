@@ -16,6 +16,10 @@ var pt = module.exports = {
     }
   },
 
+  equal: function(a,b) {
+    return a.x == b.x && a.y == b.y && a.z == b.z
+  },
+
   rand: function() {
     return {
       x: Math.random(),
