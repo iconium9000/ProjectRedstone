@@ -161,31 +161,37 @@ function getUsrIO(fu) {
   $(document).mousemove(e => {
     setMouse(e)
     mouse.hsDrgd = mouse.isDn
+    mouse.shftDn = e.shiftKey
   })
   $(document).mousedown(e => {
     setMouse(e)
     mouse.hsDrgd = false
     mouse.isDn = true
     mouse.hsDn = true
+    mouse.shftDn = e.shiftKey
   })
   $(document).mouseup(e => {
     setMouse(e)
     mouse.isDn = false
     mouse.hsUp = true
+    mouse.shftDn = e.shiftKey
   })
 
   $(document).keypress(e => {
     var c = fu.etochar(e)
     keys.isDn[c] = true
     keys.hsDn[c] = true
+    mouse.shftDn = e.shiftKey
   })
   $(document).keyup(e => {
     var c = fu.etochar(e)
     keys.isDn[c] = false
     keys.hsUp[c] = true
+    mouse.shftDn = e.shiftKey
   })
   document.onkeydown = e => {
     keys.hsDn[e.key] = true
+    mouse.shftDn = e.shiftKey
   }
 
   return {

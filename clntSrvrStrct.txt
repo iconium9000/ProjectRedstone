@@ -17,6 +17,7 @@ usrIO obj: md by clnt, snt to ap
     hsDn: bol
     hsDrgd: bol
     usUp: bol
+    shftDn: bol
     prv:
       x, y, z: prv pt crds
       isDn: bol - prv pt isDn
