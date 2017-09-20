@@ -55,6 +55,9 @@ var pt = module.exports = {
     var x = a.x - b.x
     var y = a.y - b.y
     var z = a.z - b.z
+    x = !x ? 0 : x
+    y = !y ? 0 : y
+    z = !z ? 0 : z
     return Math.sqrt(x * x + y * y + z * z)
   },
 
@@ -132,12 +135,26 @@ var pt = module.exports = {
     }
   },
 
+  scalee: function(p, s) {
+    p.x *= s
+    p.y *= s
+    p.z *= s
+    return p
+  },
+
   factor: function(p, f) {
     return {
       x: p.x / f,
       y: p.y / f,
       z: p.z / f
     }
+  },
+
+  factore: function(p, s) {
+    p.x /= s
+    p.y /= s
+    p.z /= s
+    return p
   },
 
   pow: function(p, f) {

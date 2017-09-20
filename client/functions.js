@@ -228,12 +228,12 @@ var fu = module.exports = {
     return `[${string}]`
   },
 
-  randKey: array => {
+  randKey: () => {
     var r
     do {
       r = `${Math.random()}`
-    } while (array[r]);
-    return r
+    } while (fu.randKey.array[r]);
+    return fu.randKey.array[r] = r
   },
 
   getSign: n => {
@@ -268,3 +268,5 @@ var fu = module.exports = {
     window.mozRequestAnimationFrame || window.oRequestAnimationFrame ||
     window.msRequestAnimationFrame || ((callback) => window.setTimeout(callback, 30))
 }
+
+fu.randKey.array = []
