@@ -236,6 +236,12 @@ var fu = module.exports = {
     return fu.randKey.array[r] = r
   },
 
+  loop: (n, f) => {
+    for (var i = 0; i < n; ++i) {
+      f(i)
+    }
+  },
+
   getSign: n => {
     return n > 0 ? 1 : n < 0 ? -1 : 0
   },
@@ -244,6 +250,16 @@ var fu = module.exports = {
     for (var i in a) {
       f(a[i])
     }
+  },
+
+  count: obj => obj ? Object.keys(obj).length : 0,
+
+  countif: (obj, ifu) => {
+    var count = 0
+    for (var i in obj) {
+      count += ifu(obj[i], i)
+    }
+    return count
   },
 
   isEqual: v => {

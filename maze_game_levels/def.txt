@@ -1,0 +1,115 @@
+{
+  "combo_hash": 0,
+  "combos": [],
+  "final_combos": [],
+  "depth_combos": [],
+  "rooms": [
+    {
+      "index": 0,
+      "num_players": 1,
+      "num_square_keys": 0,
+      "num_circle_keys": 1,
+      "num_pads": 2,
+      "num_square_pads": 1,
+      "num_circle_pads": 2,
+      "door_indecies": [
+        0
+      ],
+      "pad_room_indecies": [
+        2
+      ],
+      "portal_wire_indecies": []
+    },
+    {
+      "index": 1,
+      "num_players": 0,
+      "num_square_keys": 0,
+      "num_circle_keys": 0,
+      "num_pads": 2,
+      "num_square_pads": 1,
+      "num_circle_pads": 2,
+      "door_indecies": [
+        0
+      ],
+      "pad_room_indecies": [
+        3
+      ],
+      "portal_wire_indecies": []
+    },
+    {
+      "index": 2,
+      "num_players": 0,
+      "num_square_keys": 0,
+      "num_circle_keys": 0,
+      "num_pads": 1,
+      "num_square_pads": 0,
+      "num_circle_pads": 1,
+      "door_indecies": [],
+      "pad_room_indecies": [
+        0
+      ],
+      "portal_wire_indecies": [],
+      "wire_index": 1
+    },
+    {
+      "index": 3,
+      "num_players": 0,
+      "num_square_keys": 0,
+      "num_circle_keys": 0,
+      "num_pads": 1,
+      "num_square_pads": 1,
+      "num_circle_pads": 0,
+      "door_indecies": [],
+      "pad_room_indecies": [
+        1
+      ],
+      "portal_wire_indecies": [],
+      "wire_index": 0
+    }
+  ],
+  "wires": [
+    {
+      "index": 0,
+      "num_pads": 1,
+      "door_indecies": [],
+      "pad_room_indecies": [
+        3
+      ],
+      "portal_room_indecies": []
+    },
+    {
+      "index": 1,
+      "num_pads": 1,
+      "door_indecies": [],
+      "pad_room_indecies": [
+        2
+      ],
+      "portal_room_indecies": []
+    }
+  ],
+  "doors": [
+    {
+      "index": 0,
+      "wire_index": 1,
+      "room_indecies": [
+        0,
+        1
+      ]
+    },
+    {
+      "index": 1,
+      "wire_index": 0,
+      "room_indecies": []
+    }
+  ],
+  "final_door_index": 1,
+  "final_wire_index": 0,
+  "counts": {
+    "players": 1,
+    "square_keys": 0,
+    "circle_keys": 1,
+    "rooms": 4,
+    "square_key_rooms": 3,
+    "circle_key_rooms": 3
+  }
+}
