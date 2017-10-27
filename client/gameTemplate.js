@@ -1,6 +1,7 @@
 // TEMPLATE
+var log = console.log
+log('game.js init')
 
-console.log('game.js init')
 //
 //
 // module.exports = apInitA => {

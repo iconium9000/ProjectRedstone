@@ -1,4 +1,6 @@
-console.log("point.js: init")
+var log = console.log
+
+log("point.js: init")
 var pt = module.exports = {
   point: (x, y, z) => {
     return {
@@ -551,12 +553,98 @@ pt.push2 = (a, b) => {
   pt.set(b, pt.sum(cp, pt.scale(pt.sub(b, cp), b.r / pt.dist(b, cp))))
 }
 
+var mdelms = {
+  '+':1, '++':1, '+=':1,
+  '-':1,'--':1,'-=':1,
+  '*':1, '**':1, '*=':1,
+  '/':1, '/=':1,
+}
+var delms = {
+  '?':1, ':':1,'(':1, ')':1, ';':1,
+  '+':2, '-':2, '*':2, '/':2, '=':2,
+}
+var wtspc = {' ':1, '\n':1}
+var bnf = {
+  '<prog>': [['<stat_list>']],
+  '<stat_list>': [['<stat>'], ['<stat>', '<stat_list>']],
+  '<stat>': [['<decl_stat>'], ['<assgn_stat>']],
+  '<decl_stat>': [['<1_decl_stat>'], ['<2_decl_stat>'], ['<3_decl_stat>']],
+  '<assgn_stat>': [
+    ['<1_idfr>', '=', '<1_exp>', ';'],
+    ['<2_idfr>', '=', '<2_exp>', ';'],
+    ['<3_idfr>', '=', '<3_exp>', ';']],
+
+  '<1_decl_stat>': [['<arg_idfr>', '1', '<1_idfr>', ';']],
+  '<2_decl_stat>': [['<arg_idfr>', '2', '<2_idfr>', ';']],
+  '<3_decl_stat>': [['<arg_idfr>', '3', '<3_idfr>', ';']],
+  '<arg_idfr>': [['a'], ['r'], ['t']],
+
+  '<1_exp>': [['<1_exp>', '+', '<1_exp>'], ['<1_exp>', '-', '<1_exp>'],
+    ['<1_exp>', '*', '<1_exp>'], [ '<1_exp>', '/', '<1_exp>'],
+    ['<2_exp>', '*', '<2_exp>'], ['<2_exp>', '**', '<2_exp>'],
+    ['<3_exp>', '*', '<3_exp>'],
+    ['(', '<1_exp>', ')'], ['<1_idfr>'], ['<1_const>']],
+
+  '<2_exp>': [['<2_exp>', '+', '<2_exp>'], ['<2_exp>', '-', '<2_exp>'],
+    ['<2_exp>', '*', '<1_exp>'], ['<1_exp>', '*', '<2_exp>'],
+    ['<2_exp>', '/', '<1_exp>'],
+    ['(', '<1_exp>', '<1_exp>', ')'], ['(', '<2_exp>', ')'],
+    ['<2_idfr>'], ['<2_const>']],
+
+  '<3_exp>': [['<3_exp>', '+', '<3_exp>'], ['<3_exp>', '-', '<3_exp>'],
+    ['<3_exp>', '*', '<1_exp>'], ['<1_exp>', '*', '<3_exp>'],
+    ['<3_exp>', '/', '<1_exp>'], ['<3_exp>', '**', '<3_exp>'],
+    ['(', '<1_exp>', '<1_exp>', '<1_exp>', ')'],
+    ['(', '<2_exp>', '<1_exp>', ')'],
+    ['(', '<3_exp>', ')'], ['<3_idfr>'], ['<3_const>']],
+
+  '<1_idfr>': [['<idfr>']],
+  '<2_idfr>': [['<idfr>']],
+  '<3_idfr>': [['<idfr>']],
+  '<idfr>': [['<char>'], ['<char>', '<char_digit_seq>']],
+
+  '<1_const>': [['<digit>'], ['<digit>', '<digit_seq>'],
+    ['<digit_seq>', '.', '<digit_seq>']],
+  '<2_const>': [['(', '<1_const>', '<1_const>', ')']],
+  '<3_const>':
+    [['(', '(', '<1_const>', '<1_const>', ')', ',', '<1_const>', ')'],
+    ['(', '<1_const>', '<1_const>', '<1_const>', ')']],
+
+  '<char_digit_seq>': [['<char>', '<char_digit_seq>'],
+    ['<digit>', '<char_digit_seq>']],
+  '<digit_seq>': [['<digit>', '<digit_seq>']],
+
+  '<char>': [['a'],['b'],['c'],['d'],['e'],['f'],['g'],['h'],['i'],['j'],['k'],
+    ['l'],['m'],['n'],['o'],['p'],['q'],['r'],['s'],['t'],['u'],['v'],['w'],
+    ['x'],['y'],['z'],
+    ['A'],['B'],['C'],['D'],['E'],['F'],['G'],['H'],['I'],['J'],['K'],['L'],
+    ['M'],['N'],['O'],['P'],['Q'],['R'],['S'],['T'],['U'],['V'],['W'],['X'],
+    ['Y'],['Z'],['_']],
+  '<digit>': [['0'],['1'],['2'],['3'],['4'],['5'],['6'],['7'],['8'],['9']]
+}
+
 pt.solve = function(input) {
+  input = "r 1 r; a 1 x; a 1 y; 1 c = x+y; 1 r=x/y"
 
+  var stmts = []
 
+  // split input
+  {
+    var word = ''
+    var stmt = []
+    var mdelm = false
 
+    for (var i in input) {
+      var c = input[i]
+
+    }
+    if (word) stmt.push(word)
+    if (stmt.length) stmts.push(stmt)
+  }
+
+  log(stmts)
 }
 
 pt.vectTest = function() {
-  console.log('hello')
+  log('hello')
 }

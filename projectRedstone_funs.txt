@@ -1,0 +1,454 @@
+init nat
+    scp is def
+    name is string
+    buss is map of int
+      at arg names
+    get_output is function
+      vsn
+    draw is function
+      g is canvas ctx
+      cels is map of cel
+        at arg name
+
+  if
+    name is not equal to scp name
+    and scp defs at name is null
+  then
+    init nat scp as scp
+    init nat name as name
+    init nat get_output as get_output
+    init nat draw as draw
+
+    init nat args as map of arg
+    init nat ptrs as map of ptr
+    init nat uses as map of ptr
+    init nat vsns as map of vsn
+
+    for each bus at arg_name in buss
+      init arg
+        nat
+        arg_name
+        bus
+
+    init arg
+      nat
+      name
+      1
+
+    init vsn
+      nat
+      init ptr
+        nat
+        nat name
+        1
+
+    add nat to scp defs at name
+
+init def
+    scp is null or def
+    name is string
+    bus is int
+
+  if
+    scp is null
+    or scp name is not name
+      and scp defs at name is null
+  then
+    init def scp as scp
+    init def name as name
+
+    init def args as map of arg
+    init def ptrs as map of ptr
+    init def uses as map of ptr
+    init def lnks as map of lnk
+    init def vsns as map of vsn
+
+    init def dcls as map of cel
+    init def cels as map of cel
+    init def defs as map of def
+
+    init arg
+      def
+      name
+      bus
+
+    init vsn
+      def
+      init ptr
+        nat
+        nat name
+        1
+
+    if
+      scp is not null
+    then
+      add def to scp defs at name
+
+remove def
+
+  if
+    def scp is not null
+  then
+    for each ptr at ptr id in def uses
+      remove ptr
+
+    for each ptr at ptr id in def ptrs
+      remove ptr
+
+    for each def at def id in def defs
+      remove def
+
+    delete def scp defs at def name
+    init def scp as null
+
+    for each cel at arg_name in def dcls
+      remove cel
+
+init arg
+    scp is nat or def
+    name is string
+    bus is int
+
+  if
+    scp args at name is null
+  then
+    init arg scp as scp
+    init arg name as name
+    init arg bus as bus
+
+    for each vsn at vsn id in scp vsns
+      init avn
+        vsn
+        arg
+
+    add arg to scp args at name
+    return arg
+  else
+    return scp args at name
+
+remove arg
+
+  for each vsn at vsn id in arg scp vsns
+    delete vsn avns at arg name
+
+  for each ptr at ptr id in arg scp uses
+    remove lnks
+      ptr
+      arg
+    if
+      ptr dcls at arg name is not null
+    then
+      remove ptr dcls at arg name
+
+  delete arg scp args at arg name
+
+init ptr
+    scp is def
+    src_name string
+    bus is int
+
+  init ptr scp as scp
+  init ptr src as null
+  init ptr bus as bus
+
+  while
+    scp is not null
+    and scp name is not src_name
+  do
+    if
+      scp defs at name is not null
+    then
+      init ptr src as scp defs at name
+      break
+
+    init scp as scp scp
+
+  if
+    ptr src is not null
+  then
+
+    if
+      ptr src equals ptr scp
+    then
+      init ptr id as null
+    else
+      init ptr id as rid
+
+    for each vsn at vsn id in ptr scp vsns
+      init vsn
+        vsn
+        ptr
+
+    init ptr dcls as map of cel
+    add ptr to ptr scp ptrs at ptr id
+    add ptr to ptr src uses at ptr id
+
+remove ptr
+
+  if
+    ptr scp is not null
+  then
+    for each vsn at vsn id in ptr scp vsns
+      remove vsn vsns at ptr id
+
+    for each arg at arg id in ptr src args
+      remove lnks
+        ptr
+        arg
+
+    init ptr scp as null
+    for each cel at arg_name in ptr dcls
+      remove cel
+
+    delete ptr scp ptrs at ptr id
+    delete ptr src uses at ptr id
+
+init vsn
+    scp is vsn or nat or def
+    src is ptr
+
+  init vsn scp as scp
+  init vsn src as src
+
+  if
+    scp is nat or def
+  then
+    init vsn id as null
+    init vsn bus as 1
+  else
+    init vsn id as rid
+    init vsn bus as scp bus times src bus
+
+  init vsn avns as map of avn
+  init vsn vsns as map of vsn
+
+  for each arg at arg name in src src args
+    init avn
+      vsn
+      arg
+
+  for each ptr at ptr id in src src ptrs
+    if
+      ptr id is null
+    then
+      add vsn to vsn vsns at null
+    else
+      init vsn
+        vsn
+        ptr
+
+  add vsn to vsn src src vsns at vsn id
+  add vsn to vsn scp vsns at vsn src id
+
+remove vsn
+  delete vsn src src vsns at vsn id
+  delete vsn scp vsns at vsn src id
+
+  for each pvsn at pvsn id in vsn vsns
+    if psvn id is not null
+      remove pvsn
+
+init avn
+    scp is vsn
+    arg is arg
+
+  init avn scp as scp
+  init avn arg as arg
+  init bus as scp bus times arg bus
+
+  init avn pins as bool array of size bus
+  init avn nins as bool array of size bus
+  init avn outs as bool array of size bus
+
+  add avn to scp avns at arg name
+
+init lnk
+    iptr is ptr from scp ptrs
+    optr is ptr from scp ptrs
+    iarg is arg from iptr src args
+    oarg is arg from iptr src args
+
+  if
+    iptr equals optr
+      and iarg equals oarg
+    or iptr scp equals optr scp
+  then
+    return
+
+  init ibus as iptr bus times iarg bus
+  init obus as optr bus times oarg bus
+
+  if
+    ibus is not equal to obus
+  then
+    return
+
+  init scp as iptr scp
+
+  for each slk at slk id in scp lnks
+    if
+      iptr equals slk iptr
+        and optr equals slk optr
+        and iarg equals slk iarg
+        and oarg equals slk oarg
+      or iptr equals slk optr
+        and optr equals slk iptr
+        and iarg equals slk oarg
+        and oarg equals slk iarg
+    then
+      return
+
+  init lnk scp as scp
+  init lnk bus as ibus
+  init lnk iptr as iptr
+  init lnk optr as optr
+  init lnk iarg as iarg
+  init lnk oarg as oarg
+
+  init lnk id as rid
+  add lnk to scp lnks at lnk id
+
+remove lnks
+    ptr
+    arg
+
+  if
+    ptr scp is def
+  then
+    for each lnk at lnk id in ptr scp lnks
+      if
+        lnk iptr equals ptr
+          and lnk iarg equals arg
+        or lnk optr equals ptr
+          and lnk oarg equals arg
+      then
+        delete ptr scp lnks at lnk id
+
+init cel
+    scp is def
+    scl is cel or null
+    point is point
+
+  if
+    scp cels at point_to_string point is not null
+  then
+    init cel as scp cels at point_to_string point
+
+    if
+      scl is null
+      or scl scp is def
+    then
+      return cel
+    else
+      init lnk
+        scl src
+        scl arg
+        cel src
+        cel arg
+      return cel
+
+  else
+    init cel name as prompt 'fun name'
+
+    if
+      cel name is null
+    then
+      alert 'null name'
+      return
+
+    init bus as parseInt prompt 'bus_size'
+    init cel scp as scp
+    init cel point as point
+    init cel proj as point_to_mws scp, point
+    init cel id as point_to_string point
+
+    if
+      scl is null
+    then
+      if
+        cel name equals scp name
+      then
+        if
+          dcls at cel name from scp ptrs at null is null
+        then
+          init cel src as scp ptrs at null
+          init cel arg as scp args at cel name
+          add cel to cel src dcls at cel arg name
+          add cel to scp cels at cel id
+          return cel
+      else
+        init ptr
+          scp
+          cel name
+          bus
+
+        if
+          ptr is not null
+        then
+          init cel src as ptr
+          init cel arg as ptr src args at cel name
+          add cel to cel src dcls at cel arg name
+          add cel to scp cels at cel id
+          return cel
+        else
+          init def
+            scp
+            cel name
+            bus
+          if
+            def is not null
+          then
+            init cel src as def
+            init cel arg as def args at cel name
+            add cel to cel src dcls at cel arg name
+            add cel to scp cels at cel id
+            return cel
+    else if
+      scl src is def
+    then
+      init arg
+        scl src
+        cel name
+        bus
+
+      init cel src as scl src
+      init cel arg as arg
+      add cel to cel src dcls at cel arg name
+      add cel to scp cels at cel id
+      return cel
+
+    else if
+      scl src is ptr
+    then
+      init arg
+        scl src src
+        cel name
+        bus
+
+      init cel src as scl src
+      init cel arg as arg
+      add cel to cel src dcls at cel arg name
+      add cel to scp cels at cel id
+      return cel
+
+remove cel
+  if
+    cel src is ptr
+  then
+    remove lnks
+      cel src
+      cel arg
+
+  delete cel src dcls at cel arg name
+  delete cel scp cels at cel id
+
+  if
+    cel src is ptr
+    and cel arg name equals cel src src name
+  then
+    remove cel src
+  else if
+    cel src is def
+    and cel arg name equals cel src name
+  then
+    remove cel src

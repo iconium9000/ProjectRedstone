@@ -1,0 +1,46 @@
+<prog> ::= <stat_list>
+<stat_list> ::= <stat> | <stat><stat_list>
+<stat> ::= <decl_stat> | <assgn_stat>
+<decl_stat> ::= <1_decl_stat> | <2_decl_stat> | <3_decl_stat>
+<assgn_stat> ::= <1_idfr> = <1_exp> ; | <2_idfr> = <2_exp> ;
+  | <3_idfr> = <3_exp> ;
+
+<1_decl_stat> ::= <arg_idfr> 1 <1_idfr> ;
+<2_decl_stat> ::= <arg_idfr> 2 <2_idfr> ;
+<3_decl_stat> ::= <arg_idfr> 3 <3_idfr> ;
+<arg_idfr> ::= 'a' | 'r'
+
+<1_exp> ::= <1_exp> + <1_exp> | <1_exp> - <1_exp>
+  | <1_exp> * <1_exp> | <1_exp> / <1_exp>
+  | <2_exp> * <2_exp> | <2_exp> ** <2_exp>
+  | <3_exp> * <3_exp>
+  | ( <1_exp> ) | <1_idfr> | <1_const>
+
+<2_exp> ::= <2_exp> + <2_exp> | <2_exp> - <2_exp>
+  | <2_exp> * <1_exp> | <1_exp> * <2_exp>
+  | <2_exp> / <1_exp>
+  | ( <1_exp>, <1_exp> ) | ( <2_exp> )
+  | <2_idfr> | <2_const>
+
+<3_exp> ::= <3_exp> + <3_exp> | <3_exp> - <3_exp>
+  | <3_exp> * <1_exp> | <1_exp> * <3_exp>
+  | <3_exp> / <1_exp>
+  | <3_exp> ** <3_exp>
+  | ( <1_exp>, <1_exp>, <1_exp> ) | ( <2_exp>, <1_exp> )
+  | ( <3_exp> ) | <3_idfr> | <3_const>
+
+<1_idfr> ::= <idfr>
+<2_idfr> ::= <idfr>
+<3_idfr> ::= <idfr>
+<idfr> ::= <char> | <char><char_digit_seq>
+
+<1_const> ::= <digit> | <digit><digit_seq> | <digit_seq> . <digit_seq>
+<2_const> ::= ( <1_const>, <1_const> )
+<3_const> ::= ( ( <1_const>, <1_const> ), <1_const> )
+  | ( <1_const>, <1_const>, <1_const> )
+
+<char_digit_seq> :: = <char><char_digit_seq> | <digit><char_digit_seq>
+<digit_seq> :: = <digit><digit_seq>
+
+<char> ::= [A-Z] | [a-z] | _
+<digit> ::= [0-9]

@@ -26,7 +26,7 @@ usrIO obj: md by clnt, snt to ap
     hsDn: mp char -> bol (rst evy tk)
     hsUp: mp char -> bol (rst evy tk)
   evnts:
-    now: tim @ tk strt
+    nw: tim @ tk strt
     dt: tim @ (tk str - prv tk)
     lst: tim @ lst tk strt
     tk: num tks fm ap strt

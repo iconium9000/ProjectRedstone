@@ -1,0 +1,15 @@
+{
+ "name": "main",
+ "defs": {},
+ "args": {
+  "main": 1
+ },
+ "ptrs": {
+  "null": {
+   "name": "main",
+   "dcls": {}
+  }
+ },
+ "lnks": [],
+ "dcls": {}
+}

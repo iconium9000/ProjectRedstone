@@ -1,0 +1,91 @@
+nat is fun
+  scp is def
+  name is string
+
+  args is map of arg
+    at arg name is arg
+  ptrs is map of ptr
+    at null is init ptr nat, nat, 1
+  uses is map of ptr
+    at ptr id from all uses of ptr
+  vsns is map of vsn
+    at null is vsn ptrs at null
+    at vsn id is vsn
+
+  get_output is function
+    vsn
+  draw is function
+    g is canvas ctx
+    cels is map of cel
+      at arg name
+
+def is fun
+  scp is def
+  name is string
+
+  args is map of arg
+    at each arg name is arg
+  ptrs is map of ptr
+    at null is init ptr def, def, 1
+  uses is map of ptr
+    at each ptr id from all uses of ptr
+  lnks is map of lnk
+    at each lnk id is lnk
+  vsns is map of vsn
+    at null is vsn ptrs at null
+    at each vsn id is vsn
+
+  dcls is map of cel
+    at arg name from args
+  cels is map of cel
+
+arg
+  scp is nat or def
+  name is string
+  bus is int
+
+ptr
+  scp is def
+  src is nat or def
+  id is null or rid
+
+  cels is map of cel
+    at arg name from src args
+
+vsn
+  scp is vsn or nat or def
+  src is ptr
+  id is null or rid
+  bus is int from bus times ptr bus
+
+  avns is map of avn
+    at each arg name from scp src args
+  vsns is map of vsn
+    at ptr id from ptr src ptrs
+
+avn
+  scp is vsn
+  arg is arg from scp src args
+  bus is scp bus times arg bus
+  dfv is bool (default value)
+
+  pins is bool array of size bus
+  nins is bool array of size bus
+  outs is bool array of size bus
+
+lnk
+  id is rid
+  scp is def
+  bus is int
+  iptr is ptr from scp ptrs
+  optr is ptr from scp ptrs
+  iarg is arg from iptr src args
+  oarg is arg from iptr src args
+
+cel
+  scp is def
+  src is def or ptr
+  arg is arg
+  point is point in scp cels
+  proj is proj of point
+  id is point_to_string of point
