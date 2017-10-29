@@ -7,19 +7,51 @@ var lvl = {
   funs: {}
 }
 
+class Queue {
+  constructor() {
+    this.head = 0
+    this.tail = 0
+  }
+
+  isEmpty() {
+    return this.head == this.tail
+  }
+
+  push(obj) {
+    this[this.head++] = obj
+  }
+
+  peek() {
+    return this[this.tail]
+  }
+
+  pop() {
+    if (this.tail < this.head) {
+      var obj = this[this.tail]
+      delete this[this.tail++]
+      return obj
+    }
+  }
+}
+
 module.exports = apInitA => {
 
   var fu = apInitA.fu
   var pt = apInitA.pt
+  var fs = apInitA.fs
 
   plrIf = new Object
   var backgroundColor = 'black'
   var selected_mode = null
   var center_point = pt.zero()
 
+  main = cel_scope = null
+
+  saved_bus = null
+  saved_arg_name = null
+
   var selected_cel = null
   var prev_cel_id = null
-  main = cel_scope = init_def(null, 'main', 1)
 
   prev_cel_id = null
   prev_cel = null
@@ -27,103 +59,6 @@ module.exports = apInitA => {
 
   tick_speed = 1
 
-  init_nat(cel_scope, 0, {}, vsn => {
-    var avn = vsn.avns[0]
-    for (var i = 0; i < avn.bus; ++i) {
-      avn.outs[i] = !avn.nins[i]
-    }
-  })
-  init_nat(cel_scope, 'tog', {}, vsn => {
-    var avn = vsn.avns['tog']
-    for (var i = 0; i < avn.bus; ++i) {
-      if (avn.nins[i] && !avn.pins[i]) {
-        avn.outs[i] =  !avn.outs[i]
-      }
-    }
-  })
-  init_nat(cel_scope, '+', {'i':1, 'o':1}, vsn => {
-    var tra = vsn.avns['+']
-    var tin = vsn.avns['i']
-    var tot = vsn.avns['o']
-    for (var i = 0; i < vsn.bus; ++i) {
-      tot.outs[i] = tot.nins[i] || (tin.nins[i] && !tra.nins[i])
-      tin.outs[i] = tin.nins[i]
-      tra.outs[i] = tra.nins[i]
-    }
-  })
-  for (var bus = 1; bus < 0x400; bus <<= 1) {
-    var name = `i${bus}`
-    var buss = {}
-    buss[name] = bus
-    for (var b = 0; b < bus; ++b) {
-      buss[b] = 1
-    }
-    init_nat(cel_scope, name, buss, vsn => {
-      var nm = vsn.src.name
-      var bs = vsn.src.src.args[nm].bus
-      for (var b = 0; b < bs; ++b) {
-        for (var i = 0; i < vsn.bus; ++i) {
-          vsn.avns[nm].outs[b * vsn.bus + i] = vsn.avns[b].nins[i]
-          vsn.avns[b].outs[i] = vsn.avns[b].nins[i]
-        }
-      }
-    })
-    delete buss[name]
-    name = `o${bus}`
-    buss[name] = bus
-    init_nat(cel_scope, name, buss, vsn => {
-      var nm = vsn.src.name
-      var bs = vsn.src.src.args[nm].bus
-      for (var b = 0; b < bs; ++b) {
-        for (var i = 0; i < vsn.bus; ++i) {
-          vsn.avns[b].outs[i] = vsn.avns[nm].nins[b * vsn.bus + i]
-          vsn.avns[nm].outs[b * vsn.bus + i]
-            = vsn.avns[nm].nins[b * vsn.bus + i]
-        }
-      }
-    })
-
-    name = `dn${bus}`
-    var dn = {}
-    dn[name] = bus
-    dn.i = 1
-    init_nat(cel_scope, name, dn, bsn => {
-
-    })
-  }
-  init_nat(cel_scope, 1, {1:1}, vsn => {
-    var avn = vsn.avns[1]
-    for (var i = 0; i < vsn.bus; ++i) {
-      avn.outs[i] = avn.nins[i]
-    }
-  })
-  for (var gap = 2; gap < 0x400; gap <<= 1) {
-    var buss = {}
-    for (var g = 1; g <= gap; ++g) {
-      buss[g] = 1
-    }
-    init_nat(cel_scope, gap, buss, vsn => {
-
-      var top = vsn.src.name
-
-
-      for (var i = 0; i < vsn.bus; ++i) {
-
-        var top_nins = vsn.avns[top].nins[i]
-        vsn.avns[top].nins[i] = false
-
-        for (var g = top; g > 1; --g) {
-          vsn.avns[g].outs[i] = vsn.avns[g].nins[i] || vsn.avns[g - 1].outs[i]
-        }
-
-        vsn.avns[1].outs[i] = vsn.avns[1].nins[i] || top_nins
-
-
-      }
-
-
-    })
-  }
   var cell_size = 25
   var cell_width = 6
   var arrow_time = 20
@@ -273,8 +208,7 @@ module.exports = apInitA => {
       var arg = {
         scp: scp,
         name: name,
-        bus: bus > 0 ? bus : 1,
-        dfv: false
+        bus: bus > 0 ? bus : 1
       }
 
       for (var vsn_id in scp.vsns) {
@@ -309,7 +243,7 @@ module.exports = apInitA => {
     delete arg.scp.args[arg.name]
   }
 
-  function init_ptr(scp, src_name, bus) {
+  function init_ptr(scp, src_name, bus, id) {
     var ptr = {
   		type: 'ptr',
       scp: scp,
@@ -337,7 +271,7 @@ module.exports = apInitA => {
       if (ptr.src == ptr.scp) {
         ptr.id = null
       } else {
-        ptr.id = rid() + 'ptr' + src_name
+        ptr.id = id || rid() + 'ptr' + src_name
       }
 
       for (var vsn_id in ptr.scp.vsns) {
@@ -433,7 +367,8 @@ module.exports = apInitA => {
       bus: scp.bus * arg.bus,
       pins: [],
       nins: [],
-      outs: []
+      outs: [],
+      dfv: false
     }
 
     for (var i = 0; i < avn.bus; ++i) {
@@ -530,7 +465,7 @@ module.exports = apInitA => {
 
       for (var i = 0; i < avn.bus; ++i) {
         avn.pins[i] = avn.nins[i]
-        avn.nins[i] = avn.arg.dfv
+        avn.nins[i] = avn.dfv
       }
     }
 
@@ -570,7 +505,7 @@ module.exports = apInitA => {
       return cel
     } else {
       var cel = {
-        name: prompt('arg name')
+        name: saved_arg_name || prompt('arg name')
       }
 
       if (cel.name == "" || cel.name == null) {
@@ -578,7 +513,7 @@ module.exports = apInitA => {
         return
       }
 
-      var bus = () => parseInt(prompt('bus size')) || 1
+      var bus = () => saved_bus || parseInt(prompt('bus size')) || 1
       cel.scp = scp
       cel.point = point
       cel.proj = point_to_mws(scp, point)
@@ -680,6 +615,7 @@ module.exports = apInitA => {
   function save_def(def) {
     if (def.type == 'def') {
       var dmmy = {
+        name: def.name,
         defs: {},
         args: {},
         ptrs: {},
@@ -687,11 +623,12 @@ module.exports = apInitA => {
         dcls: {}
       }
 
-      fu.forEach(def.defs, fun => dmmy[fun.name] = save_def(def))
+      fu.forEach(def.defs, fun => dmmy.defs[fun.name] = save_def(fun))
       fu.forEach(def.args, arg => dmmy.args[arg.name] = arg.bus)
       fu.forEach(def.ptrs, ptr => {
         var pdmy = {
           name: ptr.name,
+          bus: ptr.bus,
           dcls: {}
         }
         fu.forEach(ptr.dcls, cel => pdmy.dcls[cel.arg.name] = cel.id)
@@ -705,10 +642,192 @@ module.exports = apInitA => {
           oarg: lnk.oarg.name
         })
       })
-      fu.forEach(ptr.dcls, cel => pdmy.dcls[cel.arg.name] = cel.id)
+      fu.forEach(def.dcls, cel => dmmy.dcls[cel.arg.name] = cel.id)
 
       return dmmy
     }
+  }
+
+  function read_def(dummy) {
+    var def_q = new Queue
+    def_q.push({
+      scp: null,
+      dmy: dummy
+    })
+
+    while (!def_q.isEmpty()) {
+      var scp = def_q.peek().scp
+      var dmy = def_q.pop().dmy
+      var def = init_def(scp, dmy.name, dmy.args[dmy.name])
+
+      if (!scp) {
+        main = cel_scope = def
+      }
+
+      fu.forEach(dmy.defs, dmy => def_q.push({
+        scp: def,
+        dmy: dmy
+      }))
+
+      for (var arg_name in dmy.args) {
+        init_arg(def, arg_name, dmy.args[arg_name])
+      }
+      for (var arg_name in dmy.dcls) {
+        var cel = {
+          scp: scp,
+          src: def,
+          arg: def.args[arg_name],
+          point: string_to_point(dmy.dcls[arg_name]),
+          id: dmy.dcls[arg_name]
+        }
+
+        scp.cels[cel.id] = cel
+        def.dcls[arg_name] = cel
+      }
+    }
+
+    init_nat(cel_scope, 0, {}, vsn => {
+      var avn = vsn.avns[0]
+      for (var i = 0; i < avn.bus; ++i) {
+        avn.outs[i] = !avn.nins[i]
+      }
+    })
+    init_nat(cel_scope, 'tog', {}, vsn => {
+      var avn = vsn.avns['tog']
+      for (var i = 0; i < avn.bus; ++i) {
+        if (avn.nins[i] && !avn.pins[i]) {
+          avn.outs[i] =  !avn.outs[i]
+        }
+      }
+    })
+    init_nat(cel_scope, '+', {'i':1, 'o':1}, vsn => {
+      var tra = vsn.avns['+']
+      var tin = vsn.avns['i']
+      var tot = vsn.avns['o']
+      for (var i = 0; i < vsn.bus; ++i) {
+        tot.outs[i] = tot.nins[i] || (tin.nins[i] && !tra.nins[i])
+        tin.outs[i] = tin.nins[i]
+        tra.outs[i] = tra.nins[i]
+      }
+    })
+    for (var bus = 1; bus < 0x400; bus <<= 1) {
+      var name = `i${bus}`
+      var buss = {}
+      buss[name] = bus
+      for (var b = 0; b < bus; ++b) {
+        buss[b] = 1
+      }
+      init_nat(cel_scope, name, buss, vsn => {
+        var nm = vsn.src.name
+        var bs = vsn.src.src.args[nm].bus
+        for (var b = 0; b < bs; ++b) {
+          for (var i = 0; i < vsn.bus; ++i) {
+            vsn.avns[nm].outs[b * vsn.bus + i]
+              = vsn.avns[b].nins[i] || vsn.avns[nm].nins[b * vsn.bus + i]
+            vsn.avns[b].outs[i] = vsn.avns[b].nins[i]
+          }
+        }
+      })
+      delete buss[name]
+      name = `o${bus}`
+      buss[name] = bus
+      init_nat(cel_scope, name, buss, vsn => {
+        var nm = vsn.src.name
+        var bs = vsn.src.src.args[nm].bus
+        for (var b = 0; b < bs; ++b) {
+          for (var i = 0; i < vsn.bus; ++i) {
+            vsn.avns[b].outs[i]
+              = vsn.avns[b].nins[i] || vsn.avns[nm].nins[b * vsn.bus + i]
+            vsn.avns[nm].outs[b * vsn.bus + i]
+              = vsn.avns[nm].nins[b * vsn.bus + i]
+          }
+        }
+      })
+
+      name = `dn${bus}`
+      var dn = {}
+      dn[name] = bus
+      dn.i = 1
+      init_nat(cel_scope, name, dn, bsn => {
+
+      })
+    }
+    init_nat(cel_scope, 1, {1:1}, vsn => {
+      var avn = vsn.avns[1]
+      for (var i = 0; i < vsn.bus; ++i) {
+        avn.outs[i] = avn.nins[i]
+      }
+    })
+    for (var gap = 2; gap < 0x400; gap <<= 1) {
+      var buss = {}
+      for (var g = 1; g <= gap; ++g) {
+        buss[g] = 1
+      }
+      init_nat(cel_scope, gap, buss, vsn => {
+
+        var top = vsn.src.name
+        for (var i = 0; i < vsn.bus; ++i) {
+
+          var top_nins = vsn.avns[top].nins[i]
+          vsn.avns[top].nins[i] = false
+
+          for (var g = top; g > 1; --g) {
+            vsn.avns[g].outs[i] = vsn.avns[g].nins[i] || vsn.avns[g - 1].outs[i]
+          }
+          vsn.avns[1].outs[i] = vsn.avns[1].nins[i] || top_nins
+        }
+      })
+    }
+
+    def_q.push({
+      def: main,
+      dmy: dummy
+    })
+
+    while (!def_q.isEmpty()) {
+      var def = def_q.peek().def
+      var dmy = def_q.pop().dmy
+
+      for (var def_name in dmy.defs) {
+        def_q.push({
+          def: def.defs[def_name],
+          dmy: dmy.defs[def_name]
+        })
+      }
+
+      for (var ptr_id in dmy.ptrs) {
+        var dmy_ptr = dmy.ptrs[ptr_id]
+        var ptr = init_ptr(def, dmy_ptr.name, dmy_ptr.bus, ptr_id)
+        if (ptr_id == 'null') {
+          ptr = def.ptrs['null']
+        }
+
+        for (var arg_name in dmy_ptr.dcls) {
+          var cel = {
+            scp: def,
+            src: ptr,
+            arg: ptr.src.args[arg_name],
+            point: string_to_point(dmy_ptr.dcls[arg_name]),
+            id: dmy_ptr.dcls[arg_name]
+          }
+
+          def.cels[cel.id] = cel
+          ptr.dcls[arg_name] = cel
+        }
+      }
+
+      for (var lnk_idx in dmy.lnks) {
+        var dmy_lnk = dmy.lnks[lnk_idx]
+
+        var iptr = def.ptrs[dmy_lnk.iptr]
+        var optr = def.ptrs[dmy_lnk.optr]
+        var iarg = iptr.src.args[dmy_lnk.iarg]
+        var oarg = optr.src.args[dmy_lnk.oarg]
+
+        init_lnk(iptr, optr, iarg, oarg)
+      }
+    }
+
   }
 
   //----------------------------------------------------------------------------
@@ -733,7 +852,7 @@ module.exports = apInitA => {
       plrIf.clnt = true
       document.body.style.backgroundColor = backgroundColor
 
-      sndMsg('rqst update',plrIf.usr.id,'srvr')
+      sndMsg('read', plrIf.usr.id, 'srvr')
     }
   }
 
@@ -744,13 +863,16 @@ module.exports = apInitA => {
     var dt = usrIO.evnts.dt
     elapsed_time = usrIO.evnts.nw
 
+    if (!cel_scope) {
+      return
+    }
+
     // cel_scope
     // selected_cel
 
     var mws_cel_pt = mws_to_point(cel_scope, mws)
     var mws_cel_id = point_to_string(mws_cel_pt)
     var mws_cel = cel_scope.cels[mws_cel_id]
-
     // draw mws
     {
       g.fillStyle = 'grey'
@@ -848,6 +970,22 @@ module.exports = apInitA => {
         prev_cel = null
       } else if (usrIO.kys.hsDn['s']) {
         sndMsg('save', plrIf.usr.id, 'srvr', save_def(main))
+      } else if (usrIO.kys.hsDn['a']) {
+        saved_arg_name = prompt('arg name')
+        if (saved_arg_name && saved_arg_name != "") {
+          alert(`saved arg name ${saved_arg_name}`)
+        } else {
+          alert('no arg name saved')
+          saved_arg_name = null
+        }
+      } else if (usrIO.kys.hsDn['b']) {
+        saved_bus = parseInt(prompt('Save Bus'))
+        if (saved_bus && saved_bus > 0) {
+          alert(`saved bus ${saved_bus}`)
+        } else {
+          alert('no bus saved')
+          saved_bus = null;
+        }
       } else if (usrIO.kys.hsDn['q']) {
         if (mws.isDn && mws_cel) {
           if (mws_cel.arg.name == mws_cel.src.name) {
@@ -883,7 +1021,11 @@ module.exports = apInitA => {
       } else if (usrIO.kys.hsDn[' '] && mws.isDn && mws_cel) {
 
         if (mws_cel.src.type == 'ptr') {
-          mws_cel.arg.dfv = !mws_cel.arg.dfv
+          var avn = cel_scope.vsns[null]
+            .vsns[mws_cel.src.id]
+            .avns[mws_cel.arg.name]
+
+          avn.dfv = !avn.dfv
           selected_cel = null
           cel_moved = true
           prev_cel = null
@@ -955,7 +1097,23 @@ module.exports = apInitA => {
     var msg = rcvMsg.msg
 
     switch (ky) {
-      
+      case 'save':
+        log(msg)
+        fs.writeFile('redstoneSave.txt',JSON.stringify(msg,null,2))
+        sndMsg('saved', 'srvr', sndr)
+        break
+      case 'saved':
+        alert('Game State Saved!')
+        break
+      case 'read':
+        sndMsg('restart',
+          'srvr',
+          'all -srvr',
+          JSON.parse(fs.readFileSync('redstoneSave.txt')))
+        break
+      case 'restart':
+        read_def(msg)
+        break
     }
   }
   var apIO = apInitA.caleInit.apIO = {

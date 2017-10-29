@@ -1,15 +1,5874 @@
 {
- "name": "main",
- "defs": {},
- "args": {
-  "main": 1
- },
- "ptrs": {
-  "null": {
-   "name": "main",
-   "dcls": {}
-  }
- },
- "lnks": [],
- "dcls": {}
+  "name": "main",
+  "defs": {
+    "and": {
+      "name": "and",
+      "defs": {},
+      "args": {
+        "and": 1,
+        "a": 1,
+        "b": 1
+      },
+      "ptrs": {
+        "null": {
+          "name": "and",
+          "bus": 1,
+          "dcls": {
+            "and": "14,6",
+            "a": "11,6",
+            "b": "17,6"
+          }
+        },
+        "1ptr1": {
+          "name": "1",
+          "bus": 1,
+          "dcls": {
+            "1": "11,8"
+          }
+        },
+        "4ptr0": {
+          "name": "0",
+          "bus": 1,
+          "dcls": {
+            "0": "17,10"
+          }
+        },
+        "7ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "14,10",
+            "i": "11,10",
+            "o": "14,8"
+          }
+        }
+      },
+      "lnks": [
+        {
+          "iptr": null,
+          "optr": "1ptr1",
+          "iarg": "a",
+          "oarg": "1"
+        },
+        {
+          "iptr": null,
+          "optr": "4ptr0",
+          "iarg": "b",
+          "oarg": 0
+        },
+        {
+          "iptr": "1ptr1",
+          "optr": "7ptr+",
+          "iarg": "1",
+          "oarg": "i"
+        },
+        {
+          "iptr": "4ptr0",
+          "optr": "7ptr+",
+          "iarg": 0,
+          "oarg": "+"
+        },
+        {
+          "iptr": "7ptr+",
+          "optr": null,
+          "iarg": "o",
+          "oarg": "and"
+        }
+      ],
+      "dcls": {
+        "and": "12,6"
+      }
+    },
+    "xor": {
+      "name": "xor",
+      "defs": {},
+      "args": {
+        "xor": 1,
+        "a": 1,
+        "b": 1
+      },
+      "ptrs": {
+        "null": {
+          "name": "xor",
+          "bus": 1,
+          "dcls": {
+            "xor": "12,6",
+            "a": "12,4",
+            "b": "12,8"
+          }
+        },
+        "9ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "15,4",
+            "i": "15,8",
+            "o": "14,6"
+          }
+        },
+        "11ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "9,8",
+            "i": "9,4",
+            "o": "10,6"
+          }
+        }
+      },
+      "lnks": [
+        {
+          "iptr": null,
+          "optr": "11ptr+",
+          "iarg": "a",
+          "oarg": "i"
+        },
+        {
+          "iptr": "11ptr+",
+          "optr": null,
+          "iarg": "o",
+          "oarg": "xor"
+        },
+        {
+          "iptr": null,
+          "optr": "11ptr+",
+          "iarg": "b",
+          "oarg": "+"
+        },
+        {
+          "iptr": null,
+          "optr": "9ptr+",
+          "iarg": "b",
+          "oarg": "i"
+        },
+        {
+          "iptr": null,
+          "optr": "9ptr+",
+          "iarg": "a",
+          "oarg": "+"
+        },
+        {
+          "iptr": "9ptr+",
+          "optr": null,
+          "iarg": "o",
+          "oarg": "xor"
+        }
+      ],
+      "dcls": {
+        "xor": "12,5"
+      }
+    },
+    "add": {
+      "name": "add",
+      "defs": {},
+      "args": {
+        "add": 1,
+        "a": 1,
+        "b": 1,
+        "i": 1,
+        "o": 1
+      },
+      "ptrs": {
+        "null": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "10,8",
+            "a": "7,8",
+            "b": "9,7",
+            "i": "11,8",
+            "o": "10,9"
+          }
+        },
+        "17ptrxor": {
+          "name": "xor",
+          "bus": 1,
+          "dcls": {
+            "xor": "8,5",
+            "a": "7,5",
+            "b": "9,5"
+          }
+        },
+        "21ptrxor": {
+          "name": "xor",
+          "bus": 1,
+          "dcls": {
+            "xor": "10,3",
+            "a": "8,3",
+            "b": "11,3"
+          }
+        },
+        "30ptrand": {
+          "name": "and",
+          "bus": 1,
+          "dcls": {
+            "and": "6,11",
+            "a": "5,10",
+            "b": "7,10"
+          }
+        },
+        "35ptr1": {
+          "name": "1",
+          "bus": 1,
+          "dcls": {
+            "1": "12,4"
+          }
+        },
+        "37ptr2": {
+          "name": "2",
+          "bus": 1,
+          "dcls": {
+            "2": "12,7"
+          }
+        },
+        "45ptrand": {
+          "name": "and",
+          "bus": 1,
+          "dcls": {
+            "and": "10,12",
+            "a": "9,10",
+            "b": "11,10"
+          }
+        },
+        "55ptr2": {
+          "name": "2",
+          "bus": 1,
+          "dcls": {
+            "2": "10,11"
+          }
+        }
+      },
+      "lnks": [
+        {
+          "iptr": "17ptrxor",
+          "optr": "21ptrxor",
+          "iarg": "xor",
+          "oarg": "a"
+        },
+        {
+          "iptr": null,
+          "optr": "17ptrxor",
+          "iarg": "a",
+          "oarg": "a"
+        },
+        {
+          "iptr": null,
+          "optr": "17ptrxor",
+          "iarg": "b",
+          "oarg": "b"
+        },
+        {
+          "iptr": "21ptrxor",
+          "optr": null,
+          "iarg": "xor",
+          "oarg": "add"
+        },
+        {
+          "iptr": null,
+          "optr": "37ptr2",
+          "iarg": "i",
+          "oarg": "2"
+        },
+        {
+          "iptr": "37ptr2",
+          "optr": "35ptr1",
+          "iarg": "2",
+          "oarg": "1"
+        },
+        {
+          "iptr": "35ptr1",
+          "optr": "21ptrxor",
+          "iarg": "1",
+          "oarg": "b"
+        },
+        {
+          "iptr": null,
+          "optr": "30ptrand",
+          "iarg": "a",
+          "oarg": "a"
+        },
+        {
+          "iptr": null,
+          "optr": "30ptrand",
+          "iarg": "b",
+          "oarg": "b"
+        },
+        {
+          "iptr": null,
+          "optr": "45ptrand",
+          "iarg": "a",
+          "oarg": "a"
+        },
+        {
+          "iptr": null,
+          "optr": "45ptrand",
+          "iarg": "b",
+          "oarg": "a"
+        },
+        {
+          "iptr": null,
+          "optr": "45ptrand",
+          "iarg": "i",
+          "oarg": "b"
+        },
+        {
+          "iptr": "30ptrand",
+          "optr": "55ptr2",
+          "iarg": "and",
+          "oarg": "2"
+        },
+        {
+          "iptr": "45ptrand",
+          "optr": "55ptr2",
+          "iarg": "and",
+          "oarg": "2"
+        },
+        {
+          "iptr": "55ptr2",
+          "optr": null,
+          "iarg": "2",
+          "oarg": "o"
+        }
+      ],
+      "dcls": {
+        "add": "17,5"
+      }
+    },
+    "bit": {
+      "name": "bit",
+      "defs": {},
+      "args": {
+        "bit": 1,
+        "w": 1,
+        "f": 1
+      },
+      "ptrs": {
+        "null": {
+          "name": "bit",
+          "bus": 1,
+          "dcls": {
+            "bit": "12,5",
+            "w": "12,3",
+            "f": "14,4"
+          }
+        },
+        "60ptrtog": {
+          "name": "tog",
+          "bus": 1,
+          "dcls": {
+            "tog": "14,6"
+          }
+        },
+        "63ptrxor": {
+          "name": "xor",
+          "bus": 1,
+          "dcls": {
+            "xor": "18,3",
+            "b": "18,6"
+          }
+        },
+        "75ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "16,4",
+            "o": "16,5",
+            "i": "17,4"
+          }
+        },
+        "83ptr0": {
+          "name": "0",
+          "bus": 1,
+          "dcls": {
+            "0": "15,4"
+          }
+        }
+      },
+      "lnks": [
+        {
+          "iptr": "60ptrtog",
+          "optr": null,
+          "iarg": "tog",
+          "oarg": "bit"
+        },
+        {
+          "iptr": "60ptrtog",
+          "optr": "63ptrxor",
+          "iarg": "tog",
+          "oarg": "b"
+        },
+        {
+          "iptr": null,
+          "optr": "63ptrxor",
+          "iarg": "w",
+          "oarg": "xor"
+        },
+        {
+          "iptr": "75ptr+",
+          "optr": "60ptrtog",
+          "iarg": "o",
+          "oarg": "tog"
+        },
+        {
+          "iptr": "63ptrxor",
+          "optr": "75ptr+",
+          "iarg": "xor",
+          "oarg": "i"
+        },
+        {
+          "iptr": "83ptr0",
+          "optr": "75ptr+",
+          "iarg": 0,
+          "oarg": "+"
+        },
+        {
+          "iptr": null,
+          "optr": "83ptr0",
+          "iarg": "f",
+          "oarg": 0
+        }
+      ],
+      "dcls": {
+        "bit": "15,5"
+      }
+    },
+    "8bit": {
+      "name": "8bit",
+      "defs": {},
+      "args": {
+        "8bit": 8,
+        "w": 8,
+        "f": 1
+      },
+      "ptrs": {
+        "null": {
+          "name": "8bit",
+          "bus": 1,
+          "dcls": {
+            "8bit": "13,9",
+            "w": "13,10",
+            "f": "13,6"
+          }
+        },
+        "89ptro8": {
+          "name": "o8",
+          "bus": 1,
+          "dcls": {
+            "0": "9,11",
+            "1": "10,11",
+            "2": "11,11",
+            "3": "12,11",
+            "4": "14,11",
+            "5": "15,11",
+            "6": "16,11",
+            "7": "17,11",
+            "o8": "13,11"
+          }
+        },
+        "95ptri8": {
+          "name": "i8",
+          "bus": 1,
+          "dcls": {
+            "0": "9,8",
+            "1": "10,8",
+            "2": "11,8",
+            "3": "12,8",
+            "4": "14,8",
+            "5": "15,8",
+            "6": "16,8",
+            "7": "17,8",
+            "i8": "13,8"
+          }
+        },
+        "106ptrbit": {
+          "name": "bit",
+          "bus": 1,
+          "dcls": {
+            "bit": "9,9",
+            "w": "9,10",
+            "f": "9,7"
+          }
+        },
+        "114ptrbit": {
+          "name": "bit",
+          "bus": 1,
+          "dcls": {
+            "bit": "10,9",
+            "w": "10,10",
+            "f": "10,7"
+          }
+        },
+        "122ptrbit": {
+          "name": "bit",
+          "bus": 1,
+          "dcls": {
+            "bit": "11,9",
+            "w": "11,10",
+            "f": "11,7"
+          }
+        },
+        "130ptrbit": {
+          "name": "bit",
+          "bus": 1,
+          "dcls": {
+            "bit": "12,9",
+            "w": "12,10",
+            "f": "12,7"
+          }
+        },
+        "138ptrbit": {
+          "name": "bit",
+          "bus": 1,
+          "dcls": {
+            "bit": "14,9",
+            "w": "14,10",
+            "f": "14,7"
+          }
+        },
+        "146ptrbit": {
+          "name": "bit",
+          "bus": 1,
+          "dcls": {
+            "bit": "15,9",
+            "w": "15,10",
+            "f": "15,7"
+          }
+        },
+        "154ptrbit": {
+          "name": "bit",
+          "bus": 1,
+          "dcls": {
+            "bit": "16,9",
+            "w": "16,10",
+            "f": "16,7"
+          }
+        },
+        "162ptrbit": {
+          "name": "bit",
+          "bus": 1,
+          "dcls": {
+            "bit": "17,9",
+            "w": "17,10",
+            "f": "17,7"
+          }
+        },
+        "188ptr1": {
+          "name": "1",
+          "bus": 1,
+          "dcls": {
+            "1": "13,7"
+          }
+        }
+      },
+      "lnks": [
+        {
+          "iptr": null,
+          "optr": "89ptro8",
+          "iarg": "w",
+          "oarg": "o8"
+        },
+        {
+          "iptr": "95ptri8",
+          "optr": null,
+          "iarg": "i8",
+          "oarg": "8bit"
+        },
+        {
+          "iptr": "89ptro8",
+          "optr": "162ptrbit",
+          "iarg": "7",
+          "oarg": "w"
+        },
+        {
+          "iptr": "89ptro8",
+          "optr": "154ptrbit",
+          "iarg": "6",
+          "oarg": "w"
+        },
+        {
+          "iptr": "89ptro8",
+          "optr": "146ptrbit",
+          "iarg": "5",
+          "oarg": "w"
+        },
+        {
+          "iptr": "89ptro8",
+          "optr": "138ptrbit",
+          "iarg": "4",
+          "oarg": "w"
+        },
+        {
+          "iptr": "89ptro8",
+          "optr": "130ptrbit",
+          "iarg": "3",
+          "oarg": "w"
+        },
+        {
+          "iptr": "89ptro8",
+          "optr": "122ptrbit",
+          "iarg": "2",
+          "oarg": "w"
+        },
+        {
+          "iptr": "89ptro8",
+          "optr": "114ptrbit",
+          "iarg": "1",
+          "oarg": "w"
+        },
+        {
+          "iptr": "89ptro8",
+          "optr": "106ptrbit",
+          "iarg": "0",
+          "oarg": "w"
+        },
+        {
+          "iptr": "106ptrbit",
+          "optr": "95ptri8",
+          "iarg": "bit",
+          "oarg": "0"
+        },
+        {
+          "iptr": "114ptrbit",
+          "optr": "95ptri8",
+          "iarg": "bit",
+          "oarg": "1"
+        },
+        {
+          "iptr": "122ptrbit",
+          "optr": "95ptri8",
+          "iarg": "bit",
+          "oarg": "2"
+        },
+        {
+          "iptr": "130ptrbit",
+          "optr": "95ptri8",
+          "iarg": "bit",
+          "oarg": "3"
+        },
+        {
+          "iptr": "138ptrbit",
+          "optr": "95ptri8",
+          "iarg": "bit",
+          "oarg": "4"
+        },
+        {
+          "iptr": "146ptrbit",
+          "optr": "95ptri8",
+          "iarg": "bit",
+          "oarg": "5"
+        },
+        {
+          "iptr": "154ptrbit",
+          "optr": "95ptri8",
+          "iarg": "bit",
+          "oarg": "6"
+        },
+        {
+          "iptr": "162ptrbit",
+          "optr": "95ptri8",
+          "iarg": "bit",
+          "oarg": "7"
+        },
+        {
+          "iptr": "188ptr1",
+          "optr": "130ptrbit",
+          "iarg": "1",
+          "oarg": "f"
+        },
+        {
+          "iptr": "188ptr1",
+          "optr": "122ptrbit",
+          "iarg": "1",
+          "oarg": "f"
+        },
+        {
+          "iptr": "188ptr1",
+          "optr": "114ptrbit",
+          "iarg": "1",
+          "oarg": "f"
+        },
+        {
+          "iptr": "188ptr1",
+          "optr": "106ptrbit",
+          "iarg": "1",
+          "oarg": "f"
+        },
+        {
+          "iptr": "188ptr1",
+          "optr": "138ptrbit",
+          "iarg": "1",
+          "oarg": "f"
+        },
+        {
+          "iptr": "188ptr1",
+          "optr": "146ptrbit",
+          "iarg": "1",
+          "oarg": "f"
+        },
+        {
+          "iptr": "188ptr1",
+          "optr": "154ptrbit",
+          "iarg": "1",
+          "oarg": "f"
+        },
+        {
+          "iptr": "188ptr1",
+          "optr": "162ptrbit",
+          "iarg": "1",
+          "oarg": "f"
+        },
+        {
+          "iptr": null,
+          "optr": "188ptr1",
+          "iarg": "f",
+          "oarg": "1"
+        }
+      ],
+      "dcls": {
+        "8bit": "15,6"
+      }
+    },
+    "idx4": {
+      "name": "idx4",
+      "defs": {},
+      "args": {
+        "0": 1,
+        "1": 1,
+        "idx4": 4
+      },
+      "ptrs": {
+        "null": {
+          "name": "idx4",
+          "bus": 1,
+          "dcls": {
+            "0": "6,4",
+            "1": "10,4",
+            "idx4": "8,3"
+          }
+        },
+        "148ptri4": {
+          "name": "i4",
+          "bus": 1,
+          "dcls": {
+            "0": "6,9",
+            "1": "7,9",
+            "2": "9,9",
+            "3": "10,9",
+            "i4": "8,10"
+          }
+        },
+        "150ptr1": {
+          "name": "1",
+          "bus": 1,
+          "dcls": {
+            "1": "6,5"
+          }
+        },
+        "152ptr0": {
+          "name": "0",
+          "bus": 1,
+          "dcls": {
+            "0": "7,5"
+          }
+        },
+        "154ptr1": {
+          "name": "1",
+          "bus": 1,
+          "dcls": {
+            "1": "9,5"
+          }
+        },
+        "156ptr0": {
+          "name": "0",
+          "bus": 1,
+          "dcls": {
+            "0": "10,5"
+          }
+        },
+        "456ptr0": {
+          "name": "0",
+          "bus": 4,
+          "dcls": {
+            "0": "8,9"
+          }
+        }
+      },
+      "lnks": [
+        {
+          "iptr": null,
+          "optr": "150ptr1",
+          "iarg": "0",
+          "oarg": "1"
+        },
+        {
+          "iptr": null,
+          "optr": "152ptr0",
+          "iarg": "0",
+          "oarg": 0
+        },
+        {
+          "iptr": null,
+          "optr": "154ptr1",
+          "iarg": "1",
+          "oarg": "1"
+        },
+        {
+          "iptr": null,
+          "optr": "156ptr0",
+          "iarg": "1",
+          "oarg": 0
+        },
+        {
+          "iptr": "148ptri4",
+          "optr": "456ptr0",
+          "iarg": "i4",
+          "oarg": 0
+        },
+        {
+          "iptr": "456ptr0",
+          "optr": null,
+          "iarg": 0,
+          "oarg": "idx4"
+        },
+        {
+          "iptr": "150ptr1",
+          "optr": "148ptri4",
+          "iarg": "1",
+          "oarg": "0"
+        },
+        {
+          "iptr": "150ptr1",
+          "optr": "148ptri4",
+          "iarg": "1",
+          "oarg": "2"
+        },
+        {
+          "iptr": "152ptr0",
+          "optr": "148ptri4",
+          "iarg": 0,
+          "oarg": "1"
+        },
+        {
+          "iptr": "152ptr0",
+          "optr": "148ptri4",
+          "iarg": 0,
+          "oarg": "3"
+        },
+        {
+          "iptr": "154ptr1",
+          "optr": "148ptri4",
+          "iarg": "1",
+          "oarg": "0"
+        },
+        {
+          "iptr": "154ptr1",
+          "optr": "148ptri4",
+          "iarg": "1",
+          "oarg": "1"
+        },
+        {
+          "iptr": "156ptr0",
+          "optr": "148ptri4",
+          "iarg": 0,
+          "oarg": "2"
+        },
+        {
+          "iptr": "156ptr0",
+          "optr": "148ptri4",
+          "iarg": 0,
+          "oarg": "3"
+        }
+      ],
+      "dcls": {
+        "idx4": "9,5"
+      }
+    },
+    "idx8": {
+      "name": "idx8",
+      "defs": {},
+      "args": {
+        "0": 1,
+        "1": 1,
+        "2": 1,
+        "3": 1,
+        "4": 1,
+        "5": 1,
+        "6": 1,
+        "7": 1,
+        "idx8": 8
+      },
+      "ptrs": {
+        "null": {
+          "name": "idx8",
+          "bus": 1,
+          "dcls": {
+            "0": "2,5",
+            "1": "5,5",
+            "2": "8,5",
+            "idx8": "5,4"
+          }
+        },
+        "193ptr0": {
+          "name": "0",
+          "bus": 1,
+          "dcls": {
+            "0": "9,6"
+          }
+        },
+        "209ptr1": {
+          "name": "1",
+          "bus": 1,
+          "dcls": {
+            "1": "7,6"
+          }
+        },
+        "211ptr0": {
+          "name": "0",
+          "bus": 1,
+          "dcls": {
+            "0": "6,6"
+          }
+        },
+        "213ptr1": {
+          "name": "1",
+          "bus": 1,
+          "dcls": {
+            "1": "4,6"
+          }
+        },
+        "215ptr0": {
+          "name": "0",
+          "bus": 1,
+          "dcls": {
+            "0": "3,6"
+          }
+        },
+        "217ptr1": {
+          "name": "1",
+          "bus": 1,
+          "dcls": {
+            "1": "1,6"
+          }
+        },
+        "276ptri8": {
+          "name": "i8",
+          "bus": 1,
+          "dcls": {
+            "0": "1,10",
+            "1": "2,10",
+            "2": "3,10",
+            "3": "4,10",
+            "4": "6,10",
+            "5": "7,10",
+            "6": "8,10",
+            "7": "9,10",
+            "i8": "5,11"
+          }
+        }
+      },
+      "lnks": [
+        {
+          "iptr": null,
+          "optr": "217ptr1",
+          "iarg": "0",
+          "oarg": "1"
+        },
+        {
+          "iptr": null,
+          "optr": "215ptr0",
+          "iarg": "0",
+          "oarg": 0
+        },
+        {
+          "iptr": null,
+          "optr": "213ptr1",
+          "iarg": "1",
+          "oarg": "1"
+        },
+        {
+          "iptr": null,
+          "optr": "211ptr0",
+          "iarg": "1",
+          "oarg": 0
+        },
+        {
+          "iptr": null,
+          "optr": "209ptr1",
+          "iarg": "2",
+          "oarg": "1"
+        },
+        {
+          "iptr": null,
+          "optr": "193ptr0",
+          "iarg": "2",
+          "oarg": 0
+        },
+        {
+          "iptr": "217ptr1",
+          "optr": "276ptri8",
+          "iarg": "1",
+          "oarg": "0"
+        },
+        {
+          "iptr": "217ptr1",
+          "optr": "276ptri8",
+          "iarg": "1",
+          "oarg": "2"
+        },
+        {
+          "iptr": "217ptr1",
+          "optr": "276ptri8",
+          "iarg": "1",
+          "oarg": "4"
+        },
+        {
+          "iptr": "217ptr1",
+          "optr": "276ptri8",
+          "iarg": "1",
+          "oarg": "6"
+        },
+        {
+          "iptr": "215ptr0",
+          "optr": "276ptri8",
+          "iarg": 0,
+          "oarg": "1"
+        },
+        {
+          "iptr": "215ptr0",
+          "optr": "276ptri8",
+          "iarg": 0,
+          "oarg": "3"
+        },
+        {
+          "iptr": "215ptr0",
+          "optr": "276ptri8",
+          "iarg": 0,
+          "oarg": "5"
+        },
+        {
+          "iptr": "215ptr0",
+          "optr": "276ptri8",
+          "iarg": 0,
+          "oarg": "7"
+        },
+        {
+          "iptr": "213ptr1",
+          "optr": "276ptri8",
+          "iarg": "1",
+          "oarg": "0"
+        },
+        {
+          "iptr": "213ptr1",
+          "optr": "276ptri8",
+          "iarg": "1",
+          "oarg": "1"
+        },
+        {
+          "iptr": "213ptr1",
+          "optr": "276ptri8",
+          "iarg": "1",
+          "oarg": "4"
+        },
+        {
+          "iptr": "213ptr1",
+          "optr": "276ptri8",
+          "iarg": "1",
+          "oarg": "5"
+        },
+        {
+          "iptr": "211ptr0",
+          "optr": "276ptri8",
+          "iarg": 0,
+          "oarg": "2"
+        },
+        {
+          "iptr": "211ptr0",
+          "optr": "276ptri8",
+          "iarg": 0,
+          "oarg": "3"
+        },
+        {
+          "iptr": "211ptr0",
+          "optr": "276ptri8",
+          "iarg": 0,
+          "oarg": "6"
+        },
+        {
+          "iptr": "211ptr0",
+          "optr": "276ptri8",
+          "iarg": 0,
+          "oarg": "7"
+        },
+        {
+          "iptr": "209ptr1",
+          "optr": "276ptri8",
+          "iarg": "1",
+          "oarg": "0"
+        },
+        {
+          "iptr": "209ptr1",
+          "optr": "276ptri8",
+          "iarg": "1",
+          "oarg": "1"
+        },
+        {
+          "iptr": "209ptr1",
+          "optr": "276ptri8",
+          "iarg": "1",
+          "oarg": "2"
+        },
+        {
+          "iptr": "209ptr1",
+          "optr": "276ptri8",
+          "iarg": "1",
+          "oarg": "3"
+        },
+        {
+          "iptr": "193ptr0",
+          "optr": "276ptri8",
+          "iarg": 0,
+          "oarg": "4"
+        },
+        {
+          "iptr": "193ptr0",
+          "optr": "276ptri8",
+          "iarg": 0,
+          "oarg": "5"
+        },
+        {
+          "iptr": "193ptr0",
+          "optr": "276ptri8",
+          "iarg": 0,
+          "oarg": "6"
+        },
+        {
+          "iptr": "193ptr0",
+          "optr": "276ptri8",
+          "iarg": 0,
+          "oarg": "7"
+        },
+        {
+          "iptr": "276ptri8",
+          "optr": null,
+          "iarg": "i8",
+          "oarg": "idx8"
+        }
+      ],
+      "dcls": {
+        "idx8": "9,6"
+      }
+    },
+    "idx16": {
+      "name": "idx16",
+      "defs": {},
+      "args": {
+        "0": 1,
+        "1": 1,
+        "2": 1,
+        "3": 1,
+        "idx16": 16
+      },
+      "ptrs": {
+        "null": {
+          "name": "idx16",
+          "bus": 1,
+          "dcls": {
+            "0": "5,4",
+            "1": "9,4",
+            "2": "13,4",
+            "3": "17,4",
+            "idx16": "11,3"
+          }
+        },
+        "289ptr1": {
+          "name": "1",
+          "bus": 1,
+          "dcls": {
+            "1": "12,5"
+          }
+        },
+        "291ptr0": {
+          "name": "0",
+          "bus": 1,
+          "dcls": {
+            "0": "14,5"
+          }
+        },
+        "293ptr1": {
+          "name": "1",
+          "bus": 1,
+          "dcls": {
+            "1": "16,5"
+          }
+        },
+        "295ptr0": {
+          "name": "0",
+          "bus": 1,
+          "dcls": {
+            "0": "18,5"
+          }
+        },
+        "301ptr0": {
+          "name": "0",
+          "bus": 1,
+          "dcls": {
+            "0": "10,5"
+          }
+        },
+        "303ptr1": {
+          "name": "1",
+          "bus": 1,
+          "dcls": {
+            "1": "8,5"
+          }
+        },
+        "305ptr0": {
+          "name": "0",
+          "bus": 1,
+          "dcls": {
+            "0": "6,5"
+          }
+        },
+        "307ptr1": {
+          "name": "1",
+          "bus": 1,
+          "dcls": {
+            "1": "4,5"
+          }
+        },
+        "341ptri16": {
+          "name": "i16",
+          "bus": 1,
+          "dcls": {
+            "0": "2,12",
+            "1": "3,12",
+            "2": "4,12",
+            "3": "5,12",
+            "4": "7,12",
+            "5": "8,12",
+            "6": "9,12",
+            "7": "10,12",
+            "8": "12,12",
+            "9": "13,12",
+            "10": "14,12",
+            "11": "15,12",
+            "12": "17,12",
+            "13": "18,12",
+            "14": "19,12",
+            "15": "20,12",
+            "i16": "11,13"
+          }
+        }
+      },
+      "lnks": [
+        {
+          "iptr": null,
+          "optr": "289ptr1",
+          "iarg": "2",
+          "oarg": "1"
+        },
+        {
+          "iptr": null,
+          "optr": "291ptr0",
+          "iarg": "2",
+          "oarg": 0
+        },
+        {
+          "iptr": null,
+          "optr": "293ptr1",
+          "iarg": "3",
+          "oarg": "1"
+        },
+        {
+          "iptr": null,
+          "optr": "295ptr0",
+          "iarg": "3",
+          "oarg": 0
+        },
+        {
+          "iptr": null,
+          "optr": "307ptr1",
+          "iarg": "0",
+          "oarg": "1"
+        },
+        {
+          "iptr": null,
+          "optr": "305ptr0",
+          "iarg": "0",
+          "oarg": 0
+        },
+        {
+          "iptr": "293ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "0"
+        },
+        {
+          "iptr": "293ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "1"
+        },
+        {
+          "iptr": "293ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "2"
+        },
+        {
+          "iptr": "293ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "3"
+        },
+        {
+          "iptr": "293ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "4"
+        },
+        {
+          "iptr": "293ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "5"
+        },
+        {
+          "iptr": "293ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "6"
+        },
+        {
+          "iptr": "293ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "7"
+        },
+        {
+          "iptr": "295ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "8"
+        },
+        {
+          "iptr": "295ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "9"
+        },
+        {
+          "iptr": "295ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "10"
+        },
+        {
+          "iptr": "295ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "11"
+        },
+        {
+          "iptr": "295ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "12"
+        },
+        {
+          "iptr": "295ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "13"
+        },
+        {
+          "iptr": "295ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "14"
+        },
+        {
+          "iptr": "295ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "15"
+        },
+        {
+          "iptr": "289ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "0"
+        },
+        {
+          "iptr": "289ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "1"
+        },
+        {
+          "iptr": "289ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "2"
+        },
+        {
+          "iptr": "289ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "3"
+        },
+        {
+          "iptr": "289ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "8"
+        },
+        {
+          "iptr": "289ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "9"
+        },
+        {
+          "iptr": "289ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "10"
+        },
+        {
+          "iptr": "289ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "11"
+        },
+        {
+          "iptr": "291ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "4"
+        },
+        {
+          "iptr": "291ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "5"
+        },
+        {
+          "iptr": "291ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "6"
+        },
+        {
+          "iptr": "291ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "7"
+        },
+        {
+          "iptr": "291ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "12"
+        },
+        {
+          "iptr": "291ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "13"
+        },
+        {
+          "iptr": "291ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "14"
+        },
+        {
+          "iptr": "291ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "15"
+        },
+        {
+          "iptr": null,
+          "optr": "303ptr1",
+          "iarg": "1",
+          "oarg": "1"
+        },
+        {
+          "iptr": "303ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "0"
+        },
+        {
+          "iptr": "303ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "1"
+        },
+        {
+          "iptr": "303ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "4"
+        },
+        {
+          "iptr": "303ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "5"
+        },
+        {
+          "iptr": "301ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "2"
+        },
+        {
+          "iptr": null,
+          "optr": "301ptr0",
+          "iarg": "1",
+          "oarg": 0
+        },
+        {
+          "iptr": "301ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "3"
+        },
+        {
+          "iptr": "301ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "6"
+        },
+        {
+          "iptr": "301ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "7"
+        },
+        {
+          "iptr": "303ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "8"
+        },
+        {
+          "iptr": "303ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "9"
+        },
+        {
+          "iptr": "301ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "10"
+        },
+        {
+          "iptr": "301ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "11"
+        },
+        {
+          "iptr": "303ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "12"
+        },
+        {
+          "iptr": "303ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "13"
+        },
+        {
+          "iptr": "301ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "14"
+        },
+        {
+          "iptr": "301ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "15"
+        },
+        {
+          "iptr": "307ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "0"
+        },
+        {
+          "iptr": "307ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "2"
+        },
+        {
+          "iptr": "307ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "4"
+        },
+        {
+          "iptr": "307ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "6"
+        },
+        {
+          "iptr": "307ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "8"
+        },
+        {
+          "iptr": "307ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "10"
+        },
+        {
+          "iptr": "307ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "12"
+        },
+        {
+          "iptr": "307ptr1",
+          "optr": "341ptri16",
+          "iarg": "1",
+          "oarg": "14"
+        },
+        {
+          "iptr": "305ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "1"
+        },
+        {
+          "iptr": "305ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "3"
+        },
+        {
+          "iptr": "305ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "5"
+        },
+        {
+          "iptr": "305ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "7"
+        },
+        {
+          "iptr": "305ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "9"
+        },
+        {
+          "iptr": "305ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "11"
+        },
+        {
+          "iptr": "305ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "13"
+        },
+        {
+          "iptr": "305ptr0",
+          "optr": "341ptri16",
+          "iarg": 0,
+          "oarg": "15"
+        },
+        {
+          "iptr": "341ptri16",
+          "optr": null,
+          "iarg": "i16",
+          "oarg": "idx16"
+        }
+      ],
+      "dcls": {
+        "idx16": "9,7"
+      }
+    },
+    "rshf8": {
+      "name": "rshf8",
+      "defs": {},
+      "args": {
+        "0": 1,
+        "1": 1,
+        "2": 1,
+        "rshf8": 8,
+        "i": 8
+      },
+      "ptrs": {
+        "null": {
+          "name": "rshf8",
+          "bus": 1,
+          "dcls": {
+            "0": "10,7",
+            "1": "9,7",
+            "2": "8,7",
+            "rshf8": "9,6",
+            "i": "9,5"
+          }
+        },
+        "468ptridx8": {
+          "name": "idx8",
+          "bus": 1,
+          "dcls": {
+            "0": "10,8",
+            "1": "9,8",
+            "2": "8,8",
+            "idx8": "9,9"
+          }
+        },
+        "481ptro8": {
+          "name": "o8",
+          "bus": 1,
+          "dcls": {
+            "0": "11,12",
+            "1": "11,13",
+            "2": "11,14",
+            "3": "11,15",
+            "4": "11,16",
+            "5": "11,17",
+            "6": "11,18",
+            "7": "11,19",
+            "o8": "9,12"
+          }
+        },
+        "484ptro8": {
+          "name": "o8",
+          "bus": 1,
+          "dcls": {
+            "0": "12,3",
+            "1": "13,3",
+            "2": "14,3",
+            "3": "15,3",
+            "4": "16,3",
+            "5": "17,3",
+            "6": "18,3",
+            "7": "19,3",
+            "o8": "9,3"
+          }
+        },
+        "492ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "19,12",
+            "i": "19,4",
+            "o": "19,20"
+          }
+        },
+        "495ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "18,12",
+            "i": "18,4",
+            "o": "18,20"
+          }
+        },
+        "497ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "17,12",
+            "i": "17,4",
+            "o": "17,20"
+          }
+        },
+        "499ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "16,12",
+            "i": "16,4",
+            "o": "16,20"
+          }
+        },
+        "501ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "15,12",
+            "i": "15,4",
+            "o": "15,20"
+          }
+        },
+        "512ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "14,12",
+            "i": "14,4",
+            "o": "14,20"
+          }
+        },
+        "514ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "13,12",
+            "i": "13,4",
+            "o": "13,20"
+          }
+        },
+        "516ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "12,12",
+            "i": "12,4",
+            "o": "12,20"
+          }
+        },
+        "521ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "19,13",
+            "i": "19,5",
+            "o": "18,21"
+          }
+        },
+        "524ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "18,13",
+            "i": "18,5",
+            "o": "17,21"
+          }
+        },
+        "526ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "17,13",
+            "i": "17,5",
+            "o": "16,21"
+          }
+        },
+        "528ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "16,13",
+            "i": "16,5",
+            "o": "15,21"
+          }
+        },
+        "530ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "15,13",
+            "i": "15,5",
+            "o": "14,21"
+          }
+        },
+        "532ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "14,13",
+            "i": "14,5",
+            "o": "13,21"
+          }
+        },
+        "534ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "13,13",
+            "i": "13,5",
+            "o": "12,21"
+          }
+        },
+        "542ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "14,14",
+            "i": "14,6",
+            "o": "12,22"
+          }
+        },
+        "544ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "15,14",
+            "i": "15,6",
+            "o": "13,22"
+          }
+        },
+        "546ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "16,14",
+            "i": "16,6",
+            "o": "14,22"
+          }
+        },
+        "548ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "17,14",
+            "i": "17,6",
+            "o": "15,22"
+          }
+        },
+        "550ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "18,14",
+            "i": "18,6",
+            "o": "16,22"
+          }
+        },
+        "552ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "19,14",
+            "i": "19,6",
+            "o": "17,22"
+          }
+        },
+        "554ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "19,15",
+            "i": "19,7",
+            "o": "16,23"
+          }
+        },
+        "556ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "18,15",
+            "i": "18,7",
+            "o": "15,23"
+          }
+        },
+        "558ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "17,15",
+            "i": "17,7",
+            "o": "14,23"
+          }
+        },
+        "560ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "16,15",
+            "i": "16,7",
+            "o": "13,23"
+          }
+        },
+        "562ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "15,15",
+            "i": "15,7",
+            "o": "12,23"
+          }
+        },
+        "578ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "16,16",
+            "i": "16,8",
+            "o": "12,24"
+          }
+        },
+        "580ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "17,16",
+            "i": "17,8",
+            "o": "13,24"
+          }
+        },
+        "582ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "18,16",
+            "i": "18,8",
+            "o": "14,24"
+          }
+        },
+        "584ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "19,16",
+            "i": "19,8",
+            "o": "15,24"
+          }
+        },
+        "596ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "17,17",
+            "i": "17,9",
+            "o": "12,25"
+          }
+        },
+        "598ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "18,17",
+            "i": "18,9",
+            "o": "13,25"
+          }
+        },
+        "600ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "19,17",
+            "i": "19,9",
+            "o": "14,25"
+          }
+        },
+        "610ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "18,18",
+            "i": "18,10",
+            "o": "12,26"
+          }
+        },
+        "612ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "19,18",
+            "i": "19,10",
+            "o": "13,26"
+          }
+        },
+        "614ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "19,19",
+            "i": "19,11",
+            "o": "12,27"
+          }
+        },
+        "432ptr4": {
+          "name": "4",
+          "bus": 8,
+          "dcls": {
+            "4": "9,4"
+          }
+        },
+        "491ptri8": {
+          "name": "i8",
+          "bus": 1,
+          "dcls": {
+            "0": "12,28",
+            "1": "13,28",
+            "2": "14,28",
+            "3": "15,28",
+            "4": "16,28",
+            "5": "17,28",
+            "6": "18,28",
+            "7": "19,28",
+            "i8": "9,28"
+          }
+        }
+      },
+      "lnks": [
+        {
+          "iptr": "481ptro8",
+          "optr": "492ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "501ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "499ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "497ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "495ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "501ptr+",
+          "iarg": "3",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "499ptr+",
+          "iarg": "4",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "497ptr+",
+          "iarg": "5",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "495ptr+",
+          "iarg": "6",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "492ptr+",
+          "iarg": "7",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "512ptr+",
+          "iarg": "2",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "514ptr+",
+          "iarg": "1",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "516ptr+",
+          "iarg": "0",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "521ptr+",
+          "iarg": "7",
+          "oarg": "i"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "516ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "514ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "512ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "534ptr+",
+          "iarg": "1",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "532ptr+",
+          "iarg": "1",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "530ptr+",
+          "iarg": "1",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "528ptr+",
+          "iarg": "1",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "526ptr+",
+          "iarg": "1",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "524ptr+",
+          "iarg": "1",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "521ptr+",
+          "iarg": "1",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "542ptr+",
+          "iarg": "2",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "544ptr+",
+          "iarg": "2",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "546ptr+",
+          "iarg": "2",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "548ptr+",
+          "iarg": "2",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "550ptr+",
+          "iarg": "2",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "552ptr+",
+          "iarg": "2",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "562ptr+",
+          "iarg": "3",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "560ptr+",
+          "iarg": "3",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "558ptr+",
+          "iarg": "3",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "556ptr+",
+          "iarg": "3",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "554ptr+",
+          "iarg": "3",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "578ptr+",
+          "iarg": "4",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "580ptr+",
+          "iarg": "4",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "582ptr+",
+          "iarg": "4",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "584ptr+",
+          "iarg": "4",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "596ptr+",
+          "iarg": "5",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "598ptr+",
+          "iarg": "5",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "600ptr+",
+          "iarg": "5",
+          "oarg": "+"
+        },
+        {
+          "iptr": null,
+          "optr": "468ptridx8",
+          "iarg": "1",
+          "oarg": "1"
+        },
+        {
+          "iptr": null,
+          "optr": "468ptridx8",
+          "iarg": "0",
+          "oarg": "0"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "610ptr+",
+          "iarg": "6",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "612ptr+",
+          "iarg": "6",
+          "oarg": "+"
+        },
+        {
+          "iptr": "481ptro8",
+          "optr": "614ptr+",
+          "iarg": "7",
+          "oarg": "+"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "534ptr+",
+          "iarg": "1",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "532ptr+",
+          "iarg": "2",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "530ptr+",
+          "iarg": "3",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "542ptr+",
+          "iarg": "2",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "562ptr+",
+          "iarg": "3",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "544ptr+",
+          "iarg": "3",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "528ptr+",
+          "iarg": "4",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "526ptr+",
+          "iarg": "5",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "524ptr+",
+          "iarg": "6",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "560ptr+",
+          "iarg": "4",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "548ptr+",
+          "iarg": "5",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "550ptr+",
+          "iarg": "6",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "552ptr+",
+          "iarg": "7",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "546ptr+",
+          "iarg": "4",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "558ptr+",
+          "iarg": "5",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "556ptr+",
+          "iarg": "6",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "554ptr+",
+          "iarg": "7",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "578ptr+",
+          "iarg": "4",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "580ptr+",
+          "iarg": "5",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "596ptr+",
+          "iarg": "5",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "582ptr+",
+          "iarg": "6",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "598ptr+",
+          "iarg": "6",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "610ptr+",
+          "iarg": "6",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "584ptr+",
+          "iarg": "7",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "600ptr+",
+          "iarg": "7",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "612ptr+",
+          "iarg": "7",
+          "oarg": "i"
+        },
+        {
+          "iptr": "484ptro8",
+          "optr": "614ptr+",
+          "iarg": "7",
+          "oarg": "i"
+        },
+        {
+          "iptr": "468ptridx8",
+          "optr": "481ptro8",
+          "iarg": "idx8",
+          "oarg": "o8"
+        },
+        {
+          "iptr": null,
+          "optr": "432ptr4",
+          "iarg": "i",
+          "oarg": "4"
+        },
+        {
+          "iptr": "432ptr4",
+          "optr": "484ptro8",
+          "iarg": "4",
+          "oarg": "o8"
+        },
+        {
+          "iptr": null,
+          "optr": "468ptridx8",
+          "iarg": "2",
+          "oarg": "2"
+        },
+        {
+          "iptr": "610ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "0"
+        },
+        {
+          "iptr": "614ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "0"
+        },
+        {
+          "iptr": "596ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "0"
+        },
+        {
+          "iptr": "578ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "0"
+        },
+        {
+          "iptr": "562ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "0"
+        },
+        {
+          "iptr": "542ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "0"
+        },
+        {
+          "iptr": "534ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "0"
+        },
+        {
+          "iptr": "516ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "0"
+        },
+        {
+          "iptr": "612ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "1"
+        },
+        {
+          "iptr": "598ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "1"
+        },
+        {
+          "iptr": "580ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "1"
+        },
+        {
+          "iptr": "560ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "1"
+        },
+        {
+          "iptr": "544ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "1"
+        },
+        {
+          "iptr": "532ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "1"
+        },
+        {
+          "iptr": "514ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "1"
+        },
+        {
+          "iptr": "600ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "2"
+        },
+        {
+          "iptr": "582ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "2"
+        },
+        {
+          "iptr": "558ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "2"
+        },
+        {
+          "iptr": "546ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "2"
+        },
+        {
+          "iptr": "530ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "2"
+        },
+        {
+          "iptr": "512ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "2"
+        },
+        {
+          "iptr": "584ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "3"
+        },
+        {
+          "iptr": "556ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "3"
+        },
+        {
+          "iptr": "548ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "3"
+        },
+        {
+          "iptr": "528ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "3"
+        },
+        {
+          "iptr": "501ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "3"
+        },
+        {
+          "iptr": "554ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "4"
+        },
+        {
+          "iptr": "550ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "4"
+        },
+        {
+          "iptr": "526ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "4"
+        },
+        {
+          "iptr": "499ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "4"
+        },
+        {
+          "iptr": "552ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "5"
+        },
+        {
+          "iptr": "524ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "5"
+        },
+        {
+          "iptr": "497ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "5"
+        },
+        {
+          "iptr": "521ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "6"
+        },
+        {
+          "iptr": "495ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "6"
+        },
+        {
+          "iptr": "492ptr+",
+          "optr": "491ptri8",
+          "iarg": "o",
+          "oarg": "7"
+        }
+      ],
+      "dcls": {
+        "rshf8": "6,5"
+      }
+    },
+    "lshf8": {
+      "name": "lshf8",
+      "defs": {},
+      "args": {
+        "0": 1,
+        "1": 1,
+        "2": 1,
+        "lshf8": 8,
+        "i": 8
+      },
+      "ptrs": {
+        "null": {
+          "name": "lshf8",
+          "bus": 1,
+          "dcls": {
+            "0": "7,8",
+            "1": "6,8",
+            "2": "5,8",
+            "lshf8": "8,8",
+            "i": "8,6"
+          }
+        },
+        "450ptro8": {
+          "name": "o8",
+          "bus": 1,
+          "dcls": {
+            "0": "16,4",
+            "1": "15,4",
+            "2": "14,4",
+            "3": "13,4",
+            "4": "12,4",
+            "5": "11,4",
+            "6": "10,4",
+            "7": "9,4",
+            "o8": "8,4"
+          }
+        },
+        "453ptridx8": {
+          "name": "idx8",
+          "bus": 1,
+          "dcls": {
+            "0": "7,10",
+            "1": "6,10",
+            "2": "5,10",
+            "idx8": "8,10"
+          }
+        },
+        "465ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "9,13",
+            "i": "9,5",
+            "o": "9,21"
+          }
+        },
+        "467ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "16,13",
+            "i": "16,5",
+            "o": "16,21"
+          }
+        },
+        "469ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "16,14",
+            "i": "16,6",
+            "o": "15,22"
+          }
+        },
+        "471ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "16,15",
+            "i": "16,7",
+            "o": "14,23"
+          }
+        },
+        "473ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "16,16",
+            "i": "16,8",
+            "o": "13,24"
+          }
+        },
+        "475ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "16,17",
+            "i": "16,9",
+            "o": "12,25"
+          }
+        },
+        "477ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "16,18",
+            "i": "16,10",
+            "o": "11,26"
+          }
+        },
+        "479ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "16,19",
+            "i": "16,11",
+            "o": "10,27"
+          }
+        },
+        "481ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "16,20",
+            "i": "16,12",
+            "o": "9,28"
+          }
+        },
+        "483ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "15,13",
+            "i": "15,5",
+            "o": "15,21"
+          }
+        },
+        "485ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "15,14",
+            "i": "15,6",
+            "o": "14,22"
+          }
+        },
+        "487ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "15,15",
+            "i": "15,7",
+            "o": "13,23"
+          }
+        },
+        "489ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "15,16",
+            "i": "15,8",
+            "o": "12,24"
+          }
+        },
+        "491ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "15,17",
+            "i": "15,9",
+            "o": "11,25"
+          }
+        },
+        "493ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "15,18",
+            "i": "15,10",
+            "o": "10,26"
+          }
+        },
+        "495ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "15,19",
+            "i": "15,11",
+            "o": "9,27"
+          }
+        },
+        "480ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "14,13",
+            "i": "14,5",
+            "o": "14,21"
+          }
+        },
+        "482ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "13,13",
+            "i": "13,5",
+            "o": "13,21"
+          }
+        },
+        "484ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "12,13",
+            "i": "12,5",
+            "o": "12,21"
+          }
+        },
+        "486ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "11,13",
+            "i": "11,5",
+            "o": "11,21"
+          }
+        },
+        "488ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "10,13",
+            "i": "10,5",
+            "o": "10,21"
+          }
+        },
+        "492ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "10,14",
+            "i": "10,6",
+            "o": "9,22"
+          }
+        },
+        "494ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "11,14",
+            "i": "11,6",
+            "o": "10,22"
+          }
+        },
+        "496ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "12,14",
+            "i": "12,6",
+            "o": "11,22"
+          }
+        },
+        "498ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "13,14",
+            "i": "13,6",
+            "o": "12,22"
+          }
+        },
+        "500ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "14,14",
+            "i": "14,6",
+            "o": "13,22"
+          }
+        },
+        "502ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "14,15",
+            "i": "14,7",
+            "o": "12,23"
+          }
+        },
+        "504ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "13,15",
+            "i": "13,7",
+            "o": "11,23"
+          }
+        },
+        "506ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "12,15",
+            "i": "12,7",
+            "o": "10,23"
+          }
+        },
+        "508ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "11,15",
+            "i": "11,7",
+            "o": "9,23"
+          }
+        },
+        "520ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "13,16",
+            "i": "13,8",
+            "o": "10,24"
+          }
+        },
+        "522ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "12,16",
+            "i": "12,8",
+            "o": "9,24"
+          }
+        },
+        "524ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "14,16",
+            "i": "14,8",
+            "o": "11,24"
+          }
+        },
+        "526ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "14,17",
+            "i": "14,9",
+            "o": "10,25"
+          }
+        },
+        "528ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "13,17",
+            "i": "13,9",
+            "o": "9,25"
+          }
+        },
+        "548ptr+": {
+          "name": "+",
+          "bus": 1,
+          "dcls": {
+            "+": "14,18",
+            "i": "14,10",
+            "o": "9,26"
+          }
+        },
+        "607ptr4": {
+          "name": "4",
+          "bus": 8,
+          "dcls": {
+            "4": "8,5"
+          }
+        },
+        "611ptro8": {
+          "name": "o8",
+          "bus": 1,
+          "dcls": {
+            "0": "8,13",
+            "1": "8,14",
+            "2": "8,15",
+            "3": "8,16",
+            "4": "8,17",
+            "5": "8,18",
+            "6": "8,19",
+            "7": "8,20",
+            "o8": "8,12"
+          }
+        },
+        "651ptri8": {
+          "name": "i8",
+          "bus": 1,
+          "dcls": {
+            "0": "16,29",
+            "1": "15,29",
+            "2": "14,29",
+            "3": "13,29",
+            "4": "12,29",
+            "5": "11,29",
+            "6": "10,29",
+            "7": "9,29",
+            "i8": "8,29"
+          }
+        }
+      },
+      "lnks": [
+        {
+          "iptr": null,
+          "optr": "453ptridx8",
+          "iarg": "2",
+          "oarg": "2"
+        },
+        {
+          "iptr": null,
+          "optr": "453ptridx8",
+          "iarg": "1",
+          "oarg": "1"
+        },
+        {
+          "iptr": null,
+          "optr": "453ptridx8",
+          "iarg": "0",
+          "oarg": "0"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "465ptr+",
+          "iarg": "7",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "488ptr+",
+          "iarg": "6",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "492ptr+",
+          "iarg": "6",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "486ptr+",
+          "iarg": "5",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "494ptr+",
+          "iarg": "5",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "508ptr+",
+          "iarg": "5",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "484ptr+",
+          "iarg": "4",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "496ptr+",
+          "iarg": "4",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "506ptr+",
+          "iarg": "4",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "522ptr+",
+          "iarg": "4",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "482ptr+",
+          "iarg": "3",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "498ptr+",
+          "iarg": "3",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "504ptr+",
+          "iarg": "3",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "528ptr+",
+          "iarg": "3",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "520ptr+",
+          "iarg": "3",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "480ptr+",
+          "iarg": "2",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "500ptr+",
+          "iarg": "2",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "502ptr+",
+          "iarg": "2",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "524ptr+",
+          "iarg": "2",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "526ptr+",
+          "iarg": "2",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "548ptr+",
+          "iarg": "2",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "483ptr+",
+          "iarg": "1",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "485ptr+",
+          "iarg": "1",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "487ptr+",
+          "iarg": "1",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "489ptr+",
+          "iarg": "1",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "491ptr+",
+          "iarg": "1",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "493ptr+",
+          "iarg": "1",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "495ptr+",
+          "iarg": "1",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "467ptr+",
+          "iarg": "0",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "469ptr+",
+          "iarg": "0",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "471ptr+",
+          "iarg": "0",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "473ptr+",
+          "iarg": "0",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "475ptr+",
+          "iarg": "0",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "477ptr+",
+          "iarg": "0",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "479ptr+",
+          "iarg": "0",
+          "oarg": "i"
+        },
+        {
+          "iptr": "450ptro8",
+          "optr": "481ptr+",
+          "iarg": "0",
+          "oarg": "i"
+        },
+        {
+          "iptr": null,
+          "optr": "607ptr4",
+          "iarg": "i",
+          "oarg": "4"
+        },
+        {
+          "iptr": "607ptr4",
+          "optr": "450ptro8",
+          "iarg": "4",
+          "oarg": "o8"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "465ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "488ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "486ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "484ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "482ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "480ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "465ptr+",
+          "optr": "483ptr+",
+          "iarg": "+",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "467ptr+",
+          "iarg": "0",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "492ptr+",
+          "iarg": "1",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "494ptr+",
+          "iarg": "1",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "496ptr+",
+          "iarg": "1",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "498ptr+",
+          "iarg": "1",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "500ptr+",
+          "iarg": "1",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "485ptr+",
+          "iarg": "1",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "469ptr+",
+          "iarg": "1",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "508ptr+",
+          "iarg": "2",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "506ptr+",
+          "iarg": "2",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "504ptr+",
+          "iarg": "2",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "522ptr+",
+          "iarg": "3",
+          "oarg": "+"
+        },
+        {
+          "iptr": "453ptridx8",
+          "optr": "611ptro8",
+          "iarg": "idx8",
+          "oarg": "o8"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "520ptr+",
+          "iarg": "3",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "524ptr+",
+          "iarg": "3",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "502ptr+",
+          "iarg": "2",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "487ptr+",
+          "iarg": "2",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "471ptr+",
+          "iarg": "2",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "489ptr+",
+          "iarg": "3",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "473ptr+",
+          "iarg": "3",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "528ptr+",
+          "iarg": "4",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "526ptr+",
+          "iarg": "4",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "491ptr+",
+          "iarg": "4",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "475ptr+",
+          "iarg": "4",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "548ptr+",
+          "iarg": "5",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "493ptr+",
+          "iarg": "5",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "477ptr+",
+          "iarg": "5",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "495ptr+",
+          "iarg": "6",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "479ptr+",
+          "iarg": "6",
+          "oarg": "+"
+        },
+        {
+          "iptr": "611ptro8",
+          "optr": "481ptr+",
+          "iarg": "7",
+          "oarg": "+"
+        },
+        {
+          "iptr": "651ptri8",
+          "optr": null,
+          "iarg": "i8",
+          "oarg": "lshf8"
+        },
+        {
+          "iptr": "481ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "7"
+        },
+        {
+          "iptr": "495ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "7"
+        },
+        {
+          "iptr": "548ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "7"
+        },
+        {
+          "iptr": "528ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "7"
+        },
+        {
+          "iptr": "522ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "7"
+        },
+        {
+          "iptr": "508ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "7"
+        },
+        {
+          "iptr": "492ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "7"
+        },
+        {
+          "iptr": "465ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "7"
+        },
+        {
+          "iptr": "479ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "6"
+        },
+        {
+          "iptr": "493ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "6"
+        },
+        {
+          "iptr": "526ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "6"
+        },
+        {
+          "iptr": "520ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "6"
+        },
+        {
+          "iptr": "506ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "6"
+        },
+        {
+          "iptr": "494ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "6"
+        },
+        {
+          "iptr": "488ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "6"
+        },
+        {
+          "iptr": "477ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "5"
+        },
+        {
+          "iptr": "491ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "5"
+        },
+        {
+          "iptr": "504ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "5"
+        },
+        {
+          "iptr": "524ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "5"
+        },
+        {
+          "iptr": "496ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "5"
+        },
+        {
+          "iptr": "486ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "5"
+        },
+        {
+          "iptr": "475ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "4"
+        },
+        {
+          "iptr": "489ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "4"
+        },
+        {
+          "iptr": "502ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "4"
+        },
+        {
+          "iptr": "498ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "4"
+        },
+        {
+          "iptr": "484ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "4"
+        },
+        {
+          "iptr": "473ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "3"
+        },
+        {
+          "iptr": "487ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "3"
+        },
+        {
+          "iptr": "500ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "3"
+        },
+        {
+          "iptr": "482ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "3"
+        },
+        {
+          "iptr": "471ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "2"
+        },
+        {
+          "iptr": "485ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "2"
+        },
+        {
+          "iptr": "480ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "2"
+        },
+        {
+          "iptr": "469ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "1"
+        },
+        {
+          "iptr": "483ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "1"
+        },
+        {
+          "iptr": "467ptr+",
+          "optr": "651ptri8",
+          "iarg": "o",
+          "oarg": "0"
+        }
+      ],
+      "dcls": {
+        "lshf8": "6,6"
+      }
+    },
+    "add16": {
+      "name": "add16",
+      "defs": {},
+      "args": {
+        "add16": 16,
+        "i": 1,
+        "o": 1,
+        "a": 16,
+        "b": 16
+      },
+      "ptrs": {
+        "null": {
+          "name": "add16",
+          "bus": 1,
+          "dcls": {
+            "add16": "22,-4",
+            "i": "17,-4",
+            "o": "22,14",
+            "a": "4,-4",
+            "b": "3,-4"
+          }
+        },
+        "695ptro16": {
+          "name": "o16",
+          "bus": 1,
+          "dcls": {
+            "0": "3,-2",
+            "1": "3,-1",
+            "2": "3,0",
+            "3": "3,1",
+            "4": "3,2",
+            "5": "3,3",
+            "6": "3,4",
+            "7": "3,5",
+            "8": "3,6",
+            "9": "3,7",
+            "10": "3,8",
+            "11": "3,9",
+            "12": "3,10",
+            "13": "3,11",
+            "14": "3,12",
+            "15": "3,13",
+            "o16": "3,-3"
+          }
+        },
+        "697ptro16": {
+          "name": "o16",
+          "bus": 1,
+          "dcls": {
+            "0": "4,-2",
+            "1": "4,-1",
+            "2": "4,0",
+            "3": "4,1",
+            "4": "4,2",
+            "5": "4,3",
+            "6": "4,4",
+            "7": "4,5",
+            "8": "4,6",
+            "9": "4,7",
+            "10": "4,8",
+            "11": "4,9",
+            "12": "4,10",
+            "13": "4,11",
+            "14": "4,12",
+            "15": "4,13",
+            "o16": "4,-3"
+          }
+        },
+        "701ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,-2",
+            "a": "14,-2",
+            "b": "13,-2",
+            "o": "16,-2",
+            "i": "17,-2"
+          }
+        },
+        "739ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,0",
+            "a": "14,0",
+            "b": "13,0",
+            "i": "17,0",
+            "o": "16,0"
+          }
+        },
+        "758ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,1",
+            "a": "14,1",
+            "b": "13,1",
+            "i": "16,1",
+            "o": "17,1"
+          }
+        },
+        "777ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,2",
+            "a": "14,2",
+            "b": "13,2",
+            "i": "17,2",
+            "o": "16,2"
+          }
+        },
+        "796ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,3",
+            "a": "14,3",
+            "b": "13,3",
+            "i": "16,3",
+            "o": "17,3"
+          }
+        },
+        "815ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,4",
+            "a": "14,4",
+            "b": "13,4",
+            "i": "17,4",
+            "o": "16,4"
+          }
+        },
+        "834ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,5",
+            "a": "14,5",
+            "b": "13,5",
+            "i": "16,5",
+            "o": "17,5"
+          }
+        },
+        "853ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,6",
+            "a": "14,6",
+            "b": "13,6",
+            "i": "17,6",
+            "o": "16,6"
+          }
+        },
+        "872ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,-1",
+            "a": "14,-1",
+            "b": "13,-1",
+            "i": "16,-1",
+            "o": "17,-1"
+          }
+        },
+        "919ptr1": {
+          "name": "1",
+          "bus": 1,
+          "dcls": {
+            "1": "17,-3"
+          }
+        },
+        "929ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "5,-1"
+          }
+        },
+        "931ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "6,-1"
+          }
+        },
+        "943ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "6,1"
+          }
+        },
+        "945ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "5,1"
+          }
+        },
+        "947ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "7,0"
+          }
+        },
+        "949ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "8,0"
+          }
+        },
+        "953ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "7,1"
+          }
+        },
+        "955ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "8,1"
+          }
+        },
+        "961ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "9,2"
+          }
+        },
+        "963ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "10,2"
+          }
+        },
+        "979ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "6,3"
+          }
+        },
+        "981ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "5,3"
+          }
+        },
+        "983ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "8,4"
+          }
+        },
+        "985ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "7,4"
+          }
+        },
+        "987ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "9,4"
+          }
+        },
+        "989ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "10,4"
+          }
+        },
+        "991ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "10,5"
+          }
+        },
+        "993ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "9,5"
+          }
+        },
+        "995ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "8,5"
+          }
+        },
+        "997ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "7,5"
+          }
+        },
+        "999ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "6,5"
+          }
+        },
+        "1001ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "5,5"
+          }
+        },
+        "1027ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "9,3"
+          }
+        },
+        "1029ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "10,3"
+          }
+        },
+        "1039ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "11,6"
+          }
+        },
+        "1041ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "12,6"
+          }
+        },
+        "1043ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "12,7"
+          }
+        },
+        "1045ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "12,8"
+          }
+        },
+        "1047ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "12,9"
+          }
+        },
+        "1051ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "11,7"
+          }
+        },
+        "1053ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "11,8"
+          }
+        },
+        "1055ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "11,9"
+          }
+        },
+        "1057ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "11,10"
+          }
+        },
+        "1059ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "11,11"
+          }
+        },
+        "1061ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "11,12"
+          }
+        },
+        "1063ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "11,13"
+          }
+        },
+        "1066ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "12,10"
+          }
+        },
+        "1068ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "12,11"
+          }
+        },
+        "1070ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "12,12"
+          }
+        },
+        "1072ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "12,13"
+          }
+        },
+        "1074ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "5,7"
+          }
+        },
+        "1078ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "5,9"
+          }
+        },
+        "1080ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "6,9"
+          }
+        },
+        "1082ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "5,11"
+          }
+        },
+        "1084ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "6,11"
+          }
+        },
+        "1086ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "5,13"
+          }
+        },
+        "1088ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "6,13"
+          }
+        },
+        "1090ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "7,9"
+          }
+        },
+        "1092ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "8,9"
+          }
+        },
+        "1094ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "7,8"
+          }
+        },
+        "1096ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "8,8"
+          }
+        },
+        "1098ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "7,12"
+          }
+        },
+        "1100ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "8,12"
+          }
+        },
+        "1102ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "8,13"
+          }
+        },
+        "1104ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "7,13"
+          }
+        },
+        "1108ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "9,10"
+          }
+        },
+        "1110ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "9,11"
+          }
+        },
+        "1112ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "9,12"
+          }
+        },
+        "1114ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "9,13"
+          }
+        },
+        "1116ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "10,10"
+          }
+        },
+        "1118ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "10,11"
+          }
+        },
+        "1120ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "10,12"
+          }
+        },
+        "1122ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "10,13"
+          }
+        },
+        "1141ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,7",
+            "o": "17,7",
+            "b": "13,7",
+            "a": "14,7",
+            "i": "16,7"
+          }
+        },
+        "1160ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,8",
+            "o": "16,8",
+            "b": "13,8",
+            "a": "14,8",
+            "i": "17,8"
+          }
+        },
+        "1179ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,9",
+            "o": "17,9",
+            "b": "13,9",
+            "a": "14,9",
+            "i": "16,9"
+          }
+        },
+        "1217ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,11",
+            "o": "17,11",
+            "b": "13,11",
+            "a": "14,11",
+            "i": "16,11"
+          }
+        },
+        "1236ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,12",
+            "o": "16,12",
+            "b": "13,12",
+            "a": "14,12",
+            "i": "17,12"
+          }
+        },
+        "1255ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,13",
+            "o": "17,13",
+            "b": "13,13",
+            "a": "14,13",
+            "i": "16,13"
+          }
+        },
+        "1285ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "6,7"
+          }
+        },
+        "1351ptradd": {
+          "name": "add",
+          "bus": 1,
+          "dcls": {
+            "add": "15,10",
+            "a": "14,10",
+            "b": "13,10",
+            "i": "17,10",
+            "o": "16,10"
+          }
+        },
+        "1377ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "18,-2"
+          }
+        },
+        "1379ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "18,0"
+          }
+        },
+        "1381ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "18,2"
+          }
+        },
+        "1383ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "18,4"
+          }
+        },
+        "1385ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "18,6"
+          }
+        },
+        "1387ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "18,8"
+          }
+        },
+        "1389ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "18,10"
+          }
+        },
+        "1391ptr8": {
+          "name": "8",
+          "bus": 1,
+          "dcls": {
+            "8": "18,12"
+          }
+        },
+        "1409ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "19,-2"
+          }
+        },
+        "1415ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "19,-1"
+          }
+        },
+        "1417ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "19,2"
+          }
+        },
+        "1423ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "19,3"
+          }
+        },
+        "1431ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "19,6"
+          }
+        },
+        "1433ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "19,7"
+          }
+        },
+        "1443ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "19,11"
+          }
+        },
+        "1445ptr16": {
+          "name": "16",
+          "bus": 1,
+          "dcls": {
+            "16": "19,10"
+          }
+        },
+        "1449ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "20,-2"
+          }
+        },
+        "1451ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "20,0"
+          }
+        },
+        "1461ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "20,-1"
+          }
+        },
+        "1463ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "20,1"
+          }
+        },
+        "1469ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "20,6"
+          }
+        },
+        "1475ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "20,7"
+          }
+        },
+        "1477ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "20,8"
+          }
+        },
+        "1483ptr32": {
+          "name": "32",
+          "bus": 1,
+          "dcls": {
+            "32": "20,9"
+          }
+        },
+        "1485ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "21,-2"
+          }
+        },
+        "1487ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "21,0"
+          }
+        },
+        "1489ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "21,-1"
+          }
+        },
+        "1491ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "21,1"
+          }
+        },
+        "1493ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "21,2"
+          }
+        },
+        "1495ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "21,3"
+          }
+        },
+        "1497ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "21,4"
+          }
+        },
+        "1499ptr64": {
+          "name": "64",
+          "bus": 1,
+          "dcls": {
+            "64": "21,5"
+          }
+        },
+        "1519ptri16": {
+          "name": "i16",
+          "bus": 1,
+          "dcls": {
+            "0": "22,-2",
+            "1": "22,-1",
+            "2": "22,0",
+            "3": "22,1",
+            "4": "22,2",
+            "5": "22,3",
+            "6": "22,4",
+            "7": "22,5",
+            "8": "22,6",
+            "9": "22,7",
+            "10": "22,8",
+            "11": "22,9",
+            "12": "22,10",
+            "13": "22,11",
+            "14": "22,12",
+            "15": "22,13",
+            "i16": "22,-3"
+          }
+        },
+        "1521ptr1": {
+          "name": "1",
+          "bus": 1,
+          "dcls": {
+            "1": "17,14"
+          }
+        }
+      },
+      "lnks": [
+        {
+          "iptr": null,
+          "optr": "695ptro16",
+          "iarg": "b",
+          "oarg": "o16"
+        },
+        {
+          "iptr": null,
+          "optr": "697ptro16",
+          "iarg": "a",
+          "oarg": "o16"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "701ptradd",
+          "iarg": "0",
+          "oarg": "b"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "701ptradd",
+          "iarg": "0",
+          "oarg": "a"
+        },
+        {
+          "iptr": "701ptradd",
+          "optr": "872ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "872ptradd",
+          "optr": "739ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "739ptradd",
+          "optr": "758ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "758ptradd",
+          "optr": "777ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "777ptradd",
+          "optr": "796ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "796ptradd",
+          "optr": "815ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "815ptradd",
+          "optr": "834ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "834ptradd",
+          "optr": "853ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "919ptr1",
+          "optr": "701ptradd",
+          "iarg": "1",
+          "oarg": "i"
+        },
+        {
+          "iptr": null,
+          "optr": "919ptr1",
+          "iarg": "i",
+          "oarg": "1"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "929ptr8",
+          "iarg": "1",
+          "oarg": "8"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "931ptr8",
+          "iarg": "1",
+          "oarg": "8"
+        },
+        {
+          "iptr": "929ptr8",
+          "optr": "872ptradd",
+          "iarg": "8",
+          "oarg": "b"
+        },
+        {
+          "iptr": "931ptr8",
+          "optr": "872ptradd",
+          "iarg": "8",
+          "oarg": "a"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "947ptr16",
+          "iarg": "2",
+          "oarg": "16"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "949ptr16",
+          "iarg": "2",
+          "oarg": "16"
+        },
+        {
+          "iptr": "947ptr16",
+          "optr": "739ptradd",
+          "iarg": "16",
+          "oarg": "b"
+        },
+        {
+          "iptr": "949ptr16",
+          "optr": "739ptradd",
+          "iarg": "16",
+          "oarg": "a"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "961ptr32",
+          "iarg": "4",
+          "oarg": "32"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "963ptr32",
+          "iarg": "4",
+          "oarg": "32"
+        },
+        {
+          "iptr": "961ptr32",
+          "optr": "777ptradd",
+          "iarg": "32",
+          "oarg": "b"
+        },
+        {
+          "iptr": "963ptr32",
+          "optr": "777ptradd",
+          "iarg": "32",
+          "oarg": "a"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "985ptr16",
+          "iarg": "6",
+          "oarg": "16"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "983ptr16",
+          "iarg": "6",
+          "oarg": "16"
+        },
+        {
+          "iptr": "985ptr16",
+          "optr": "987ptr32",
+          "iarg": "16",
+          "oarg": "32"
+        },
+        {
+          "iptr": "983ptr16",
+          "optr": "989ptr32",
+          "iarg": "16",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1027ptr32",
+          "optr": "796ptradd",
+          "iarg": "32",
+          "oarg": "b"
+        },
+        {
+          "iptr": "1029ptr32",
+          "optr": "796ptradd",
+          "iarg": "32",
+          "oarg": "a"
+        },
+        {
+          "iptr": "987ptr32",
+          "optr": "815ptradd",
+          "iarg": "32",
+          "oarg": "b"
+        },
+        {
+          "iptr": "989ptr32",
+          "optr": "815ptradd",
+          "iarg": "32",
+          "oarg": "a"
+        },
+        {
+          "iptr": "993ptr32",
+          "optr": "834ptradd",
+          "iarg": "32",
+          "oarg": "b"
+        },
+        {
+          "iptr": "991ptr32",
+          "optr": "834ptradd",
+          "iarg": "32",
+          "oarg": "a"
+        },
+        {
+          "iptr": "997ptr16",
+          "optr": "993ptr32",
+          "iarg": "16",
+          "oarg": "32"
+        },
+        {
+          "iptr": "995ptr16",
+          "optr": "991ptr32",
+          "iarg": "16",
+          "oarg": "32"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "1039ptr64",
+          "iarg": "8",
+          "oarg": "64"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "1041ptr64",
+          "iarg": "8",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1039ptr64",
+          "optr": "853ptradd",
+          "iarg": "64",
+          "oarg": "b"
+        },
+        {
+          "iptr": "1041ptr64",
+          "optr": "853ptradd",
+          "iarg": "64",
+          "oarg": "a"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "945ptr8",
+          "iarg": "3",
+          "oarg": "8"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "943ptr8",
+          "iarg": "3",
+          "oarg": "8"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "981ptr8",
+          "iarg": "5",
+          "oarg": "8"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "979ptr8",
+          "iarg": "5",
+          "oarg": "8"
+        },
+        {
+          "iptr": "981ptr8",
+          "optr": "1027ptr32",
+          "iarg": "8",
+          "oarg": "32"
+        },
+        {
+          "iptr": "979ptr8",
+          "optr": "1029ptr32",
+          "iarg": "8",
+          "oarg": "32"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "1001ptr8",
+          "iarg": "7",
+          "oarg": "8"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "999ptr8",
+          "iarg": "7",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1001ptr8",
+          "optr": "997ptr16",
+          "iarg": "8",
+          "oarg": "16"
+        },
+        {
+          "iptr": "999ptr8",
+          "optr": "995ptr16",
+          "iarg": "8",
+          "oarg": "16"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "1074ptr8",
+          "iarg": "9",
+          "oarg": "8"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "1285ptr8",
+          "iarg": "9",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1074ptr8",
+          "optr": "1051ptr64",
+          "iarg": "8",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1285ptr8",
+          "optr": "1043ptr64",
+          "iarg": "8",
+          "oarg": "64"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "1094ptr16",
+          "iarg": "10",
+          "oarg": "16"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "1096ptr16",
+          "iarg": "10",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1094ptr16",
+          "optr": "1053ptr64",
+          "iarg": "16",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1096ptr16",
+          "optr": "1045ptr64",
+          "iarg": "16",
+          "oarg": "64"
+        },
+        {
+          "iptr": "943ptr8",
+          "optr": "955ptr16",
+          "iarg": "8",
+          "oarg": "16"
+        },
+        {
+          "iptr": "853ptradd",
+          "optr": "1141ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "1141ptradd",
+          "optr": "1160ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "1160ptradd",
+          "optr": "1179ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "1217ptradd",
+          "optr": "1236ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "1236ptradd",
+          "optr": "1255ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "1051ptr64",
+          "optr": "1141ptradd",
+          "iarg": "64",
+          "oarg": "b"
+        },
+        {
+          "iptr": "1043ptr64",
+          "optr": "1141ptradd",
+          "iarg": "64",
+          "oarg": "a"
+        },
+        {
+          "iptr": "1053ptr64",
+          "optr": "1160ptradd",
+          "iarg": "64",
+          "oarg": "b"
+        },
+        {
+          "iptr": "1045ptr64",
+          "optr": "1160ptradd",
+          "iarg": "64",
+          "oarg": "a"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "1078ptr8",
+          "iarg": "11",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1078ptr8",
+          "optr": "1090ptr16",
+          "iarg": "8",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1090ptr16",
+          "optr": "1055ptr64",
+          "iarg": "16",
+          "oarg": "64"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "1080ptr8",
+          "iarg": "11",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1080ptr8",
+          "optr": "1092ptr16",
+          "iarg": "8",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1092ptr16",
+          "optr": "1047ptr64",
+          "iarg": "16",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1055ptr64",
+          "optr": "1179ptradd",
+          "iarg": "64",
+          "oarg": "b"
+        },
+        {
+          "iptr": "1047ptr64",
+          "optr": "1179ptradd",
+          "iarg": "64",
+          "oarg": "a"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "1108ptr32",
+          "iarg": "12",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1108ptr32",
+          "optr": "1057ptr64",
+          "iarg": "32",
+          "oarg": "64"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "1116ptr32",
+          "iarg": "12",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1116ptr32",
+          "optr": "1066ptr64",
+          "iarg": "32",
+          "oarg": "64"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "1082ptr8",
+          "iarg": "13",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1082ptr8",
+          "optr": "1110ptr32",
+          "iarg": "8",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1110ptr32",
+          "optr": "1059ptr64",
+          "iarg": "32",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1059ptr64",
+          "optr": "1217ptradd",
+          "iarg": "64",
+          "oarg": "b"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "1084ptr8",
+          "iarg": "13",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1084ptr8",
+          "optr": "1118ptr32",
+          "iarg": "8",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1118ptr32",
+          "optr": "1068ptr64",
+          "iarg": "32",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1068ptr64",
+          "optr": "1217ptradd",
+          "iarg": "64",
+          "oarg": "a"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "1098ptr16",
+          "iarg": "14",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1098ptr16",
+          "optr": "1112ptr32",
+          "iarg": "16",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1112ptr32",
+          "optr": "1061ptr64",
+          "iarg": "32",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1061ptr64",
+          "optr": "1236ptradd",
+          "iarg": "64",
+          "oarg": "b"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "1100ptr16",
+          "iarg": "14",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1100ptr16",
+          "optr": "1120ptr32",
+          "iarg": "16",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1120ptr32",
+          "optr": "1070ptr64",
+          "iarg": "32",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1070ptr64",
+          "optr": "1236ptradd",
+          "iarg": "64",
+          "oarg": "a"
+        },
+        {
+          "iptr": "695ptro16",
+          "optr": "1086ptr8",
+          "iarg": "15",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1086ptr8",
+          "optr": "1104ptr16",
+          "iarg": "8",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1104ptr16",
+          "optr": "1114ptr32",
+          "iarg": "16",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1114ptr32",
+          "optr": "1063ptr64",
+          "iarg": "32",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1063ptr64",
+          "optr": "1255ptradd",
+          "iarg": "64",
+          "oarg": "b"
+        },
+        {
+          "iptr": "697ptro16",
+          "optr": "1088ptr8",
+          "iarg": "15",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1088ptr8",
+          "optr": "1102ptr16",
+          "iarg": "8",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1102ptr16",
+          "optr": "1122ptr32",
+          "iarg": "16",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1122ptr32",
+          "optr": "1072ptr64",
+          "iarg": "32",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1072ptr64",
+          "optr": "1255ptradd",
+          "iarg": "64",
+          "oarg": "a"
+        },
+        {
+          "iptr": "945ptr8",
+          "optr": "953ptr16",
+          "iarg": "8",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1179ptradd",
+          "optr": "1351ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "1351ptradd",
+          "optr": "1217ptradd",
+          "iarg": "o",
+          "oarg": "i"
+        },
+        {
+          "iptr": "1057ptr64",
+          "optr": "1351ptradd",
+          "iarg": "64",
+          "oarg": "b"
+        },
+        {
+          "iptr": "1066ptr64",
+          "optr": "1351ptradd",
+          "iarg": "64",
+          "oarg": "a"
+        },
+        {
+          "iptr": "953ptr16",
+          "optr": "758ptradd",
+          "iarg": "16",
+          "oarg": "b"
+        },
+        {
+          "iptr": "955ptr16",
+          "optr": "758ptradd",
+          "iarg": "16",
+          "oarg": "a"
+        },
+        {
+          "iptr": "1255ptradd",
+          "optr": "1521ptr1",
+          "iarg": "o",
+          "oarg": "1"
+        },
+        {
+          "iptr": "1521ptr1",
+          "optr": null,
+          "iarg": "1",
+          "oarg": "o"
+        },
+        {
+          "iptr": "1255ptradd",
+          "optr": "1519ptri16",
+          "iarg": "add",
+          "oarg": "15"
+        },
+        {
+          "iptr": "1236ptradd",
+          "optr": "1391ptr8",
+          "iarg": "add",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1391ptr8",
+          "optr": "1519ptri16",
+          "iarg": "8",
+          "oarg": "14"
+        },
+        {
+          "iptr": "1217ptradd",
+          "optr": "1443ptr16",
+          "iarg": "add",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1443ptr16",
+          "optr": "1519ptri16",
+          "iarg": "16",
+          "oarg": "13"
+        },
+        {
+          "iptr": "1351ptradd",
+          "optr": "1389ptr8",
+          "iarg": "add",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1389ptr8",
+          "optr": "1445ptr16",
+          "iarg": "8",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1445ptr16",
+          "optr": "1519ptri16",
+          "iarg": "16",
+          "oarg": "12"
+        },
+        {
+          "iptr": "1179ptradd",
+          "optr": "1483ptr32",
+          "iarg": "add",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1483ptr32",
+          "optr": "1519ptri16",
+          "iarg": "32",
+          "oarg": "11"
+        },
+        {
+          "iptr": "1160ptradd",
+          "optr": "1387ptr8",
+          "iarg": "add",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1387ptr8",
+          "optr": "1477ptr32",
+          "iarg": "8",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1477ptr32",
+          "optr": "1519ptri16",
+          "iarg": "32",
+          "oarg": "10"
+        },
+        {
+          "iptr": "1141ptradd",
+          "optr": "1433ptr16",
+          "iarg": "add",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1433ptr16",
+          "optr": "1475ptr32",
+          "iarg": "16",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1475ptr32",
+          "optr": "1519ptri16",
+          "iarg": "32",
+          "oarg": "9"
+        },
+        {
+          "iptr": "853ptradd",
+          "optr": "1385ptr8",
+          "iarg": "add",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1385ptr8",
+          "optr": "1431ptr16",
+          "iarg": "8",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1431ptr16",
+          "optr": "1469ptr32",
+          "iarg": "16",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1469ptr32",
+          "optr": "1519ptri16",
+          "iarg": "32",
+          "oarg": "8"
+        },
+        {
+          "iptr": "834ptradd",
+          "optr": "1499ptr64",
+          "iarg": "add",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1499ptr64",
+          "optr": "1519ptri16",
+          "iarg": "64",
+          "oarg": "7"
+        },
+        {
+          "iptr": "815ptradd",
+          "optr": "1383ptr8",
+          "iarg": "add",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1383ptr8",
+          "optr": "1497ptr64",
+          "iarg": "8",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1497ptr64",
+          "optr": "1519ptri16",
+          "iarg": "64",
+          "oarg": "6"
+        },
+        {
+          "iptr": "796ptradd",
+          "optr": "1423ptr16",
+          "iarg": "add",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1423ptr16",
+          "optr": "1495ptr64",
+          "iarg": "16",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1495ptr64",
+          "optr": "1519ptri16",
+          "iarg": "64",
+          "oarg": "5"
+        },
+        {
+          "iptr": "777ptradd",
+          "optr": "1381ptr8",
+          "iarg": "add",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1381ptr8",
+          "optr": "1417ptr16",
+          "iarg": "8",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1417ptr16",
+          "optr": "1493ptr64",
+          "iarg": "16",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1493ptr64",
+          "optr": "1519ptri16",
+          "iarg": "64",
+          "oarg": "4"
+        },
+        {
+          "iptr": "758ptradd",
+          "optr": "1463ptr32",
+          "iarg": "add",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1463ptr32",
+          "optr": "1491ptr64",
+          "iarg": "32",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1491ptr64",
+          "optr": "1519ptri16",
+          "iarg": "64",
+          "oarg": "3"
+        },
+        {
+          "iptr": "739ptradd",
+          "optr": "1379ptr8",
+          "iarg": "add",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1379ptr8",
+          "optr": "1451ptr32",
+          "iarg": "8",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1451ptr32",
+          "optr": "1487ptr64",
+          "iarg": "32",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1487ptr64",
+          "optr": "1519ptri16",
+          "iarg": "64",
+          "oarg": "2"
+        },
+        {
+          "iptr": "872ptradd",
+          "optr": "1415ptr16",
+          "iarg": "add",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1415ptr16",
+          "optr": "1461ptr32",
+          "iarg": "16",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1461ptr32",
+          "optr": "1489ptr64",
+          "iarg": "32",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1489ptr64",
+          "optr": "1519ptri16",
+          "iarg": "64",
+          "oarg": "1"
+        },
+        {
+          "iptr": "701ptradd",
+          "optr": "1377ptr8",
+          "iarg": "add",
+          "oarg": "8"
+        },
+        {
+          "iptr": "1377ptr8",
+          "optr": "1409ptr16",
+          "iarg": "8",
+          "oarg": "16"
+        },
+        {
+          "iptr": "1409ptr16",
+          "optr": "1449ptr32",
+          "iarg": "16",
+          "oarg": "32"
+        },
+        {
+          "iptr": "1449ptr32",
+          "optr": "1485ptr64",
+          "iarg": "32",
+          "oarg": "64"
+        },
+        {
+          "iptr": "1485ptr64",
+          "optr": "1519ptri16",
+          "iarg": "64",
+          "oarg": "0"
+        }
+      ],
+      "dcls": {
+        "add16": "17,6"
+      }
+    }
+  },
+  "args": {
+    "main": 1
+  },
+  "ptrs": {
+    "null": {
+      "name": "main",
+      "bus": 1,
+      "dcls": {}
+    }
+  },
+  "lnks": [],
+  "dcls": {}
 }
