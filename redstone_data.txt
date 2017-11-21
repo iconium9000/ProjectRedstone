@@ -1,0 +1,76 @@
+nat
+  name is string
+  args is map of int
+
+  init_vsn is function ptr, vsn
+  push_lnks is function vsn
+  get_output is function vsn
+
+def
+  scp is null or def
+  name is string
+  args is map of int
+
+  defs is map of def
+  cels is map of cel
+
+  self_ptr is ptr
+  self_ptrs is map of ptr
+  ptrs is map of ptr
+
+  self_vsn is vsn
+  self_vsns is map of vsn
+
+  sp_vsns is map of vsn
+
+  init_vsn is function ptr, vsn
+  push_lnks is function vsn
+  get_output is function vsn
+
+ptr
+  id is rid
+  bus is int
+  scp is def
+  src is def or nat
+
+  cels is map of cel
+
+vsn
+  id is rid
+  scp is vsn
+  src is ptr
+
+  vsns is null or map of vsn
+
+  bus is int (ptr bus * vsn bus)
+  bargs is map of int array
+  iargs is map of bool array
+  oargs is map of bool array
+
+cel
+  point is point
+  string is point_to_string point
+  id is rid
+  scp is def
+  src is ptr
+  arg is string
+  bus is int
+
+  src_cel is cel
+  idxs is null or map of cel
+  idx is null or int
+
+  icels is map of cel
+  ocels is map of cel
+
+bus >= 1 : def args at def name
+bus >= 1 : def args at arg name
+
+bus == 1 : self_ptr
+bus == arg bus : self_ptr cels at cel arg name
+
+bus >= 1 : def ptrs at ptr id
+bus == ptr bus * arg bus : ptr cels at cel arg name
+
+bus of self_vsn is 1
+bus of each self_vsn vsns

@@ -242,23 +242,53 @@ var fu = module.exports = {
     }
   },
 
+  findif: (obj, foo) => {
+    for (var i in obj)
+      if (foo(obj[i], i))
+        return obj[i]
+  },
+
+  trueif: (obj, foo) => {
+    for (var i in obj)
+      if (foo(obj[i], i))
+        return true
+    return false
+  },
+
+  forlen: (l, foo) => { for (var i = 0; i < l; ++i) foo(i) },
+
   getSign: n => {
     return n > 0 ? 1 : n < 0 ? -1 : 0
   },
 
+  isEmpty: arg => {
+    for (var i in arg) {
+      return false
+    }
+    return true
+  },
+
   forEach: (a, f) => {
     for (var i in a) {
-      f(a[i])
+      f(a[i], i)
     }
   },
 
+  first: obj => { for (var i in obj) return obj[i] },
+
   count: obj => obj ? Object.keys(obj).length : 0,
+
+  contains: (obj, m) => {
+    for (var i in obj)
+      if (obj[i] == m)
+        return true
+    return false
+  },
 
   countif: (obj, ifu) => {
     var count = 0
-    for (var i in obj) {
+    for (var i in obj)
       count += ifu(obj[i], i)
-    }
     return count
   },
 

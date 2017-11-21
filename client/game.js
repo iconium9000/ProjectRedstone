@@ -1,848 +1,18 @@
-// project_redstone
-
+// PROJECT REDSTONE
 var log = console.log
-log('game.js project_redstone init')
-
-var lvl = {
-  funs: {}
-}
-
-class Queue {
-  constructor() {
-    this.head = 0
-    this.tail = 0
-  }
-
-  isEmpty() {
-    return this.head == this.tail
-  }
-
-  push(obj) {
-    this[this.head++] = obj
-  }
-
-  peek() {
-    return this[this.tail]
-  }
-
-  pop() {
-    if (this.tail < this.head) {
-      var obj = this[this.tail]
-      delete this[this.tail++]
-      return obj
-    }
-  }
-}
+log('game.js init')
 
 module.exports = apInitA => {
 
-  var fu = apInitA.fu
-  var pt = apInitA.pt
-  var fs = apInitA.fs
+  fu = apInitA.fu
+  pt = apInitA.pt
+  fs = apInitA.fs
 
-  plrIf = new Object
-  var backgroundColor = 'black'
-  var selected_mode = null
-  var center_point = pt.zero()
+  var plrIf = new Object
 
-  main = cel_scope = null
-
-  saved_bus = null
-  saved_arg_name = null
-
-  var selected_cel = null
-  var prev_cel_id = null
-
-  prev_cel_id = null
-  prev_cel = null
-  cel_moved = false
-
-  tick_speed = 1
-
-  var cell_size = 25
-  var cell_width = 6
-  var arrow_time = 20
-  var arrow_size = 3
-  var elapsed_time = 0
-
-  var zero_string = point_to_string(pt.zero())
-
-  var directions = lvl.directions = {
-    up: {
-      x: 0, y: -1, z: 0,
-      op: 'dn', next: 'lf'
-    },
-    dn: {
-      x: 0, y: 1, z: 0,
-      op: 'up', next: 'rt'
-    },
-    rt: {
-      x: 1, y: 0, z: 0,
-      op: 'lf', next: 'up'
-    },
-    lf: {
-      x: -1, y: 0, z: 0,
-      op: 'rt', next: 'dn'
-    }
+  function sndMsg(ky,sndr,rcvr,msg) {
+    apIO.apSnd({ky:ky, sndr:sndr, rcvr:rcvr, msg:msg})
   }
-
-  // direction setup
-  {
-    for (var direction_name in directions) {
-      var direction = directions[direction_name]
-      direction.op = directions[direction.op]
-      direction.next = directions[direction.next]
-    }
-  }
-
-  // mws, string, point translations
-  function mws_to_point(scp, mws) {
-    var cp = scp.center_point = scp.center_point || pt.zero()
-    return pt.math(Math.round, pt.factor(pt.sub(mws, cp), cell_size))
-  }
-  function point_to_mws(scp, point) {
-    var cp = scp.center_point = scp.center_point || pt.zero()
-    return pt.sum(pt.scale(point, cell_size), cp)
-  }
-  function string_to_point(string) {
-    string = string.split(',')
-    return {
-      x: parseFloat(string[0]),
-      y: parseFloat(string[1]),
-      z: 0
-    }
-  }
-  function point_to_string(point) {
-    return `${point.x},${point.y}`
-  }
-
-  //----------------------------------------------------------------------------
-  // project_redstone
-  //----------------------------------------------------------------------------
-
-  function rid() {
-    return ++rid.index
-  }
-  rid.index = 0
-
-  function init_nat(scp, name, buss, get_output) {
-    if (name != scp.name && !scp.defs[name]) {
-      var nat = {
-        type: 'nat',
-        scp: scp,
-        name: name,
-        get_output: get_output,
-
-        args: {},
-        ptrs: {},
-        uses: {},
-        vsns: {}
-      }
-
-      for (var arg_name in buss) {
-        var bus = buss[arg_name]
-
-        init_arg(nat, arg_name, bus)
-      }
-
-      init_arg(nat, name, 1)
-      init_vsn(nat, init_ptr(nat, name, 1))
-
-      scp.defs[name] = nat
-
-  		return nat
-    }
-  }
-
-  function init_def(scp, name, bus) {
-    if (!scp || (scp.name != name && !scp.defs[name])) {
-      var def = {
-        type: 'def',
-        scp: scp,
-        name: name,
-
-        args: {},
-        ptrs: {},
-        uses: {},
-        lnks: {},
-        vsns: {},
-
-        defs: {},
-        cels: {},
-        dcls: {}
-      }
-
-      if (scp != null) {
-        scp.defs[name] = def
-      }
-
-      init_arg(def, name, bus)
-      init_vsn(def, init_ptr(def, name, 1))
-
-  		return def
-    }
-  }
-
-  function remove_def(def) {
-    if (def.scp) {
-      for (var ptr_id in def.uses) {
-        remove_ptr(def.uses[ptr_id])
-      }
-      for (var ptr_id in def.ptrs) {
-        remove_ptr(def.ptrs[ptr_id])
-      }
-      for (var def_id in def.defs) {
-        remove_def(def.defs)
-      }
-
-      delete def.scp.defs[def.name]
-
-      for (var arg_name in def.dcls) {
-        remove_cel(def.dcls[arg_name])
-      }
-    }
-  }
-
-  function init_arg(scp, name, bus) {
-    if (!scp.args[name]) {
-      var arg = {
-        scp: scp,
-        name: name,
-        bus: bus > 0 ? bus : 1
-      }
-
-      for (var vsn_id in scp.vsns) {
-        var vsn = scp.vsns[vsn_id]
-        init_avn(vsn, arg)
-      }
-
-      scp.args[name] = arg
-  		return arg
-    } else {
-      return scp.args[name]
-    }
-  }
-
-  function remove_arg(arg) {
-    for (var vsn_id in arg.scp.vsns) {
-      delete vsn.avns[arg.name]
-    }
-
-    if (arg.scp.dcls[arg.name]) {
-      remove_cel(arg.scp.dcls[arg.name])
-    }
-
-    for (var ptr_id in arg.scp.uses) {
-      var ptr = arg.scp.uses[ptr_id]
-      remove_lnks(ptr, arg)
-      if (ptr.dcls[arg.name]) {
-        remove_cel(ptr.dcls[arg.name])
-      }
-    }
-
-    delete arg.scp.args[arg.name]
-  }
-
-  function init_ptr(scp, src_name, bus, id) {
-    var ptr = {
-  		type: 'ptr',
-      scp: scp,
-      bus: bus,
-      name: src_name,
-      src: null
-    }
-
-  	if (src_name == scp.name) {
-  		if (!ptr.scp.ptrs[null]) {
-  			ptr.src = scp
-  		}
-  	} else {
-  	  while (scp && scp.name != src_name) {
-  	    if (scp.defs[src_name]) {
-  	      ptr.src = scp.defs[src_name]
-  				break
-  	    }
-
-  	    scp = scp.scp
-  	  }
-  	}
-
-    if (ptr.src) {
-      if (ptr.src == ptr.scp) {
-        ptr.id = null
-      } else {
-        ptr.id = id || rid() + 'ptr' + src_name
-      }
-
-      for (var vsn_id in ptr.scp.vsns) {
-        var vsn = ptr.scp.vsns[vsn_id]
-        init_vsn(vsn, ptr)
-      }
-
-      ptr.dcls = {}
-      ptr.scp.ptrs[ptr.id] = ptr
-      ptr.src.uses[ptr.id] = ptr
-
-  		return ptr
-    }
-  }
-
-  function remove_ptr(ptr) {
-    if (ptr.id) {
-
-      for (var vsn_id in ptr.scp.vsns) {
-        var vsn = ptr.scp.vsns[vsn_id]
-        remove_vsn(vsn.vsns[ptr.id])
-      }
-
-      for (var arg_id in ptr.src.args) {
-        var arg = ptr.src.args[arg_id]
-        remove_lnks(ptr, arg)
-      }
-
-      delete ptr.scp.ptrs[ptr.id]
-      delete ptr.src.uses[ptr.id]
-
-      for (var arg_name in ptr.dcls) {
-        remove_cel(ptr.dcls[arg_name])
-      }
-    }
-  }
-
-  function init_vsn(scp, src) {
-    var vsn = {
-      type: 'vsn',
-      scp: scp,
-      src: src,
-      avns: {},
-      vsns: {}
-    }
-
-    if (scp.type == 'vsn') {
-      vsn.id = rid() + 'vsn' + src.name
-      vsn.bus = scp.bus * src.bus
-    } else {
-      vsn.id = null
-      vsn.bus = 1
-    }
-
-    for (var arg_name in src.src.args) {
-      var arg = src.src.args[arg_name]
-      init_avn(vsn, arg)
-    }
-
-    for (var ptr_id in src.src.ptrs) {
-      var ptr = src.src.ptrs[ptr_id]
-
-      if (ptr.id) {
-        init_vsn(vsn, ptr)
-      } else {
-        vsn.vsns[null] = vsn
-  		}
-    }
-
-    vsn.src.src.vsns[vsn.id] = vsn
-    vsn.scp.vsns[vsn.src.id] = vsn
-
-  	return vsn
-  }
-
-  function remove_vsn(vsn) {
-    delete vsn.src.src.vsns[vsn.id]
-    delete vsn.scp.vsns[vsn.src.id]
-
-    for (var pvsn_id in vsn.vsns) {
-      var pvsn = vsn.vsns[pvsn_id]
-
-      if (pvsn_id != 'null') {
-        remove_vsn(pvsn)
-      }
-    }
-  }
-
-  function init_avn(scp, arg) {
-    var avn = {
-      scp: scp,
-      arg: arg,
-      bus: scp.bus * arg.bus,
-      pins: [],
-      nins: [],
-      outs: [],
-      dfv: false
-    }
-
-    for (var i = 0; i < avn.bus; ++i) {
-      avn.pins[i] = avn.nins[i] = avn.outs[i] = false
-    }
-
-    scp.avns[arg.name] = avn
-
-  	return avn
-  }
-
-  function init_lnk(iptr, optr, iarg, oarg) {
-    if ((iptr == optr && iarg == oarg) || iptr.scp != optr.scp) {
-      return
-    }
-
-    var ibus = iptr.bus * iarg.bus
-    var obus = optr.bus * oarg.bus
-
-    if (ibus != obus) {
-      return
-    }
-
-    var scp = iptr.scp
-
-    for (var slk_id in scp.lnks) {
-      var slk = scp.lnks[slk_id]
-      if (
-        (iptr == slk.iptr
-          && optr == slk.optr
-          && iarg == slk.iarg
-          && oarg == slk.oarg)
-        || (iptr == slk.optr
-          && optr == slk.iptr
-          && iarg == slk.oarg
-          && oarg == slk.iarg)
-      ) {
-        return
-      }
-    }
-
-    var lnk = {
-      scp: scp,
-      bus: ibus,
-      iptr: iptr,
-      optr: optr,
-      iarg: iarg,
-      oarg: oarg,
-      id: rid()
-    }
-
-    scp.lnks[lnk.id] = lnk
-
-  	return lnk
-  }
-
-  function remove_lnks(ptr, arg) {
-    if (ptr.scp.type == 'def') {
-      for (var lnk_id in ptr.scp.lnks) {
-        var lnk = ptr.scp.lnks[lnk_id]
-
-        if (
-          (lnk.iptr == ptr && lnk.iarg == arg)
-          || (lnk.optr == ptr && lnk.oarg == arg)
-        ) {
-          delete ptr.scp.lnks[lnk_id]
-        }
-      }
-    }
-  }
-
-  function get_output(vsn) {
-
-    if (vsn.src.src.type == 'nat') {
-      vsn.src.src.get_output(vsn)
-    } else if (vsn.src.src.type == 'def') {
-      for (var ptr_id in vsn.vsns) {
-        if (ptr_id != 'null') {
-          get_output(vsn.vsns[ptr_id])
-        }
-      }
-
-      for (var arg_name in vsn.avns) {
-        var avn = vsn.avns[arg_name]
-
-        for (var i = 0; i < avn.bus; ++i) {
-          avn.outs[i] = avn.nins[i]
-        }
-      }
-    }
-
-    for (var arg_name in vsn.avns) {
-      var avn = vsn.avns[arg_name]
-
-      for (var i = 0; i < avn.bus; ++i) {
-        avn.pins[i] = avn.nins[i]
-        avn.nins[i] = avn.dfv
-      }
-    }
-
-  }
-
-  function get_input(vsn) {
-    if (vsn.src.src.type == 'def') {
-      for (var ptr_id in vsn.vsns) {
-        if (ptr_id != 'null') {
-          get_input(vsn.vsns[ptr_id])
-        }
-      }
-
-      var def = vsn.src.src
-      for (var lnk_id in def.lnks) {
-        var lnk = def.lnks[lnk_id]
-
-        var ivsn = vsn.vsns[lnk.iptr.id]
-        var ovsn = vsn.vsns[lnk.optr.id]
-        var iavn = ivsn.avns[lnk.iarg.name]
-        var oavn = ovsn.avns[lnk.oarg.name]
-
-        for (var i = 0; i < iavn.bus; ++i) {
-          oavn.nins[i] = iavn.outs[i] || oavn.nins[i]
-        }
-      }
-    }
-  }
-
-  function init_cel(scp, scl, point) {
-    var cel = scp.cels[point_to_string(point)]
-
-    if (cel) {
-      if (scl && scl.src.type == 'ptr' && cel.src.type == 'ptr') {
-        init_lnk(scl.src, cel.src, scl.arg, cel.arg)
-      }
-      return cel
-    } else {
-      var cel = {
-        name: saved_arg_name || prompt('arg name')
-      }
-
-      if (cel.name == "" || cel.name == null) {
-        alert('no arg name')
-        return
-      }
-
-      var bus = () => saved_bus || parseInt(prompt('bus size')) || 1
-      cel.scp = scp
-      cel.point = point
-      cel.proj = point_to_mws(scp, point)
-      cel.id = point_to_string(point)
-
-      if (scl == null) {
-        if (cel.name == scp.name) {
-          if (scp.ptrs[null].dcls[cel.name] == null) {
-            cel.src = scp.ptrs[null]
-            cel.arg = scp.args[cel.name]
-
-            cel.src.dcls[cel.arg.name] = cel
-            scp.cels[cel.id] = cel
-            return cel
-          }
-        } else {
-          var gbus = bus()
-          var ptr = init_ptr(scp, cel.name, gbus)
-
-          if (ptr) {
-            cel.src = ptr
-            cel.arg = ptr.src.args[cel.name]
-
-            cel.src.dcls[cel.arg.name] = cel
-            scp.cels[cel.id] = cel
-            return cel
-          } else {
-            var def = init_def(scp, cel.name, gbus)
-            cel.src = def
-            cel.arg = def.args[cel.name]
-
-            cel.src.dcls[cel.arg.name] = cel
-            scp.cels[cel.id] = cel
-            return cel
-          }
-        }
-      } else if (scl.src.type == 'def') {
-        if (!scl.src.dcls[cel.name]) {
-          var arg = init_arg(scl.src, cel.name, bus())
-
-          cel.src = scl.src
-          cel.arg = arg
-
-          cel.src.dcls[cel.arg.name] = cel
-          cel.scp.cels[cel.id] = cel
-          return cel
-        }
-      } else if (scl.src.type == 'ptr') {
-        if (!scl.src.dcls[cel.name])  {
-          if (scl.src.src.type == 'def') {
-            var arg = scl.src.src.args[cel.name] ||
-              init_arg(scl.src.src, cel.name, bus())
-
-            cel.src = scl.src
-            cel.arg = arg
-
-            cel.src.dcls[cel.arg.name] = cel
-            cel.scp.cels[cel.id] = cel
-            return cel
-          } else if (scl.src.src.type == 'nat') {
-            var arg = scl.src.src.args[cel.name]
-
-            if (arg) {
-              cel.src = scl.src
-              cel.arg = arg
-
-              cel.src.dcls[cel.arg.name] = cel
-              cel.scp.cels[cel.id] = cel
-              return cel
-            } else {
-              alert(`invalid arg name '${cel.name}'`)
-            }
-          }
-        }
-      }
-    }
-  }
-
-  function remove_cel(cel) {
-    if (cel.src.type == 'ptr') {
-      remove_lnks(cel.src, cel.arg)
-    }
-
-    delete cel.src.dcls[cel.arg.name]
-    delete cel.scp.cels[cel.id]
-  }
-
-  function drawArrowLine(g, pointB, pointA, elapsed_time) {
-    if (pointA != pointB) {
-      pt.drawLine(g, pointB, pointA)
-
-      var vect = pt.sub(pointB, pointA)
-      var arrow = arrow_time * pt.length(vect)
-      pt.fillCircle(g, pt.sum(
-        pt.scale(vect, (elapsed_time % arrow) / arrow), pointA), arrow_size)
-    }
-  }
-
-  function save_def(def) {
-    if (def.type == 'def') {
-      var dmmy = {
-        name: def.name,
-        defs: {},
-        args: {},
-        ptrs: {},
-        lnks: [],
-        dcls: {}
-      }
-
-      fu.forEach(def.defs, fun => dmmy.defs[fun.name] = save_def(fun))
-      fu.forEach(def.args, arg => dmmy.args[arg.name] = arg.bus)
-      fu.forEach(def.ptrs, ptr => {
-        var pdmy = {
-          name: ptr.name,
-          bus: ptr.bus,
-          dcls: {}
-        }
-        fu.forEach(ptr.dcls, cel => pdmy.dcls[cel.arg.name] = cel.id)
-        dmmy.ptrs[ptr.id] = pdmy
-      })
-      fu.forEach(def.lnks, lnk => {
-        dmmy.lnks.push({
-          iptr: lnk.iptr.id,
-          optr: lnk.optr.id,
-          iarg: lnk.iarg.name,
-          oarg: lnk.oarg.name
-        })
-      })
-      fu.forEach(def.dcls, cel => dmmy.dcls[cel.arg.name] = cel.id)
-
-      return dmmy
-    }
-  }
-
-  function read_def(dummy) {
-    var def_q = new Queue
-    def_q.push({
-      scp: null,
-      dmy: dummy
-    })
-
-    while (!def_q.isEmpty()) {
-      var scp = def_q.peek().scp
-      var dmy = def_q.pop().dmy
-      var def = init_def(scp, dmy.name, dmy.args[dmy.name])
-
-      if (!scp) {
-        main = cel_scope = def
-      }
-
-      fu.forEach(dmy.defs, dmy => def_q.push({
-        scp: def,
-        dmy: dmy
-      }))
-
-      for (var arg_name in dmy.args) {
-        init_arg(def, arg_name, dmy.args[arg_name])
-      }
-      for (var arg_name in dmy.dcls) {
-        var cel = {
-          scp: scp,
-          src: def,
-          arg: def.args[arg_name],
-          point: string_to_point(dmy.dcls[arg_name]),
-          id: dmy.dcls[arg_name]
-        }
-
-        scp.cels[cel.id] = cel
-        def.dcls[arg_name] = cel
-      }
-    }
-
-    init_nat(cel_scope, 0, {}, vsn => {
-      var avn = vsn.avns[0]
-      for (var i = 0; i < avn.bus; ++i) {
-        avn.outs[i] = !avn.nins[i]
-      }
-    })
-    init_nat(cel_scope, 'tog', {}, vsn => {
-      var avn = vsn.avns['tog']
-      for (var i = 0; i < avn.bus; ++i) {
-        if (avn.nins[i] && !avn.pins[i]) {
-          avn.outs[i] =  !avn.outs[i]
-        }
-      }
-    })
-    init_nat(cel_scope, '+', {'i':1, 'o':1}, vsn => {
-      var tra = vsn.avns['+']
-      var tin = vsn.avns['i']
-      var tot = vsn.avns['o']
-      for (var i = 0; i < vsn.bus; ++i) {
-        tot.outs[i] = tot.nins[i] || (tin.nins[i] && !tra.nins[i])
-        tin.outs[i] = tin.nins[i]
-        tra.outs[i] = tra.nins[i]
-      }
-    })
-    for (var bus = 1; bus < 0x400; bus <<= 1) {
-      var name = `i${bus}`
-      var buss = {}
-      buss[name] = bus
-      for (var b = 0; b < bus; ++b) {
-        buss[b] = 1
-      }
-      init_nat(cel_scope, name, buss, vsn => {
-        var nm = vsn.src.name
-        var bs = vsn.src.src.args[nm].bus
-        for (var b = 0; b < bs; ++b) {
-          for (var i = 0; i < vsn.bus; ++i) {
-            vsn.avns[nm].outs[b * vsn.bus + i]
-              = vsn.avns[b].nins[i] || vsn.avns[nm].nins[b * vsn.bus + i]
-            vsn.avns[b].outs[i] = vsn.avns[b].nins[i]
-          }
-        }
-      })
-      delete buss[name]
-      name = `o${bus}`
-      buss[name] = bus
-      init_nat(cel_scope, name, buss, vsn => {
-        var nm = vsn.src.name
-        var bs = vsn.src.src.args[nm].bus
-        for (var b = 0; b < bs; ++b) {
-          for (var i = 0; i < vsn.bus; ++i) {
-            vsn.avns[b].outs[i]
-              = vsn.avns[b].nins[i] || vsn.avns[nm].nins[b * vsn.bus + i]
-            vsn.avns[nm].outs[b * vsn.bus + i]
-              = vsn.avns[nm].nins[b * vsn.bus + i]
-          }
-        }
-      })
-
-      name = `dn${bus}`
-      var dn = {}
-      dn[name] = bus
-      dn.i = 1
-      init_nat(cel_scope, name, dn, bsn => {
-
-      })
-    }
-    init_nat(cel_scope, 1, {1:1}, vsn => {
-      var avn = vsn.avns[1]
-      for (var i = 0; i < vsn.bus; ++i) {
-        avn.outs[i] = avn.nins[i]
-      }
-    })
-    for (var gap = 2; gap < 0x400; gap <<= 1) {
-      var buss = {}
-      for (var g = 1; g <= gap; ++g) {
-        buss[g] = 1
-      }
-      init_nat(cel_scope, gap, buss, vsn => {
-
-        var top = vsn.src.name
-        for (var i = 0; i < vsn.bus; ++i) {
-
-          var top_nins = vsn.avns[top].nins[i]
-          vsn.avns[top].nins[i] = false
-
-          for (var g = top; g > 1; --g) {
-            vsn.avns[g].outs[i] = vsn.avns[g].nins[i] || vsn.avns[g - 1].outs[i]
-          }
-          vsn.avns[1].outs[i] = vsn.avns[1].nins[i] || top_nins
-        }
-      })
-    }
-
-    def_q.push({
-      def: main,
-      dmy: dummy
-    })
-
-    while (!def_q.isEmpty()) {
-      var def = def_q.peek().def
-      var dmy = def_q.pop().dmy
-
-      for (var def_name in dmy.defs) {
-        def_q.push({
-          def: def.defs[def_name],
-          dmy: dmy.defs[def_name]
-        })
-      }
-
-      for (var ptr_id in dmy.ptrs) {
-        var dmy_ptr = dmy.ptrs[ptr_id]
-        var ptr = init_ptr(def, dmy_ptr.name, dmy_ptr.bus, ptr_id)
-        if (ptr_id == 'null') {
-          ptr = def.ptrs['null']
-        }
-
-        for (var arg_name in dmy_ptr.dcls) {
-          var cel = {
-            scp: def,
-            src: ptr,
-            arg: ptr.src.args[arg_name],
-            point: string_to_point(dmy_ptr.dcls[arg_name]),
-            id: dmy_ptr.dcls[arg_name]
-          }
-
-          def.cels[cel.id] = cel
-          ptr.dcls[arg_name] = cel
-        }
-      }
-
-      for (var lnk_idx in dmy.lnks) {
-        var dmy_lnk = dmy.lnks[lnk_idx]
-
-        var iptr = def.ptrs[dmy_lnk.iptr]
-        var optr = def.ptrs[dmy_lnk.optr]
-        var iarg = iptr.src.args[dmy_lnk.iarg]
-        var oarg = optr.src.args[dmy_lnk.oarg]
-
-        init_lnk(iptr, optr, iarg, oarg)
-      }
-    }
-
-  }
-
-  //----------------------------------------------------------------------------
-  //
-  //----------------------------------------------------------------------------
-
-  function sndMsg(ky, sndr, rcvr, msg) {
-    apIO.apSnd({
-      ky: ky,
-      sndr: sndr,
-      rcvr: rcvr,
-      msg: msg
-    })
-  }
-
   var apIO_init = apInitB => {
     plrIf.usr = apInitB.usrInfo.usr
 
@@ -850,246 +20,15 @@ module.exports = apInitA => {
       plrIf.srvr = true
     } else {
       plrIf.clnt = true
-      document.body.style.backgroundColor = backgroundColor
-
-      sndMsg('read', plrIf.usr.id, 'srvr')
+      document.body.style.backgroundColor = 'black'
+      sndMsg('read',plrIf.usr.id,'srvr')
     }
   }
 
   var apIO_tick = usrIO => {
-    var mws = usrIO.mws
-    mws.r = 10
-    var g = usrIO.dsply.g
-    var dt = usrIO.evnts.dt
     elapsed_time = usrIO.evnts.nw
-
-    if (!cel_scope) {
-      return
-    }
-
-    // cel_scope
-    // selected_cel
-
-    var mws_cel_pt = mws_to_point(cel_scope, mws)
-    var mws_cel_id = point_to_string(mws_cel_pt)
-    var mws_cel = cel_scope.cels[mws_cel_id]
-    // draw mws
-    {
-      g.fillStyle = 'grey'
-      pt.fillRect(g, point_to_mws(cel_scope, mws_to_point(cel_scope, mws)), 10)
-      g.fillStyle = 'white'
-      pt.fillCircle(g, mws, 10)
-    }
-
-    g.font = 'Arial 12px'
-    g.textAlign = 'center'
-
-    // draw
-    {
-      fu.forEach(cel_scope.cels, cel =>
-        cel.proj = point_to_mws(cel_scope, cel.point))
-
-      g.fillStyle = g.strokeStyle = 'grey'
-      fu.forEach(cel_scope.lnks, lnk => {
-        var icel = lnk.iptr.dcls[lnk.iarg.name]
-        var ocel = lnk.optr.dcls[lnk.oarg.name]
-        if (icel && ocel) {
-          drawArrowLine(g, ocel.proj, icel.proj, elapsed_time)
-        }
-      })
-
-      g.fillStyle = g.strokeStyle = 'white'
-      fu.forEach(cel_scope.ptrs, ptr => {
-        var cntr = ptr.dcls[ptr.src.name]
-        if (cntr) {
-          fu.forEach(ptr.dcls, cel => pt.drawLine(g, cel.proj, cntr.proj))
-        }
-      })
-
-      g.fillStyle = g.strokeStyle = 'white'
-      fu.forEach(cel_scope.defs, def => {
-        if (def.type == 'def') {
-          var cntr = def.dcls[def.name]
-          if (cntr) {
-            fu.forEach(def.dcls, cel => pt.drawLine(g, cel.proj, cntr.proj))
-          }
-        }
-      })
-
-      g.fillStyle = g.strokeStyle = 'grey'
-      if (selected_cel) {
-        var cel = cel_scope.cels[mws_cel_id]
-        if (cel) {
-          drawArrowLine(g, cel.proj, selected_cel.proj, elapsed_time)
-        } else {
-          cel = selected_cel.src.dcls[selected_cel.src.name]
-          if (cel) {
-            pt.drawLine(g, point_to_mws(cel_scope, mws_cel_pt), cel.proj)
-          }
-        }
-      }
-
-
-      fu.forEach(cel_scope.ptrs, ptr => {
-        fu.forEach(ptr.dcls, cel => {
-          g.fillStyle = g.strokeStyle = 'white'
-
-          var avn = cel_scope.vsns[null].vsns[ptr.id].avns[cel.arg.name]
-          for (var i = 0; i < avn.bus; ++i) {
-            if (avn.outs[i]) {
-              g.fillStyle = g.strokeStyle = 'red'
-              break
-            }
-          }
-
-          g.fillText(`${cel.arg.name}:${cel.arg.bus * cel.src.bus}`,
-            cel.proj.x, cel.proj.y)
-        })
-      })
-
-      g.fillStyle = g.strokeStyle = 'white'
-      fu.forEach(cel_scope.defs, def => {
-        if (def.type == 'def') {
-          fu.forEach(def.dcls, cel => {
-            g.fillText(`${cel.arg.name}:${cel.arg.bus}`,
-              cel.proj.x, cel.proj.y)
-          })
-        }
-      })
-    }
-
-    // actions
-    {
-
-      if (usrIO.kys.hsDn['t']) {
-        tick_speed = parseInt(prompt('speed'))
-        tick_speed = tick_speed <= 128 && tick_speed > 0 ? tick_speed : 0
-
-        selected_cel = null
-        cel_moved = true
-        prev_cel = null
-      } else if (usrIO.kys.hsDn['s']) {
-        sndMsg('save', plrIf.usr.id, 'srvr', save_def(main))
-      } else if (usrIO.kys.hsDn['a']) {
-        saved_arg_name = prompt('arg name')
-        if (saved_arg_name && saved_arg_name != "") {
-          alert(`saved arg name ${saved_arg_name}`)
-        } else {
-          alert('no arg name saved')
-          saved_arg_name = null
-        }
-      } else if (usrIO.kys.hsDn['b']) {
-        saved_bus = parseInt(prompt('Save Bus'))
-        if (saved_bus && saved_bus > 0) {
-          alert(`saved bus ${saved_bus}`)
-        } else {
-          alert('no bus saved')
-          saved_bus = null;
-        }
-      } else if (usrIO.kys.hsDn['q']) {
-        if (mws.isDn && mws_cel) {
-          if (mws_cel.arg.name == mws_cel.src.name) {
-            if (mws_cel.src.type == 'def') {
-              remove_def(mws_cel.src)
-            } else if (mws_cel.src.type == 'ptr') {
-              remove_ptr(mws_cel.src)
-            }
-          } else {
-            remove_cel(mws_cel)
-          }
-        }
-        selected_cel = null
-        cel_moved = true
-        prev_cel = null
-
-      } else if (usrIO.kys.hsDn['Shift'] && mws.isDn && mws_cel) {
-
-        if (mws_cel.src.type == 'ptr') {
-          if (mws_cel.src.name == mws_cel.scp.name) {
-            cel_scope = mws_cel.scp.scp || cel_scope
-          } else if (mws_cel.src.src.type == 'def') {
-            cel_scope = mws_cel.src.src.scp || cel_scope
-          }
-        } else if (mws_cel.src.type == 'def') {
-          cel_scope = mws_cel.src
-        }
-
-        selected_cel = null
-        cel_moved = true
-        prev_cel = null
-
-      } else if (usrIO.kys.hsDn[' '] && mws.isDn && mws_cel) {
-
-        if (mws_cel.src.type == 'ptr') {
-          var avn = cel_scope.vsns[null]
-            .vsns[mws_cel.src.id]
-            .avns[mws_cel.arg.name]
-
-          avn.dfv = !avn.dfv
-          selected_cel = null
-          cel_moved = true
-          prev_cel = null
-        }
-      } else if (usrIO.kys.isDn['x'] && mws.isDn) {
-
-        pt.sume(cel_scope.center_point, pt.sub(mws, mws.prv))
-        selected_cel = null
-        cel_moved = true
-        prev_cel = null
-
-      } else if (usrIO.kys.hsDn['l'] && mws.isDn && mws_cel) {
-
-        if (mws_cel.src.type == 'ptr') {
-          remove_lnks(mws_cel.src, mws_cel.arg)
-          selected_cel = null
-          cel_moved = true
-          prev_cel = null
-        }
-
-      } else {
-
-        if (mws.hsDn) {
-          prev_cel_id = mws_cel_id
-          prev_cel = mws_cel
-          cel_moved = false
-        }
-
-        if (mws.isDn) {
-          if (prev_cel && !mws_cel && mws_cel_id != prev_cel_id) {
-            delete cel_scope.cels[prev_cel.id]
-
-            prev_cel_id = prev_cel.id = mws_cel_id
-            prev_cel.point = pt.copy(mws_cel_pt)
-
-            cel_scope.cels[prev_cel.id] = prev_cel
-
-            cel_moved = true
-          }
-        }
-
-        if (mws.hsUp && !cel_moved) {
-          selected_cel = init_cel(cel_scope, selected_cel, mws_cel_pt)
-        }
-      }
-
-
-    }
-
-
-    if (tick_speed > 0) {
-      for (var i = 0; i < tick_speed; ++i) {
-        get_output(cel_scope.vsns[null])
-        get_input(cel_scope.vsns[null])
-      }
-
-    } else {
-      if (usrIO.kys.hsDn['Enter']) {
-        get_output(cel_scope.vsns[null])
-        get_input(cel_scope.vsns[null])
-      }
-    }
+    tick(usrIO, (key, msg) => sndMsg(key, plrIf.usr.id, 'srvr', msg))
   }
-
   var apIO_apRcv = rcvMsg => {
     var ky = rcvMsg.ky
     var sndr = rcvMsg.sndr
@@ -1097,19 +36,18 @@ module.exports = apInitA => {
     var msg = rcvMsg.msg
 
     switch (ky) {
-      case 'save':
-        log(msg)
-        fs.writeFile('redstoneSave.txt',JSON.stringify(msg,null,2))
-        sndMsg('saved', 'srvr', sndr)
-        break
-      case 'saved':
-        alert('Game State Saved!')
-        break
       case 'read':
         sndMsg('restart',
           'srvr',
           'all -srvr',
-          JSON.parse(fs.readFileSync('redstoneSave.txt')))
+          JSON.parse(fs.readFileSync('redstone.txt')))
+        break
+      case 'save':
+        fs.writeFile('redstone.txt',JSON.stringify(msg,null,2))
+        sndMsg('saved', 'srvr', sndr)
+        break
+      case 'saved':
+        alert('Game State Saved!')
         break
       case 'restart':
         read_def(msg)
@@ -1117,9 +55,1487 @@ module.exports = apInitA => {
     }
   }
   var apIO = apInitA.caleInit.apIO = {
-    init: apIO_init,
-    tick: apIO_tick,
-    apRcv: apIO_apRcv
+    init:apIO_init,
+    tick:apIO_tick,
+    apRcv:apIO_apRcv
   }
   apInitA.cale(apInitA.caleInit)
 }
+
+// -----------------------------------------------------------------------------
+// POINT MANIP
+// -----------------------------------------------------------------------------
+
+cel_size = 32
+arrow_time = 20
+arrow_size = 3
+elapsed_time = 0
+
+// mws, string, point translations
+function mws_to_point(cp, mws) {
+  return pt.math(Math.round, pt.factor(pt.sub(mws, cp), cel_size))
+}
+function point_to_mws(cp, point) {
+  return pt.sum(pt.scale(point, cel_size), cp)
+}
+function string_to_point(string) {
+  string = string.split(',')
+  return {
+    x: parseFloat(string[0]),
+    y: parseFloat(string[1]),
+    z: 0
+  }
+}
+function point_to_string(point) {
+  return `${point.x},${point.y}`
+}
+function drawArrowLine(g, pointA, pointB, radA, radB) {
+  if (pointA != pointB) {
+    pt.drawLine(g, pointB, pointA)
+
+    var vect = pt.sub(pointB, pointA)
+    var length = pt.length(vect)
+    var arrow = arrow_time * length
+    var scale = (elapsed_time % arrow) / arrow
+    arrow = scale * length
+
+    if (arrow > length - radB) pt.drawCircle(g, pointB, radB + 2)
+    else if (radA > arrow) pt.drawCircle(g, pointA, radA + 2)
+
+    pt.fillCircle(g, pt.sum(pt.scale(vect, scale), pointA), arrow_size)
+  }
+}
+
+function valid_name(obj) {
+  return !!obj || obj == '0' ? obj : null
+}
+function get_valid_name(obj, str) {
+  var name = valid_name(obj)
+  return name != null ? name : valid_name(prompt(`${str} name`))
+}
+function get_name(cfn_bus,name,far_bus) {
+  return cfn_bus > 1 ?
+    far_bus > 1 ?
+      `${cfn_bus}:${name}:${far_bus}` :
+      `${cfn_bus}:${name}` :
+    far_bus > 1 ?
+      `${name}:${far_bus}` :
+      `${name}`
+}
+function valid_bus(obj) {
+  obj = parseInt(obj)
+  return obj > 0 && obj
+}
+function get_valid_bus(obj, str) {
+  return valid_bus(obj || prompt(`${str} bus size`))
+}
+function valid_idx(obj) {
+  obj = parseInt(obj)
+  return (obj || obj == 0) && obj >= 0 ? obj : null
+}
+function get_valid_idx(obj, str) {
+  obj = valid_idx(obj)
+  return obj != null ? obj : valid_idx(prompt(`${str} idx`))
+}
+function mod_match(ibus, obus) {
+  return !(ibus % obus) || !(obus % ibus)
+}
+function valid_lnk(is, ib, os, ob) {
+  return mod_match(is * ib, os * ob)
+}
+
+// -----------------------------------------------------------------------------
+// RIDX
+// -----------------------------------------------------------------------------
+
+function rid_add(obj, type) {
+  rid_objs[rid_idx] = obj
+  rid_obj_type[rid_idx] = type
+  if (!rid_types[type]) rid_types[type] = {}
+  rid_types[type][rid_idx] = obj
+  return rid_idx++
+}
+function rid_rmv(idx) {
+  var type = rid_obj_type[idx]
+  type && delete rid_types[type][idx]
+  delete rid_obj_type[idx]
+  delete rid_objs[idx]
+}
+
+// -----------------------------------------------------------------------------
+// PROJECT REDSTONE
+// -----------------------------------------------------------------------------
+
+class Fun {
+  constructor(scp_fun, name) {
+    this.id = rid_add(this,'Fun')
+    this.scp_fun = scp_fun
+    this.name = name
+    this.n = null // native function
+
+    this.locked = false
+
+    this.funs = {}
+    this.fars = {}
+    this.fals = {}
+
+    this.cels = {}
+    this.cfns = {}
+    this.clks = {}
+
+    this.pfns = {}
+    this.pals = {}
+
+    this.slf_far = null
+    this.slf_cfn = null
+    this.slf_pfn = null
+
+    this.slf_cfns = {}
+    this.slf_vfns = {}
+  }
+
+  get_fun(name) {
+    return this.name != name && (this.funs[name] ||
+      (this.scp_fun && this.scp_fun.get_fun(name)))
+  }
+  add_fun(name) {
+    var fun = this.get_fun(name)
+    if (fun) return fun
+    else if (name == this.name) return this
+    else {
+      var fun = new Fun(this, name)
+      this.funs[name] = fun
+      return fun
+    }
+  }
+  rmv_fun(fun) {
+    var fun = this.funs[fun.name]
+    if (fun && !fun.locked) {
+      delete this.funs[fun.name]
+      rid_rmv(fun.id)
+
+      fu.forEach(fun.cels, cel => fun.rmv_cel(cel))
+    }
+  }
+
+  add_far(name, bus) {
+    if (this.fars[name]) return this.fars[name]
+    else if (this.locked) return
+
+    var far = new Far(this, name, bus)
+    this.fars[far.name] = far
+    if (name == this.name) this.slf_far = far
+
+    fu.forlen(far.bus, idx => far.add_fal(idx))
+
+    return far
+  }
+  rmv_far(far) {
+    if (!this.fars[far.name]) return
+    else if (this.locked) return
+
+    fu.forEach(far.fals, fal => far.rmv_fal(fal))
+
+    if (far == this.slf_far) this.slf_far = null
+    delete this.fars[far.name]
+    rid_rmv(far.id)
+    fu.forEach(this.slf_cfns, cfn => cfn.rmv_car(far))
+  }
+
+  add_cfn(name, bus) {
+    if (this.locked) return
+
+    name = get_valid_name(name, 'cfn')
+    if (!name) return
+    var fun = this.add_fun(name)
+    if (!fun) return
+    else if (this == fun && this.slf_cfn) return this.slf_cfn
+
+    var cfn = new Cfn(this, fun, bus)
+    if (this == fun) this.slf_cfn = cfn
+    this.cfns[cfn.id] = cfn
+    fun.slf_cfns[cfn.id] = cfn
+
+    fu.forlen(cfn.bus, idx => cfn.add_pfn(idx))
+    return cfn
+  }
+  rmv_cfn(cfn) {
+    if (!this.cfns[cfn.id]) return
+    else if (this.locked) return
+
+    fu.forEach(cfn.src_fun.fars, far => cfn.rmv_car(far))
+    fu.forEach(cfn.pfns, pfn => cfn.rmv_pfn(pfn))
+
+    delete cfn.src_fun.slf_cfns[cfn.id]
+    delete this.cfns[cfn.id]
+    if (this == cfn.src_fun) this.slf_cfn = null
+    rid_rmv(cfn.id)
+
+    if (!fu.trueif(cfn.src_fun.slf_cfns, scfn => scfn != cfn.src_fun.slf_cfn)) {
+      cfn.src_fun.scp_fun && cfn.src_fun.scp_fun.rmv_fun(cfn.src_fun)
+    }
+  }
+
+  add_clk(icel, ocel) {
+    if (icel == ocel) return
+    else if (icel.clks[ocel.id]) return icel.clks[ocel.id]
+    // else if (ocel.clks[icel.id]) return ocel.clks[icel.id]
+
+    if (!valid_lnk(icel.cfn_bus, icel.fal_bus, ocel.cfn_bus, ocel.fal_bus))
+      return
+
+    var clk = new Clk(icel, ocel)
+    this.clks[clk.id] = clk
+
+    icel.clks[ocel.id] = clk
+    ocel.clks[icel.id] = clk
+
+    icel.ocels[ocel.id] = ocel
+    ocel.icels[icel.id] = icel
+
+    var ibus = icel.pals.length
+    var obus = ocel.pals.length
+    var iscl = obus > ibus ? Math.floor(ibus / obus) : 1
+    var oscl = ibus > obus ? Math.floor(obus / ibus) : 1
+    var bus = ibus > obus ? ibus : obus
+
+    fu.forlen(bus, idx => clk.add_plk(idx * iscl, idx * oscl))
+
+    return clk
+  }
+  rmv_clk(clk) {
+    if (!this.clks[clk.id]) return
+    var icel = clk.icel
+    var ocel = clk.ocel
+
+    delete this.clks[clk.id]
+
+    delete icel.clks[ocel.id]
+    delete ocel.clks[icel.id]
+
+    delete icel.ocels[ocel.id]
+    delete ocel.icels[icel.id]
+
+    rid_rmv(clk.id)
+
+    fu.forEach(clk.plks, plk => clk.rmv_plk(plk))
+  }
+
+  add_cel(sel_cels, point, name, cfn_bus, far_bus) {
+    var cel = this.cels[point.s]
+    if (cel) {
+      fu.forEach(sel_cels, sel_cel => this.add_clk(sel_cel, cel))
+      return [cel]
+    }
+    else if (fu.isEmpty(sel_cels)) {
+      var cfn = this.add_cfn(name, cfn_bus)
+      if (!cfn) return []
+
+      name = cfn.src_fun.name
+      if (cfn.cars[name]) return [cfn.cars[name].slf_cel]
+
+      var car = cfn.add_car(name, far_bus)
+      if (!car) {
+        this.rmv_cfn(cfn)
+        return []
+      }
+
+      var cel = new Cel(car, null, point)
+      cel.color = '#404050'
+      // cel.radius =
+      this.cels[point.s] = cel
+      car.slf_cel = cel
+
+      cel.far_bus = car.src_far.bus
+      cel.cfn_bus = car.src_cfn.bus
+      cel.idx = null
+      cel.name = get_name(cel.cfn_bus, name, cel.far_bus)
+      cel.radius = 5 + cel.name.length * 2
+
+
+      fu.forEach(car.pals, pal => pal.add_cel(cel))
+
+      cel.get_scl = sfn => {
+        var scl = {
+          point: cel.point.s,
+          name: name
+        }
+
+        if (cel.cfn_bus > 1) scl.cfn_bus = cel.cfn_bus
+        if (cel.far_bus > 1) scl.far_bus = cel.far_bus
+
+        sfn.scls[cel.id] = scl
+        fu.forEach(cel.idx_cels, idx_cel => idx_cel.get_scl(sfn))
+        fu.forEach(cfn.cars,
+          src_car => src_car != car && src_car.slf_cel.get_scl(sfn))
+      }
+
+      return [cel]
+    }
+    else if (fu.count(sel_cels) == 1) {
+      var sel_cel = fu.first(sel_cels)
+
+      var name = get_valid_name(name, 'cel idx or far')
+      var idx = valid_idx(name)
+      if (idx == null) {
+        var cfn = sel_cel.src_car.src_cfn
+        if (cfn.cars[name]) return [cfn.cars[name].slf_cel]
+
+        var car = cfn.add_car(name, far_bus)
+        if (!car) return []
+        name = car.src_far.name
+
+        var cel = new Cel(car, null, point)
+        cel.color = '#404040'
+        this.cels[point.s] = cel
+        car.slf_cel = cel
+
+        cel.far_bus = car.src_far.bus
+        cel.cfn_bus = car.src_cfn.bus
+        cel.name = get_name(cel.cfn_bus, name, cel.far_bus)
+        cel.radius = 5 + cel.name.length * 2
+        cel.idx = null
+
+        fu.forEach(car.pals, pal => pal.add_cel(cel))
+
+        cel.get_scl = sfn => {
+          var scl = {
+            src_cel: sel_cel.id,
+            point: cel.point.s,
+            name: name
+          }
+
+          if (cel.cfn_bus > 1) scl.cfn_bus = cel.cfn_bus
+          if (cel.far_bus > 1) scl.far_bus = cel.far_bus
+
+          sfn.scls[cel.id] = scl
+          fu.forEach(cel.idx_cels, idx_cel => idx_cel.get_scl(sfn))
+        }
+
+        return [cel]
+      }
+      else if (sel_cel.idx_cels[idx]) return [sel_cel.idx_cels[idx]]
+      else if (sel_cel.cfn_bus > 1) {
+        if (idx >= sel_cel.cfn_bus) return []
+
+        var cel = new Cel(null, sel_cel, point)
+        cel.color = '#403030'
+        cel.idx = idx
+        this.cels[point.s] = cel
+        sel_cel.idx_cels[idx] = cel
+
+        var car = sel_cel.src_car
+        var par = car.pars[idx]
+        var far = car.src_far
+
+        cel.far_bus = far.bus
+        cel.cfn_bus = 1
+        cel.name = get_name(cel.cfn_bus, idx, cel.far_bus)
+        cel.radius = 5 + cel.name.length * 2
+
+        fu.forEach(par.pals, pal => pal.add_cel(cel))
+
+        cel.get_scl = sfn => {
+          var scl = {
+            src_cel: sel_cel.id,
+            point: cel.point.s,
+            name: idx
+          }
+
+          if (cel.far_bus > 1) scl.far_bus = cel.far_bus
+
+          sfn.scls[cel.id] = scl
+          fu.forEach(cel.idx_cels, idx_cel => idx_cel.get_scl(sfn))
+        }
+
+        return [cel]
+      }
+      else {
+        if (idx >= sel_cel.far_bus) return []
+
+        var cel = new Cel(null, sel_cel, point)
+        cel.color = '#403030'
+        cel.idx = idx
+        this.cels[point.s] = cel
+        sel_cel.idx_cels[idx] = cel
+
+        far_bus = get_valid_bus(far_bus, 'cel') || 1
+        cel.far_bus = far_bus + idx > sel_cel.far_bus ?
+          sel_cel.far_bus - idx : far_bus
+        cel.cfn_bus = 1
+        cel.name = get_name(cel.cfn_bus, idx, cel.far_bus)
+        cel.radius = 5 + cel.name.length * 2
+
+        fu.forlen(cel.far_bus,
+          far_idx => sel_cel.pals[idx + far_idx].add_cel(cel))
+
+        cel.get_scl = sfn => {
+          var scl = {
+            src_cel: sel_cel.id,
+            point: cel.point.s,
+            name: idx,
+          }
+
+          if (cel.far_bus > 1) scl.far_bus = cel.far_bus
+
+          sfn.scls[cel.id] = scl
+          fu.forEach(cel.idx_cels, idx_cel => idx_cel.get_scl(sfn))
+        }
+
+        return [cel]
+      }
+    }
+  }
+  rmv_cel(cel) {
+    if (!this.cels[cel.point.s]) return
+    fu.forEach(cel.pals, pal => pal.rmv_cel(cel))
+    fu.forEach(cel.idx_cels, idx_cel => this.rmv_cel(idx_cel))
+    fu.forEach(cel.clks, clk => this.rmv_clk(clk))
+    delete this.cels[cel.point.s]
+    rid_rmv(cel.id)
+    rid_rmv(cel.id + 1) // TODO rmv this
+
+    if (cel.src_cel == null) {
+      var car = cel.src_car
+      var cfn = car.src_cfn
+      cfn.rmv_car(car.src_far)
+
+      if (cfn.slf_car == null) {
+        fu.forEach(cfn.cars, car => this.rmv_cel(car.slf_cel))
+        this.rmv_cfn(cfn)
+      }
+    }
+    else {
+      delete cel.src_cel.idx_cels[cel.idx]
+    }
+  }
+
+  add_sfn(sfn) {
+    if (this.locked) return
+
+    var cels = {}
+    fu.forEach(sfn.sfns, (sfn, name) => this.add_fun(name))
+
+    fu.forEach(sfn.scls, (scl,id) => {
+      var src_cel = scl.src_cel && [cels[scl.src_cel]]
+      var point = string_to_point(scl.point)
+      point.s = scl.point
+      var cel = this.add_cel(src_cel, point, scl.name,
+        scl.cfn_bus || 1, scl.far_bus || 1)
+      cels[id] = cel[0]
+    })
+    fu.forEach(sfn.slks, slk => {
+      var icel = cels[slk[0]]
+      var ocel = cels[slk[1]]
+      this.add_clk(icel, ocel)
+    })
+
+    fu.forEach(sfn.sfns, (sfn, name) => this.funs[name].add_sfn(sfn))
+  }
+  get_sfn(scp_sfn) {
+    var sfn = {
+      sfns: {},
+      scls: {},
+      slks: []
+    }
+
+    fu.forEach(this.funs, fun => sfn.sfns[fun.name] = fun.get_sfn())
+    fu.forEach(this.cfns, cfn => cfn.slf_car.slf_cel.get_scl(sfn))
+    fu.forEach(this.clks, clk => sfn.slks.push(clk.get_slk()))
+
+    return sfn
+  }
+}
+class Far {
+  constructor(src_fun, name, bus) {
+    this.id = rid_add(this,'Far')
+    this.src_fun = src_fun
+    this.name = name
+    this.bus = get_valid_bus(bus, 'far') || 1
+
+    this.fals = []
+    this.slf_cars = {}
+  }
+  add_fal(idx) {
+    if (this.fals[idx]) return this.fals[idx]
+
+    var fal = new Fal(this, idx)
+    this.fals[idx] = fal
+    this.src_fun.fals[fal.id] = fal
+    return fal
+  }
+  rmv_fal(fal) {
+    if (!this.fals[fal.idx]) return
+
+    delete this.src_fun.fals[fal.id]
+    delete this.fals[fal.idx]
+    rid_rmv(fal.id)
+  }
+}
+class Fal {
+  constructor(src_far, idx) {
+    this.id = rid_add(this,'Fal')
+    this.src_far = src_far
+    this.idx = idx
+  }
+}
+
+class Cel {
+  constructor(src_car, src_cel, point) {
+    this.id = rid_add(this,'Cel')
+    rid_add('new Cel -----')
+    this.scp_fun = scp_fun
+    this.src_car = src_car || src_cel.src_car
+    this.src_cel = src_cel
+    this.point = point
+    this.proj = null
+    this.name = null
+
+    this.idx_cels = []
+    this.pals = []
+
+    this.icels = {}
+    this.ocels = {}
+    this.clks = {}
+
+    this.active = false
+
+    this.idx = null
+    this.far_bus = null
+    this.cfn_bus = null
+
+    this.get_scl = sfn => {throw 'no get_scl'}
+  }
+  set_active(active) {
+    this.active = active
+    fu.forEach(this.pals, pal => pal.set_active(active))
+  }
+  is_active() {
+    return fu.trueif(this.pals, pal => {
+      var val = pal.get_val()
+      return val && val.o
+    })
+  }
+
+  draw_clk_lines(g) {
+    g.fillStyle = g.strokeStyle = this.is_active() && '#FF2020' || 'grey'
+    fu.forEach(this.ocels,
+      ocel => drawArrowLine(g, this.proj, ocel.proj, this.radius, ocel.radius))
+  }
+  draw_lnks(g) {
+    var cfn = this.src_car.src_cfn
+    g.strokeStyle = this.is_active() && '#FF2020' || 'grey'
+    if (this.src_cel) {
+      pt.drawLine(g, this.proj, this.src_cel.proj)
+    }
+    else if (cfn.slf_car != this.src_car) {
+      pt.drawLine(g, this.proj, cfn.slf_car.slf_cel.proj)
+    }
+  }
+  fill_text(g) {
+    g.fillStyle = this.color
+    var x = this.proj.x
+    var y = this.proj.y
+
+    var name = `${this.name}`
+    var w = cel_size / 2
+    pt.fillCircle(g, this.proj, this.radius)
+
+    if (this.is_active()) {
+      g.strokeStyle = '#FF2020'
+      pt.drawCircle(g, this.proj, this.radius)
+    }
+
+    g.fillStyle = 'white'
+    var far_bus = this.far_bus > 1 ? this.far_bus : ''
+    var cfn_bus = this.cfn_bus > 1 ? this.cfn_bus : ''
+    g.fillText(name, this.proj.x,this.proj.y + 4)
+  }
+}
+class Cfn {
+  constructor(scp_fun, src_fun, bus) {
+    this.id = rid_add(this,'Cfn')
+    this.scp_fun = scp_fun
+    this.src_fun = src_fun
+    this.is_slf = scp_fun == src_fun
+    this.bus = this.is_slf ? 1 : get_valid_bus(bus, 'cfn') || 1
+
+    this.pfns = []
+    this.cars = {}
+    this.slf_car = null
+  }
+  add_pfn(idx) {
+    if (this.pfns[idx]) return this.pfns[idx]
+
+    var pfn = new Pfn(this, idx)
+    this.pfns[idx] = pfn
+    this.scp_fun.pfns[pfn.id] = pfn
+    if (this.is_slf) this.scp_fun.slf_pfn = pfn
+
+    fu.forEach(scp_fun.slf_vfns, vfn => pfn.get_vfn(vfn))
+    pfn.get_vfn()
+
+    return pfn
+  }
+  rmv_pfn(pfn) {
+    if (!this.pfns[pfn.idx]) return
+
+    fu.forEach(scp_fun.slf_vfns, vfn => pfn.rmv_vfn(vfn))
+    pfn.rmv_vfn()
+
+    if (this.is_slf) this.scp_fun.slf_pfn = null
+    delete this.scp_fun.pfns[pfn.id]
+    delete this.pfns[pfn.idx]
+    rid_rmv(pfn.id)
+  }
+
+  add_car(name, bus) {
+    name = get_valid_name(name, 'car')
+    if (!name) return
+    else if (this.cars[name]) return this.cars[name]
+    var far = this.src_fun.add_far(name, bus)
+    if (!far) return
+
+    var car = new Car(this, far)
+    this.cars[name] = car
+    far.slf_cars[car.id] = car
+    if (far == this.src_fun.slf_far) this.slf_car = car
+
+    fu.forEach(far.fals, fal => car.add_cal(fal))
+    fu.forEach(this.pfns, pfn => pfn.add_par(car))
+
+    var src_name = this.src_fun.name
+
+    if (src_name == '+' || src_name == '=') {
+      if (name == 'i' || name == 's') {
+        fu.forEach(this.pfns, pfn => {
+          var n = pfn.pars[src_name].pal
+          var i = pfn.pars[name].pal
+          if (i) {
+            n[name] = i
+            i.src_pal = n
+          }
+        })
+      }
+      else {
+        fu.forEach(this.pfns, pfn => {
+          var n = pfn.pars[src_name].pal
+          n.n = this.src_fun.n
+        })
+      }
+    }
+
+    return car
+  }
+  rmv_car(far) {
+    var car = this.cars[far.name]
+    if (!car) return
+
+    fu.forEach(this.pfns, pfn => pfn.rmv_par(car))
+    fu.forEach(far.fals, fal => car.rmv_cal(fal))
+
+    if (far == this.src_fun.slf_far) this.slf_car = null
+    delete far.slf_cars[car.id]
+    delete this.cars[far.name]
+    rid_rmv(car.id)
+
+    if (fu.isEmpty(far.slf_cars)) this.src_fun.rmv_far(far)
+  }
+}
+class Car {
+  constructor(src_cfn, src_far) {
+    this.id = rid_add(this,'Car')
+    this.src_cfn = src_cfn
+    this.src_far = src_far
+
+    this.cals = []
+    this.pars = []
+    this.pals = {}
+
+    this.slf_cel = null
+  }
+  add_cal(fal) {
+    if (this.cals[fal.idx]) return this.cals[fal.idx]
+
+    var cal = new Cal(this, fal)
+    this.cals[fal.idx] = cal
+    return cal
+  }
+  rmv_cal(fal) {
+    var cal = this.cals[fal.idx]
+    if (!cal) return
+
+    delete this.cals[fal.idx]
+    rid_rmv(cal.id)
+  }
+}
+class Cal {
+  constructor(src_car, src_fal) {
+    this.id = rid_add(this,'Cal')
+    this.src_car = src_car
+    this.src_fal = src_fal
+
+    this.pals = []
+  }
+}
+class Clk {
+  constructor(icel, ocel) {
+    this.id = rid_add(this,'Clk')
+    this.icel = icel
+    this.ocel = ocel
+
+    this.plks = {}
+  }
+
+  get_slk() {
+    return [this.icel.id, this.ocel.id]
+  }
+
+  add_plk(iidx, oidx) {
+    var ipal = this.icel.pals[iidx]
+    var opal = this.ocel.pals[oidx]
+    var plk = new Plk(ipal, opal)
+    this.plks[plk.id] = plk
+    if (!ipal.plks[opal.id]) ipal.plks[opal.id] = {}
+    if (!opal.plks[ipal.id]) opal.plks[ipal.id] = {}
+    ipal.plks[opal.id][plk.id] = plk
+    opal.plks[ipal.id][plk.id] = plk
+
+    ipal.opals[opal.id] = opal
+    opal.ipals[ipal.id] = ipal
+
+    return plk
+  }
+  rmv_plk(plk) {
+    if (!this.plks[plk.id]) return
+
+    var ipal = plk.ipal
+    var opal = plk.opal
+
+    delete this.plks[plk.id]
+    delete ipal.plks[opal.id][plk.id]
+    delete opal.plks[ipal.id][plk.id]
+    rid_rmv(plk.id)
+
+    if (fu.isEmpty(ipal.plks[opal.id])) {
+      delete ipal.plks[opal.id]
+      delete opal.plks[ipal.id]
+      delete ipal.opals[opal.id]
+      delete opal.ipals[ipal.id]
+    }
+  }
+}
+
+class Pfn {
+  constructor(src_cfn, idx) {
+    this.id = rid_add(this,'Pfn')
+    this.src_cfn = src_cfn
+    this.idx = idx
+
+    this.scp_fun = src_cfn.scp_fun
+    this.src_fun = src_cfn.src_fun
+    this.is_slf = src_cfn.is_slf
+
+    this.pars = {}
+    this.pals = {}
+
+    this.slf_vfn = null
+  }
+  add_par(car) {
+    var far = car.src_far
+    if (this.pars[far.name]) return this.pars[far.name]
+
+    var par = new Par(this, car)
+    this.pars[far.name] = par
+    car.pars[this.idx] = par
+
+    fu.forEach(car.cals, cal => par.add_pal(cal))
+
+    if (far.bus > 1) par.pal = null
+
+    return par
+  }
+  rmv_par(car) {
+    var far = car.src_far
+    var par = this.pars[far.name]
+    if (!par) return
+
+    fu.forEach(car.cals, cal => par.rmv_pal(cal))
+
+    delete car.pars[this.idx]
+    delete this.pars[far.name]
+    rid_rmv(par.id)
+  }
+
+  get_vfn(scp_vfn) {
+    var src_vfn = scp_vfn ? scp_vfn.vfns[this.id] : this.slf_vfn
+    if (!src_vfn)
+      if (this.is_slf && scp_vfn) {
+        src_vfn = scp_vfn
+        scp_vfn.vfns[this.id] = src_vfn
+      }
+      else return null
+
+    if (this.is_slf) src_vfn.src_pfn = this
+    else src_vfn.scp_pfn = this
+
+    return src_vfn
+  }
+  add_vfn(scp_vfn) {
+    var src_vfn = this.get_vfn(scp_vfn)
+    if (src_vfn) return src_vfn
+
+    src_vfn = this.is_slf ?
+      new Vfn(scp_vfn, this.src_fun, null, this) :
+      new Vfn(scp_vfn, this.src_fun, this, this.src_fun.slf_pfn)
+
+      // log('add_vfn', this.id, src_vfn.id)
+
+    if (scp_vfn) scp_vfn.vfns[this.id] = src_vfn
+    else this.slf_vfn = src_vfn
+
+    this.src_fun.slf_vfns[src_vfn.id] = src_vfn
+    return src_vfn
+  }
+  rmv_vfn(scp_vfn) {
+    var src_vfn = scp_vfn ? scp_vfn.vfns[this.id] : this.slf_vfn
+    if (!src_vfn) return
+
+    if (!this.is_slf || !scp_vfn){
+      fu.forEach(this.pals, pal => pal.rmv_val(scp_vfn))
+      if (!this.is_slf || !scp_vfn) rid_rmv(src_vfn.id)
+
+      // log('rmv_vfn', this.id, src_vfn.id)
+    }
+
+    if (scp_vfn) delete scp_vfn.vfns[this.id]
+    else this.slf_vfn = null
+
+    if (!this.is_slf || scp_vfn)
+      fu.forEach(this.src_fun.pfns, pfn => pfn.rmv_vfn(src_vfn))
+  }
+}
+class Par {
+  constructor(src_pfn, src_car) {
+    this.id = rid_add(this,'Par')
+    this.src_pfn = src_pfn
+    this.src_car = src_car
+
+    this.scp_fun = src_pfn.scp_fun
+    this.src_fun = src_pfn.src_fun
+
+    this.pals = []
+    this.pal = null // only used for single bus fars
+  }
+  add_pal(cal) {
+    var fal = cal.src_fal
+    if (this.pals[fal.idx]) return this.pals[fal.idx]
+
+    var pal = new Pal(this, cal)
+    this.pals[fal.idx] = pal
+    cal.pals[this.src_pfn.idx] = pal
+    cal.src_car.pals[pal.id] = pal
+    this.src_pfn.pals[fal.id] = pal
+    this.src_car.src_cfn.scp_fun.pals[pal.id] = pal
+    this.pal = pal
+
+    fu.forEach(this.scp_fun.slf_vfns, vfn => pal.get_val(vfn))
+    pal.get_val()
+
+    return pal
+  }
+  rmv_pal(cal) {
+    var fal = cal.src_fal
+    var pal = this.pals[fal.idx]
+    if (!pal) return
+
+    fu.forEach(this.src_fun.slf_vfns, vfn => pal.rmv_val(vfn))
+    pal.rmv_val()
+
+    this.pal = null
+    delete this.src_car.src_cfn.scp_fun.pals[pal.id]
+    delete this.src_pfn.pals[fal.id]
+    delete cal.src_car.pals[pal.id]
+    delete cal.pals[this.src_pfn.idx]
+    delete this.pals[fal.idx]
+    rid_rmv(pal.id)
+  }
+}
+class Pal {
+  constructor(src_par, src_cal) {
+    this.id = rid_add(this,'Pal')
+    this.src_par = src_par
+    this.src_cal = src_cal
+
+    this.src_fal = src_cal.src_fal
+    this.src_pfn = src_par.src_pfn
+    this.is_slf = this.src_pfn.is_slf
+
+    this.active = false
+    this.cels = {}
+
+    this.ipals = {}
+    this.opals = {}
+
+    this.plks = {}
+
+    this.slf_val = null
+
+    this.n = null
+    this.i = null
+    this.s = null
+    this.src_pal = null
+  }
+  set_active(active) {
+    active = active || fu.trueif(this.cels, cel => cel.active)
+    if (this.active != active) {
+      this.active = active
+      this.add_val()
+    }
+  }
+
+  add_cel(cel) {
+    cel.pals.push(this)
+    this.cels[cel.id] = cel
+  }
+  rmv_cel(cel) {
+    delete this.cels[cel.id]
+  }
+
+  get_val(scp_vfn) {
+    var src_vfn = this.src_pfn.get_vfn(scp_vfn)
+    if (!src_vfn) return null
+
+    var val = src_vfn.vals[this.src_fal.id]
+    if (!val) return null
+
+    if (this.is_slf) val.src_pal = this
+    else val.scp_pal = this
+
+    return val
+  }
+  add_val(scp_vfn) {
+    var src_vfn = this.src_pfn.add_vfn(scp_vfn)
+    var fal = this.src_fal
+    var val = src_vfn.vals[fal.id]
+
+    if (val) {
+      if (this.is_slf) val.src_pal = this
+      else val.scp_pal = this
+    }
+    else {
+
+      var scp_pfn = src_vfn.scp_pfn
+      var src_pfn = src_vfn.src_pfn
+
+      var scp_pal = scp_pfn && scp_pfn.pals[fal.id]
+      var src_pal = src_pfn && src_pfn.pals[fal.id]
+
+      val = this.is_slf ?
+        new Val(fal, scp_vfn && scp_vfn.scp_vfn, scp_vfn, scp_pal, src_pal) :
+        new Val(fal, scp_vfn, src_vfn, scp_pal, src_pal)
+
+      src_vfn.vals[fal.id] = val
+    }
+
+    return val
+  }
+  rmv_val(scp_vfn) {
+    var src_vfn = this.src_pfn.get_vfn(scp_vfn)
+    if (!src_vfn) return null
+
+    var fal = this.src_fal
+    var val = src_vfn.vals[fal.id]
+    if (!val) return null
+
+    if (this.is_slf) val.src_pal = null
+    else val.scp_pal = null
+
+    if (this.scp_pal || val.src_pal) return
+
+    delete src_vfn.vals[fal.id]
+    rid_rmv(val.id)
+  }
+}
+class Plk {
+  constructor(ipal, opal) {
+    this.id = rid_add(this,'Plk')
+    this.ipal = ipal
+    this.opal = opal
+  }
+}
+
+class Vfn {
+  constructor(scp_vfn, src_fun, scp_pfn, src_pfn) {
+    this.id = rid_add(this, 'Vfn')
+    this.scp_vfn = scp_vfn
+    this.src_fun = src_fun
+    this.scp_pfn = scp_pfn
+    this.src_pfn = src_pfn
+
+    this.vfns = {}
+    this.vals = {}
+  }
+  get_vals(vals) {
+    fu.forEach(this.vals, val => vals[val.id] = val)
+    fu.forEach(this.vfns, vfn => vfn != this && vfn.get_vals(vals))
+  }
+}
+class Val {
+  constructor(src_fal, scp_vfn, src_vfn, scp_pal, src_pal) {
+    this.id = rid_add(this, 'Val')
+
+    this.src_fal = src_fal
+    this.scp_vfn = scp_vfn
+    this.src_vfn = src_vfn
+
+    this.scp_pal = scp_pal
+    this.src_pal = src_pal
+
+    this.i = false
+    this.o = false
+  }
+}
+
+// -----------------------------------------------------------------------------
+// VARS
+// -----------------------------------------------------------------------------
+{
+  cntr_pt = {x:0, y:0, z:0}
+
+  scp_fun = null
+  sel_cels = {}
+  fcs_cels = {}
+
+  scp_vals = {}
+
+  svd_cfn_bus = null
+  svd_far_bus = null
+  svd_name = null
+
+  enter_count = 1
+  tick_count = 0
+  tick_tally = 0
+
+  mws_cel = mws_pt = mws_proj = null
+  prv_cel = prv_pt = prv_proj = null
+  fcs_cel = fcs_pt = fcs_proj = null
+
+  mws_moved = false
+}
+// -----------------------------------------------------------------------------
+// TICK
+// -----------------------------------------------------------------------------
+
+function update_next(scp_fun, vals) {
+  // check_vals()
+  var new_vals = {}
+
+  fu.forEach(vals, val => {
+    var src_pal = val.scp_pal && val.scp_pal.src_pal
+    if (src_pal) {
+      var src_val = src_pal.add_val(val.scp_vfn)
+      vals[src_val.id] = src_val
+    }
+  })
+
+  // clear
+  fu.forEach(vals, val => val.i = false)
+
+  // get active cel
+  fu.forEach(scp_fun.pals, pal => {
+    var val = pal.get_val()
+    if (val) val.i = val.i || pal.active
+  })
+
+  // get i
+  fu.forEach(vals, oval => oval.i = oval.i ||
+    (oval.scp_pal && fu.trueif(oval.scp_pal.ipals, ipal => {
+      var ival = ipal.get_val(oval.scp_vfn)
+      // log('rcv', ipal.id, oval.id, ival && ival.id)
+      return ival && ival.o
+    })) ||
+    (oval.src_pal && fu.trueif(oval.src_pal.ipals, ipal => {
+      var ival = ipal.get_val(oval.src_vfn)
+      // log('rcv', oval.id, ival && ival.id)
+      return ival && ival.o
+    })))
+
+  // set o
+  fu.forEach(vals, val => {
+    // log(val.i)
+
+    var change = false
+    if (val.i) {
+      change = !val.o
+      val.o = true
+    }
+    else {
+      var scp_pal = val.scp_pal
+      if (scp_pal && scp_pal.n) {
+        var scp_vfn = val.scp_vfn
+        var i = scp_pal.i && scp_pal.i.get_val(scp_vfn)
+        var s = scp_pal.s && scp_pal.s.get_val(scp_vfn)
+        if (scp_pal.n(val.o, i && i.i, s && s.i)) {
+          change = !val.o
+          val.o = true
+        }
+        else {
+          change = val.o
+          val.o = false
+        }
+      }
+      else {
+        change = val.o
+        val.o = false
+      }
+    }
+
+    if (change) {
+      val.scp_pal && fu.forEach(val.scp_pal.opals, opal => {
+        var oval = opal.add_val(val.scp_vfn)
+        new_vals[oval.id] = oval
+
+        // log('snd', val.id, oval.id)
+      })
+      val.src_pal && fu.forEach(val.src_pal.opals, opal => {
+        var oval = opal.add_val(val.src_vfn)
+        new_vals[oval.id] = oval
+
+        // log('snd', val.id, oval.id)
+      })
+    }
+  })
+
+  return new_vals
+}
+function update_all(scp_fun) {
+  var vals = {}
+  fu.forEach(scp_fun.pfns, pfn => {
+    var vfn = pfn.get_vfn()
+    vfn && vfn.get_vals(vals)
+  })
+  return update_next(scp_fun, vals)
+}
+function tick(usrIO, sndMsg) {
+  if (!scp_fun) return
+
+  // USER INTERFACE
+  {
+    var mws = usrIO.mws
+    mws_pt = mws_to_point(cntr_pt, mws)
+    mws_proj = point_to_mws(cntr_pt, mws_pt)
+    mws_pt.s = point_to_string(mws_pt)
+    mws_cel = scp_fun.cels[mws_pt.s]
+
+    // scp trace setup
+    {
+      scp_trc = []
+
+      var p = pt.point(1,1)
+      var fun = scp_fun
+
+      while (fun) {
+        scp_trc.push({point:pt.copy(p), string:point_to_string(p), fun:fun})
+        fun = fun.scp_fun
+        ++p.y
+      }
+
+      p.y = 1
+      for (var fun_name in scp_fun.funs) {
+        fun = scp_fun.funs[fun_name]
+        if (fun.locked) continue
+        ++p.x
+        scp_trc.push({point:pt.copy(p), string:point_to_string(p), fun:fun})
+      }
+    }
+
+    if (mws.hsDn) {
+      mws_moved = false
+
+      fcs_pt = mws_pt
+      fcs_proj = mws_proj
+      fcs_cel = mws_cel
+
+      fcs_cels = mws_cel && [mws_cel] || []
+
+      var scp_trc_tpl = fu.findif(scp_trc, tpl => fcs_pt.s == tpl.string)
+      if (scp_trc_tpl) {
+        mws_moved = true
+        fcs_cel = null
+
+        scp_fun = scp_trc_tpl.fun
+        sel_cels = []
+        fcs_cels = []
+      }
+      else if (fcs_cel) {
+        if (!fu.contains(sel_cels, fcs_cel)) {
+          fcs_cel = null
+          // sel_cels = []
+        }
+      }
+    }
+
+    if (usrIO.kys.hsDn['q']) {
+
+      if (mws.isDn) {
+        if (mws_cel)
+          scp_fun.rmv_cel(mws_cel)
+        fu.forEach(fcs_cels, cel => scp_fun.rmv_cel(cel))
+      }
+
+      fcs_cels = []
+      sel_cels = []
+      mws_moved = true
+
+      scp_vals = update_all(scp_fun)
+    }
+    else if (usrIO.kys.hsDn['l']) {
+
+      fu.forEach(sel_cels,
+        cel => fu.forEach(cel.clks,
+          clk => scp_fun.rmv_clk(clk)))
+
+      fcs_cels = []
+      sel_cels = []
+      mws_moved = true
+
+      scp_vals = update_all(scp_fun)
+    }
+    else if (usrIO.kys.hsDn[' ']) {
+      var active = fu.countif(sel_cels, sel_cel => sel_cel.active)
+      var count = fu.count(sel_cels)
+
+      active += !!mws_cel && !!mws_cel.active
+      count += !!mws_cel
+
+      active = active != count
+      fu.forEach(sel_cels, sel_cel => sel_cel.set_active(active))
+      mws_cel && (mws_cel.set_active(active))
+
+      fcs_cels = []
+      sel_cels = []
+      mws_moved = true
+      scp_vals = update_all(scp_fun)
+    }
+    else if (usrIO.kys.hsDn['s']) {
+      sndMsg('save', save_def(main))
+    }
+    else if (usrIO.kys.hsDn['r']) {
+      sndMsg('read')
+    }
+    else if (usrIO.kys.hsDn['c']) {
+      svd_cfn_bus = get_valid_bus(null, 'cfn')
+    }
+    else if (usrIO.kys.hsDn['f']) {
+      svd_far_bus = get_valid_bus(null, 'far')
+    }
+    else if (usrIO.kys.hsDn['n']) {
+      svd_name = get_valid_name(null, 'cel')
+    }
+    else if (usrIO.kys.hsDn['e']) {
+      enter_count = get_valid_bus(null, 'Enter tick') || 1
+    }
+    else if (usrIO.kys.hsDn['t']) {
+      tick_count = parseFloat(prompt('tick count'))
+      tick_count = tick_count || 0
+      tick_tally = 0
+    }
+
+    if (mws.isDn && mws_pt.s != prv_pt.s) {
+      if (fcs_cel) {
+        var valid = true
+        var temp_pts = []
+        for (var idx in sel_cels) {
+          var point = pt.sum(mws_pt, pt.sub(sel_cels[idx].point, fcs_pt))
+          temp_pts[idx] = point
+          point.s = point_to_string(point)
+          var cel = scp_fun.cels[point.s]
+          valid = valid && (!cel || fu.contains(sel_cels, cel))
+        }
+        if (valid) {
+          fu.forEach(sel_cels, cel => delete scp_fun.cels[cel.point.s])
+          fu.forEach(sel_cels, (cel,idx) => {
+            cel.point = temp_pts[idx]
+            scp_fun.cels[cel.point.s] = cel
+          })
+          fcs_pt = mws_pt
+        }
+      }
+      else {
+        fcs_cels = []
+        var ax = fcs_pt.x > mws_pt.x ? mws_pt.x : fcs_pt.x
+        var ay = fcs_pt.y > mws_pt.y ? mws_pt.y : fcs_pt.y
+        var bx = fcs_pt.x < mws_pt.x ? mws_pt.x : fcs_pt.x
+        var by = fcs_pt.y < mws_pt.y ? mws_pt.y : fcs_pt.y
+        var p = pt.point()
+
+        for (p.x = ax; p.x <= bx; ++p.x)
+          for (p.y = ay; p.y <= by; ++p.y) {
+            var str = point_to_string(p)
+            var cel = scp_fun.cels[str]
+            cel && fcs_cels.push(cel)
+          }
+      }
+
+      mws_moved = true
+    }
+
+    if (mws.hsUp) {
+      var p = pt.point(1,1)
+      var fun = scp_fun
+
+      if (mws_moved) {
+        if (fu.count(sel_cels) == 1) {
+          var sel_cel = fu.first(sel_cels)
+          fu.forEach(fcs_cels, fcs_cel => scp_fun.add_clk(sel_cel, fcs_cel))
+        }
+
+        sel_cels = fcs_cels
+        fcs_cels = []
+      }
+      else {
+        sel_cels = scp_fun.add_cel(sel_cels, mws_pt, svd_name,
+          svd_cfn_bus, svd_far_bus)
+        scp_vals = update_all(scp_fun)
+      }
+    }
+
+    if (usrIO.kys.hsDn['Enter']) {
+      fu.forlen(enter_count, i => scp_vals = update_next(scp_fun, scp_vals))
+    }
+
+    if (tick_count > 1) {
+      fu.forlen(tick_count, i => scp_vals = update_next(scp_fun, scp_vals))
+    }
+    else if (tick_count > 0) {
+      tick_tally += tick_count
+      if (tick_tally > 1) scp_vals = update_next(scp_fun, scp_vals)
+      tick_tally %= 1
+    }
+
+    // set prv
+    {
+      prv_pt = mws_pt
+      prv_proj = mws_proj
+      prv_cel = mws_cel
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // DRAW
+  // ---------------------------------------------------------------------------
+  {
+    var g = usrIO.dsply.g
+    var mws = usrIO.mws
+
+    g.font = "12px Lucida Console"
+
+    g.textAlign = 'center'
+
+    // draw mws
+    {
+      g.fillStyle = 'grey'
+      pt.fillRect(g, mws_proj, 10)
+      g.fillStyle = 'white'
+      pt.fillCircle(g, mws, 10)
+    }
+
+    // proj points onto screen
+    {
+      fu.forEach(scp_fun.cels,
+        cel => cel.proj = point_to_mws(cntr_pt, cel.point))
+
+      fu.forEach(scp_trc, tpl => tpl.proj = point_to_mws(cntr_pt, tpl.point))
+    }
+
+    // draw cel lnks
+    {
+      g.lineWidth = 3
+      fu.forEach(scp_fun.cels, cel => cel.draw_lnks(g))
+    }
+
+    // draw ptr lnks
+    {
+      g.lineWidth = 2
+      g.setLineDash([2,4])
+
+      fu.forEach(scp_fun.cels, cel => cel.draw_clk_lines(g))
+      g.setLineDash([])
+    }
+
+    // draw mws lines
+    {
+      g.fillStyle = g.strokeStyle = 'grey'
+      fu.forEach(sel_cels, cel => {
+        drawArrowLine(g, cel.proj, mws_proj, cel.radius, 0)
+        pt.drawRect(g, cel.proj, 10)
+      })
+      fu.forEach(fcs_cels, cel => pt.drawRect(g, cel.proj, 10))
+    }
+
+    // fill cel txt
+    {
+      g.lineWidth = 2
+      g.setLineDash([])
+      fu.forEach(scp_fun.cels, cel => cel.fill_text(g))
+
+      g.fillStyle = 'white'
+      fu.forEach(scp_trc, tpl =>
+        g.fillText(tpl.fun.name, tpl.proj.x, tpl.proj.y))
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// FILE I/O
+// -----------------------------------------------------------------------------
+
+function check_vals() {
+  fu.forEach(rid_types.Val, val => {
+    log('scp',
+      'vfn', val.scp_vfn && val.scp_vfn.id || 0,
+      'pal', val.scp_pal && val.scp_pal.id || 0,
+      'src',
+      'vfn', val.src_vfn && val.src_vfn.id || 0,
+      'pal', val.src_pal && val.src_pal.id || 0)
+  })
+}
+function read_def(msg) {
+  rid_idx = msg.ridx || 0
+  rid_objs = {}
+  rid_obj_type = {}
+  rid_types = {}
+
+  scp_fun = main = new Fun(null, 'main')
+  {
+    var t = main.add_fun('+')
+    t.add_far('+', 1)
+    t.add_far('i', 1)
+    t.add_far('s', 1)
+    t.n = (n,i,s) => i && !s
+    t.locked = true
+
+    var b = main.add_fun('=')
+    b.add_far('=', 1)
+    b.add_far('i', 1)
+    b.add_far('s', 1)
+    b.n = (n,i,s) => s ? i : n
+    b.locked = true
+
+    rid_add('setup -----')
+  }
+
+  main.add_sfn(msg)
+
+  scp_vals = update_all(scp_fun)
+}
+function save_def(scp_fun) {
+  var sfn = scp_fun.get_sfn()
+  log('save_def')
+  sfn.rid_idx = rid_idx
+  return sfn
+}
+
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
