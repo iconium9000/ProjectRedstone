@@ -171,7 +171,7 @@ class Fun {
     this.id = rid_add(this,'Fun')
     this.scp_fun = scp_fun
     this.name = name
-    this.n = null // native function
+    this.native = null
 
     this.locked = false
 
@@ -352,6 +352,7 @@ class Fun {
       cel.name = get_name(cel.cfn_bus, name, cel.far_bus)
       cel.radius = 5 + cel.name.length * 2
 
+      cel.draw = cfn.src_fun.draw
 
       fu.forEach(car.pals, pal => pal.add_cel(cel))
 
@@ -591,6 +592,8 @@ class Cel {
     this.proj = null
     this.name = null
 
+    this.draw = null
+
     this.idx_cels = []
     this.pals = []
 
@@ -610,11 +613,8 @@ class Cel {
     this.active = active
     fu.forEach(this.pals, pal => pal.set_active(active))
   }
-  is_active() {
-    return fu.trueif(this.pals, pal => {
-      var val = pal.get_val()
-      return val && val.o
-    })
+  is_active(scp_vfn) {
+    return fu.trueif(this.pals, pal => pal.is_active(scp_vfn))
   }
 
   draw_clk_lines(g) {
@@ -633,6 +633,11 @@ class Cel {
     }
   }
   fill_text(g) {
+    if (this.draw) {
+      this.draw(g, this)
+      return
+    }
+
     g.fillStyle = this.color
     var x = this.proj.x
     var y = this.proj.y
@@ -658,7 +663,7 @@ class Cfn {
     this.scp_fun = scp_fun
     this.src_fun = src_fun
     this.is_slf = scp_fun == src_fun
-    this.bus = this.is_slf ? 1 : get_valid_bus(bus, 'cfn') || 1
+    this.bus = this.is_slf || src_fun.draw ? 1 : get_valid_bus(bus, 'cfn') || 1
 
     this.pfns = []
     this.cars = {}
@@ -704,26 +709,8 @@ class Cfn {
     fu.forEach(far.fals, fal => car.add_cal(fal))
     fu.forEach(this.pfns, pfn => pfn.add_par(car))
 
-    var src_name = this.src_fun.name
-
-    if (src_name == '+' || src_name == '=') {
-      if (name == 'i' || name == 's') {
-        fu.forEach(this.pfns, pfn => {
-          var n = pfn.pars[src_name].pal
-          var i = pfn.pars[name].pal
-          if (i) {
-            n[name] = i
-            i.src_pal = n
-          }
-        })
-      }
-      else {
-        fu.forEach(this.pfns, pfn => {
-          var n = pfn.pars[src_name].pal
-          n.n = this.src_fun.n
-        })
-      }
-    }
+    var native = this.src_fun.native
+    native && fu.forEach(this.pfns, pfn => native(pfn, name))
 
     return car
   }
@@ -981,9 +968,7 @@ class Pal {
 
     this.slf_val = null
 
-    this.n = null
-    this.i = null
-    this.s = null
+    this.native = null
     this.src_pal = null
   }
   set_active(active) {
@@ -992,6 +977,10 @@ class Pal {
       this.active = active
       this.add_val()
     }
+  }
+  is_active(scp_vfn) {
+    var val = this.get_val(scp_vfn)
+    return val && val.o
   }
 
   add_cel(cel) {
@@ -1166,29 +1155,13 @@ function update_next(scp_fun, vals) {
     // log(val.i)
 
     var change = false
-    if (val.i) {
-      change = !val.o
-      val.o = true
+
+    if (val.scp_pal && val.scp_pal.native) {
+      change = val.scp_pal.native(val)
     }
     else {
-      var scp_pal = val.scp_pal
-      if (scp_pal && scp_pal.n) {
-        var scp_vfn = val.scp_vfn
-        var i = scp_pal.i && scp_pal.i.get_val(scp_vfn)
-        var s = scp_pal.s && scp_pal.s.get_val(scp_vfn)
-        if (scp_pal.n(val.o, i && i.i, s && s.i)) {
-          change = !val.o
-          val.o = true
-        }
-        else {
-          change = val.o
-          val.o = false
-        }
-      }
-      else {
-        change = val.o
-        val.o = false
-      }
+      change = val.i != val.o
+      val.o = val.i
     }
 
     if (change) {
@@ -1196,13 +1169,11 @@ function update_next(scp_fun, vals) {
         var oval = opal.add_val(val.scp_vfn)
         new_vals[oval.id] = oval
 
-        // log('snd', val.id, oval.id)
       })
       val.src_pal && fu.forEach(val.src_pal.opals, opal => {
         var oval = opal.add_val(val.src_vfn)
         new_vals[oval.id] = oval
 
-        // log('snd', val.id, oval.id)
       })
     }
   })
@@ -1435,10 +1406,19 @@ function tick(usrIO, sndMsg) {
 
     // draw mws
     {
-      g.fillStyle = 'grey'
-      pt.fillRect(g, mws_proj, 10)
+      g.lineWidth = 3
+      if (mws_cel) {
+        g.strokeStyle = 'grey'
+        pt.drawCircle(g, mws_cel.proj, mws_cel.radius + 2)
+      }
+      else {
+        g.fillStyle = 'grey'
+        pt.fillRect(g, mws_proj, 10)
+      }
+
       g.fillStyle = 'white'
       pt.fillCircle(g, mws, 10)
+
     }
 
     // proj points onto screen
@@ -1469,9 +1449,9 @@ function tick(usrIO, sndMsg) {
       g.fillStyle = g.strokeStyle = 'grey'
       fu.forEach(sel_cels, cel => {
         drawArrowLine(g, cel.proj, mws_proj, cel.radius, 0)
-        pt.drawRect(g, cel.proj, 10)
+        pt.drawCircle(g, cel.proj, cel.radius + 2)
       })
-      fu.forEach(fcs_cels, cel => pt.drawRect(g, cel.proj, 10))
+      fu.forEach(fcs_cels, cel => pt.drawCircle(g, cel.proj, cel.radius + 2))
     }
 
     // fill cel txt
@@ -1508,23 +1488,109 @@ function read_def(msg) {
   rid_types = {}
 
   scp_fun = main = new Fun(null, 'main')
+
+  // Transistor
   {
-    var t = main.add_fun('+')
-    t.add_far('+', 1)
-    t.add_far('i', 1)
-    t.add_far('s', 1)
-    t.n = (n,i,s) => i && !s
-    t.locked = true
+    var f = main.add_fun('+')
+    var n_far = f.add_far('+', 1)
+    var i_far = f.add_far('i', 1)
+    var s_far = f.add_far('s', 1)
 
-    var b = main.add_fun('=')
-    b.add_far('=', 1)
-    b.add_far('i', 1)
-    b.add_far('s', 1)
-    b.n = (n,i,s) => s ? i : n
-    b.locked = true
+    var n_id = n_far.fals[0].id
+    var i_id = i_far.fals[0].id
+    var s_id = s_far.fals[0].id
 
-    rid_add('setup -----')
+    f.native = (pfn, name) => {
+      if (name == 'i' || name == 's') {
+        var n = pfn.pals[n_id]
+        var i = pfn.pars[name].pal
+        if (i) {
+          n[name] = i
+          i.src_pal = n
+        }
+      }
+      else pfn.pals[n_id].native = val => {
+        if (val.i) {
+          var prev = val.o
+          val.o = true
+          return !prev
+        }
+
+        var pfn = val.scp_pal.src_pfn
+        var i = pfn.pals[i_id]
+        var s = pfn.pals[s_id]
+
+        i = i && i.get_val(val.scp_vfn)
+        s = s && s.get_val(val.scp_vfn)
+
+        var prev = val.o
+        val.o = (i && i.i) && !(s && s.i)
+        return prev != val.o
+      }
+    }
+
+    f.locked = true
   }
+
+  // Display
+  {
+    var f = main.add_fun('=')
+    var n_far = f.add_far('=', 25)
+    var i_far = f.add_far('i', 25)
+
+    f.draw = (g, cel) => {
+      g.fillStyle = '#202040'
+      pt.fillRect(g, cel.proj, 15)
+
+      var n_par = cel.src_car.pars[0]
+      var i_par = n_par.src_pfn.pars.i
+      if (!i_par) return
+
+      var idx = 0
+      var i_pals = i_par.pals
+      var n_pals = n_par.pals
+      var p = pt.zero()
+
+      g.fillStyle = cel.is_active() && '#FF2020' || '#404040'
+
+      for (p.y = -12; p.y <= 12; p.y += 6)
+        for (p.x = -12; p.x <= 12; p.x += 6, ++idx) {
+          if (i_pals[idx].is_active())
+            pt.fillRect(g, pt.sum(cel.proj, p), 3)
+        }
+
+    }
+    f.native = (pfn, name) => {
+      var n_par = pfn.pars['=']
+
+      if (name == 'i') {
+        var i_par = pfn.pars.i
+        if (!i_par) return
+
+        fu.forEach(i_par.pals, (i_pal, idx) => {
+          var n_pal = n_par.pals[idx]
+          i_pal.src_pal = n_pal
+        })
+
+        return
+      }
+
+      fu.forEach(n_par.pals, (n_pal, idx) => n_pal.native = n_val => {
+        var i_par = pfn.pars.i
+        if (!i_par) return false
+        var i_pal = i_par.pals[idx]
+        var i_val = i_pal.get_val(n_val.scp_vfn)
+        if (!i_val) return false
+
+        var prev = n_val.o
+        n_val.o = n_val.i && i_val.i
+        return prev != n_val.o
+      })
+    }
+
+    f.locked = true
+  }
+  rid_add('setup -----')
 
   main.add_sfn(msg)
 
