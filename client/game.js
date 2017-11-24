@@ -40,10 +40,10 @@ module.exports = apInitA => {
         sndMsg('restart',
           'srvr',
           'all -srvr',
-          JSON.parse(fs.readFileSync('redstone.txt')))
+          JSON.parse(fs.readFileSync('redstone.json')))
         break
       case 'save':
-        fs.writeFile('redstone.txt',JSON.stringify(msg,null,2))
+        fs.writeFile('redstone.json',JSON.stringify(msg,null,2))
         sndMsg('saved', 'srvr', sndr)
         break
       case 'saved':
@@ -79,11 +79,12 @@ function point_to_mws(cp, point) {
   return pt.sum(pt.scale(point, cel_size), cp)
 }
 function string_to_point(string) {
-  string = string.split(',')
+  var s = string.split(',')
   return {
-    x: parseFloat(string[0]),
-    y: parseFloat(string[1]),
-    z: 0
+    x: parseFloat(s[0]),
+    y: parseFloat(s[1]),
+    z: 0,
+    s: string
   }
 }
 function point_to_string(point) {
@@ -342,7 +343,6 @@ class Fun {
 
       var cel = new Cel(car, null, point)
       cel.color = '#404050'
-      // cel.radius =
       this.cels[point.s] = cel
       car.slf_cel = cel
 
@@ -352,24 +352,12 @@ class Fun {
       cel.name = get_name(cel.cfn_bus, name, cel.far_bus)
       cel.radius = 5 + cel.name.length * 2
 
+      cel.sel_cel = null
+      cel.scl_name = name
+
       cel.draw = cfn.src_fun.draw
 
       fu.forEach(car.pals, pal => pal.add_cel(cel))
-
-      cel.get_scl = sfn => {
-        var scl = {
-          point: cel.point.s,
-          name: name
-        }
-
-        if (cel.cfn_bus > 1) scl.cfn_bus = cel.cfn_bus
-        if (cel.far_bus > 1) scl.far_bus = cel.far_bus
-
-        sfn.scls[cel.id] = scl
-        fu.forEach(cel.idx_cels, idx_cel => idx_cel.get_scl(sfn))
-        fu.forEach(cfn.cars,
-          src_car => src_car != car && src_car.slf_cel.get_scl(sfn))
-      }
 
       return [cel]
     }
@@ -397,25 +385,13 @@ class Fun {
         cel.radius = 5 + cel.name.length * 2
         cel.idx = null
 
+        cel.sel_cel = sel_cel
+        cel.scl_name = name
+
         fu.forEach(car.pals, pal => pal.add_cel(cel))
-
-        cel.get_scl = sfn => {
-          var scl = {
-            src_cel: sel_cel.id,
-            point: cel.point.s,
-            name: name
-          }
-
-          if (cel.cfn_bus > 1) scl.cfn_bus = cel.cfn_bus
-          if (cel.far_bus > 1) scl.far_bus = cel.far_bus
-
-          sfn.scls[cel.id] = scl
-          fu.forEach(cel.idx_cels, idx_cel => idx_cel.get_scl(sfn))
-        }
 
         return [cel]
       }
-      else if (sel_cel.idx_cels[idx]) return [sel_cel.idx_cels[idx]]
       else if (sel_cel.cfn_bus > 1) {
         if (idx >= sel_cel.cfn_bus) return []
 
@@ -423,7 +399,7 @@ class Fun {
         cel.color = '#403030'
         cel.idx = idx
         this.cels[point.s] = cel
-        sel_cel.idx_cels[idx] = cel
+        sel_cel.idx_cels[cel.id] = cel
 
         var car = sel_cel.src_car
         var par = car.pars[idx]
@@ -434,20 +410,10 @@ class Fun {
         cel.name = get_name(cel.cfn_bus, idx, cel.far_bus)
         cel.radius = 5 + cel.name.length * 2
 
+        cel.sel_cel = sel_cel
+        cel.scl_name = idx
+
         fu.forEach(par.pals, pal => pal.add_cel(cel))
-
-        cel.get_scl = sfn => {
-          var scl = {
-            src_cel: sel_cel.id,
-            point: cel.point.s,
-            name: idx
-          }
-
-          if (cel.far_bus > 1) scl.far_bus = cel.far_bus
-
-          sfn.scls[cel.id] = scl
-          fu.forEach(cel.idx_cels, idx_cel => idx_cel.get_scl(sfn))
-        }
 
         return [cel]
       }
@@ -458,7 +424,7 @@ class Fun {
         cel.color = '#403030'
         cel.idx = idx
         this.cels[point.s] = cel
-        sel_cel.idx_cels[idx] = cel
+        sel_cel.idx_cels[cel.id] = cel
 
         far_bus = get_valid_bus(far_bus, 'cel') || 1
         cel.far_bus = far_bus + idx > sel_cel.far_bus ?
@@ -467,21 +433,11 @@ class Fun {
         cel.name = get_name(cel.cfn_bus, idx, cel.far_bus)
         cel.radius = 5 + cel.name.length * 2
 
+        cel.sel_cel = sel_cel
+        cel.scl_name = idx
+
         fu.forlen(cel.far_bus,
           far_idx => sel_cel.pals[idx + far_idx].add_cel(cel))
-
-        cel.get_scl = sfn => {
-          var scl = {
-            src_cel: sel_cel.id,
-            point: cel.point.s,
-            name: idx,
-          }
-
-          if (cel.far_bus > 1) scl.far_bus = cel.far_bus
-
-          sfn.scls[cel.id] = scl
-          fu.forEach(cel.idx_cels, idx_cel => idx_cel.get_scl(sfn))
-        }
 
         return [cel]
       }
@@ -507,25 +463,41 @@ class Fun {
       }
     }
     else {
-      delete cel.src_cel.idx_cels[cel.idx]
+      delete cel.src_cel.idx_cels[cel.id]
     }
   }
 
   add_sfn(sfn) {
     if (this.locked) return
 
-    var cels = {}
+    var cels = []
     fu.forEach(sfn.sfns, (sfn, name) => this.add_fun(name))
 
-    fu.forEach(sfn.scls, (scl,id) => {
-      var src_cel = scl.src_cel && [cels[scl.src_cel]]
-      var point = string_to_point(scl.point)
-      point.s = scl.point
-      var cel = this.add_cel(src_cel, point, scl.name,
-        scl.cfn_bus || 1, scl.far_bus || 1)
-      cels[id] = cel[0]
-    })
+    var fun = this
+
+    function add_scl(idx) {
+      if (!sfn.scls[idx]) return []
+      else if (cels[idx]) return [cels[idx]]
+
+      var scl = sfn.scls[idx].split(':')
+      var src_cel = scl[2]
+      var point = scl[0]
+      var name = scl[1]
+      var cfn_bus = scl[3] || 1
+      var far_bus = scl[4] || 1
+
+      src_cel = add_scl(src_cel)
+      point = string_to_point(point)
+
+      var cel = fun.add_cel(src_cel, point, name, cfn_bus, far_bus)
+      cels[idx] = cel[0]
+
+      return cel
+    }
+
+    fu.forEach(sfn.scls, (scl,id) => add_scl(id))
     fu.forEach(sfn.slks, slk => {
+      slk = slk.split(',')
       var icel = cels[slk[0]]
       var ocel = cels[slk[1]]
       this.add_clk(icel, ocel)
@@ -536,13 +508,26 @@ class Fun {
   get_sfn(scp_sfn) {
     var sfn = {
       sfns: {},
-      scls: {},
+      scls: [],
       slks: []
     }
 
+    var get_scl = cel => {
+      var scl = {}
+      var name = cel.scl_name
+      var point = cel.point.s
+      var src_cel = cel.sel_cel ? cel.sel_cel.scl_idx : ''
+      var cfn_bus = cel.cfn_bus > 1 ? cel.cfn_bus : ''
+      var far_bus = cel.far_bus > 1 ? cel.far_bus : ''
+      return `${point}:${name}:${src_cel}:${cfn_bus}:${far_bus}`
+    }
+
     fu.forEach(this.funs, fun => sfn.sfns[fun.name] = fun.get_sfn())
-    fu.forEach(this.cfns, cfn => cfn.slf_car.slf_cel.get_scl(sfn))
-    fu.forEach(this.clks, clk => sfn.slks.push(clk.get_slk()))
+    var idx = 0
+    fu.forEach(this.cels, cel => cel.scl_idx = idx++)
+    fu.forEach(this.cels, cel => sfn.scls[cel.scl_idx] = get_scl(cel))
+    fu.forEach(this.clks,
+      clk => sfn.slks.push(`${clk.icel.scl_idx},${clk.ocel.scl_idx}`))
 
     return sfn
   }
@@ -592,9 +577,12 @@ class Cel {
     this.proj = null
     this.name = null
 
+    this.src_cfn = this.src_car.src_cfn
+    this.src_fun = this.src_cfn.src_fun
+
     this.draw = null
 
-    this.idx_cels = []
+    this.idx_cels = {}
     this.pals = []
 
     this.icels = {}
@@ -606,8 +594,6 @@ class Cel {
     this.idx = null
     this.far_bus = null
     this.cfn_bus = null
-
-    this.get_scl = sfn => {throw 'no get_scl'}
   }
   set_active(active) {
     this.active = active
@@ -772,10 +758,6 @@ class Clk {
     this.ocel = ocel
 
     this.plks = {}
-  }
-
-  get_slk() {
-    return [this.icel.id, this.ocel.id]
   }
 
   add_plk(iidx, oidx) {
@@ -1212,13 +1194,13 @@ function tick(usrIO, sndMsg) {
         ++p.y
       }
 
-      p.y = 1
-      for (var fun_name in scp_fun.funs) {
-        fun = scp_fun.funs[fun_name]
-        if (fun.locked) continue
-        ++p.x
-        scp_trc.push({point:pt.copy(p), string:point_to_string(p), fun:fun})
-      }
+      // p.y = 1
+      // for (var fun_name in scp_fun.funs) {
+      //   fun = scp_fun.funs[fun_name]
+      //   if (fun.locked) continue
+      //   ++p.x
+      //   scp_trc.push({point:pt.copy(p), string:point_to_string(p), fun:fun})
+      // }
     }
 
     if (mws.hsDn) {
@@ -1230,16 +1212,7 @@ function tick(usrIO, sndMsg) {
 
       fcs_cels = mws_cel && [mws_cel] || []
 
-      var scp_trc_tpl = fu.findif(scp_trc, tpl => fcs_pt.s == tpl.string)
-      if (scp_trc_tpl) {
-        mws_moved = true
-        fcs_cel = null
-
-        scp_fun = scp_trc_tpl.fun
-        sel_cels = []
-        fcs_cels = []
-      }
-      else if (fcs_cel) {
+      if (fcs_cel) {
         if (!fu.contains(sel_cels, fcs_cel)) {
           fcs_cel = null
           // sel_cels = []
@@ -1247,7 +1220,9 @@ function tick(usrIO, sndMsg) {
       }
     }
 
-    if (usrIO.kys.hsDn['q']) {
+    var kydn = usrIO.kys.hsDn
+
+    if (kydn['q']) {
 
       if (mws.isDn) {
         if (mws_cel)
@@ -1261,7 +1236,7 @@ function tick(usrIO, sndMsg) {
 
       scp_vals = update_all(scp_fun)
     }
-    else if (usrIO.kys.hsDn['l']) {
+    else if (kydn['l']) {
 
       fu.forEach(sel_cels,
         cel => fu.forEach(cel.clks,
@@ -1273,7 +1248,7 @@ function tick(usrIO, sndMsg) {
 
       scp_vals = update_all(scp_fun)
     }
-    else if (usrIO.kys.hsDn[' ']) {
+    else if (kydn[' ']) {
       var active = fu.countif(sel_cels, sel_cel => sel_cel.active)
       var count = fu.count(sel_cels)
 
@@ -1289,28 +1264,47 @@ function tick(usrIO, sndMsg) {
       mws_moved = true
       scp_vals = update_all(scp_fun)
     }
-    else if (usrIO.kys.hsDn['s']) {
+    else if (kydn['s']) {
       sndMsg('save', save_def(main))
     }
-    else if (usrIO.kys.hsDn['r']) {
+    else if (kydn['r']) {
       sndMsg('read')
     }
-    else if (usrIO.kys.hsDn['c']) {
+    else if (kydn['c']) {
       svd_cfn_bus = get_valid_bus(null, 'cfn')
     }
-    else if (usrIO.kys.hsDn['f']) {
+    else if (kydn['f']) {
       svd_far_bus = get_valid_bus(null, 'far')
     }
-    else if (usrIO.kys.hsDn['n']) {
+    else if (kydn['n']) {
       svd_name = get_valid_name(null, 'cel')
     }
-    else if (usrIO.kys.hsDn['e']) {
+    else if (kydn['e']) {
       enter_count = get_valid_bus(null, 'Enter tick') || 1
     }
-    else if (usrIO.kys.hsDn['t']) {
+    else if (kydn['t']) {
       tick_count = parseFloat(prompt('tick count'))
       tick_count = tick_count || 0
       tick_tally = 0
+    }
+    else if (kydn['Shift']) {
+      var scp_trc_tpl = fu.findif(scp_trc, tpl => mws_pt.s == tpl.string)
+      if (scp_trc_tpl) {
+        mws_moved = true
+        fcs_cel = null
+
+        scp_fun = scp_trc_tpl.fun
+        sel_cels = []
+        fcs_cels = []
+      }
+      else if (mws_cel) {
+        mws_moved = true
+        fcs_cel = null
+
+        scp_fun = mws_cel.src_fun
+        sel_cels = []
+        fcs_cels = []
+      }
     }
 
     if (mws.isDn && mws_pt.s != prv_pt.s) {
@@ -1372,7 +1366,7 @@ function tick(usrIO, sndMsg) {
       }
     }
 
-    if (usrIO.kys.hsDn['Enter']) {
+    if (kydn['Enter']) {
       fu.forlen(enter_count, i => scp_vals = update_next(scp_fun, scp_vals))
     }
 
@@ -1482,6 +1476,8 @@ function check_vals() {
   })
 }
 function read_def(msg) {
+  log('read_def')
+
   rid_idx = msg.ridx || 0
   rid_objs = {}
   rid_obj_type = {}
@@ -1595,10 +1591,13 @@ function read_def(msg) {
   main.add_sfn(msg)
 
   scp_vals = update_all(scp_fun)
+
+  alert('Successfully reloaded save file!')
 }
 function save_def(scp_fun) {
-  var sfn = scp_fun.get_sfn()
   log('save_def')
+
+  var sfn = scp_fun.get_sfn()
   sfn.rid_idx = rid_idx
   return sfn
 }
