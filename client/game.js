@@ -65,11 +65,12 @@ module.exports = apInitA => {
 // -----------------------------------------------------------------------------
 // POINT MANIP
 // -----------------------------------------------------------------------------
-
-cel_size = 32
-arrow_time = 20
-arrow_size = 3
-elapsed_time = 0
+{
+  cel_size = 32
+  arrow_time = 20
+  arrow_size = 3
+  elapsed_time = 0
+}
 
 // mws, string, point translations
 function mws_to_point(cp, mws) {
@@ -413,7 +414,9 @@ class Fun {
         cel.sel_cel = sel_cel
         cel.scl_name = idx
 
-        fu.forEach(par.pals, pal => pal.add_cel(cel))
+        fu.forlen(cel.cfn_bus,
+          cfn_idx => fu.forEach(car.pars[idx + cfn_idx].pals,
+            pal => pal.add_cel(cel)))
 
         return [cel]
       }
@@ -522,7 +525,7 @@ class Fun {
       return `${point}:${name}:${src_cel}:${cfn_bus}:${far_bus}`
     }
 
-    fu.forEach(this.funs, fun => sfn.sfns[fun.name] = fun.get_sfn())
+    fu.forEach(this.funs, fun => fun.locked || (sfn.sfns[fun.name] = fun.get_sfn()))
     var idx = 0
     fu.forEach(this.cels, cel => cel.scl_idx = idx++)
     fu.forEach(this.cels, cel => sfn.scls[cel.scl_idx] = get_scl(cel))
@@ -1586,6 +1589,14 @@ function read_def(msg) {
 
     f.locked = true
   }
+
+  // Read
+  {
+    var f = main.add_fun('R')
+    var n_far = f.add_far('R', 16)
+
+  }
+
   rid_add('setup -----')
 
   main.add_sfn(msg)
