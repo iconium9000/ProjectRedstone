@@ -408,6 +408,10 @@ class Fun {
 
         cel.far_bus = far.bus
         cel.cfn_bus = 1
+        cfn_bus = get_valid_bus(cfn_bus, 'cel cfn') || 1
+
+        cel.cfn_bus = cfn_bus + idx > sel_cel.cfn_bus ?
+          sel_cel.cfn_bus - idx : cfn_bus
         cel.name = get_name(cel.cfn_bus, idx, cel.far_bus)
         cel.radius = 5 + cel.name.length * 2
 
