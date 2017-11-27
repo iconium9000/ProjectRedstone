@@ -51,10 +51,10 @@ module.exports = apInitA => {
         sndMsg('restart',
           'srvr',
           'all -srvr',
-          JSON.parse(fs.readFileSync('redstone.json')))
+          JSON.parse(fs.readFileSync('rs/save.json')))
         break
       case 'save':
-        fs.writeFile('redstone.json',JSON.stringify(msg,null,2))
+        fs.writeFile('rs/save.json',JSON.stringify(msg,null,2))
         sndMsg('saved', 'srvr', sndr)
         break
       case 'saved':
@@ -992,7 +992,8 @@ class Pal {
     active = active || fu.trueif(this.cels, cel => cel.active)
     if (this.active != active) {
       this.active = active
-      this.add_val()
+      var val = this.add_val()
+      scp_vals[val.id] = val
     }
   }
   is_active(scp_vfn) {
@@ -1292,7 +1293,8 @@ function tick(usrIO, sndMsg) {
       fcs_cels = []
       sel_cels = []
       mws_moved = true
-      scp_vals = update_all(scp_fun)
+      scp_vals = update_next(scp_fun, scp_vals)
+      // scp_vals = update_all(scp_fun)
     }
     else if (kydn['s']) {
       sndMsg('save', save_def(main))
