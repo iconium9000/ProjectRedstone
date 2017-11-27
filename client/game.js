@@ -10,9 +10,10 @@ module.exports = apInitA => {
 
   var plrIf = new Object
 
-  function sndMsg(ky,sndr,rcvr,msg) {
+  var sndMsg = (ky,sndr,rcvr,msg) =>
     apIO.apSnd({ky:ky, sndr:sndr, rcvr:rcvr, msg:msg})
-  }
+  clnt_snd = (ky,msg) => sndMsg(ky,plrIf.usr.id,'srvr',msg)
+
   var apIO_init = apInitB => {
     plrIf.usr = apInitB.usrInfo.usr
 
@@ -36,6 +37,16 @@ module.exports = apInitA => {
     var msg = rcvMsg.msg
 
     switch (ky) {
+      case 'W snd': // clnt snd -> srvr rcv
+
+
+        break
+      case 'R snd': // clnt snd -> srvr rcv
+        sndMsg('R rcv', 'srvr', sndr, snd_R_rply(msg))
+        break
+      case 'R rcv': // srvr snd -> clnt rcv
+        rcv_R_rply(msg)
+        break
       case 'read':
         sndMsg('restart',
           'srvr',
@@ -97,7 +108,7 @@ function drawArrowLine(g, pointA, pointB, radA, radB) {
 
     var vect = pt.sub(pointB, pointA)
     var length = pt.length(vect)
-    var arrow = arrow_time * length
+    var arrow = arrow_time * Math.ceil(length / 20) * 20
     var scale = (elapsed_time % arrow) / arrow
     arrow = scale * length
 
@@ -144,6 +155,12 @@ function mod_match(ibus, obus) {
 }
 function valid_lnk(is, ib, os, ob) {
   return mod_match(is * ib, os * ob)
+}
+
+var hex_alph = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F']
+var alph_hex = {
+  '0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7,
+  '8': 8, '9': 9, 'A': 10, 'B': 11, 'C': 12, 'D': 13, 'E': 14, 'F': 15
 }
 
 // -----------------------------------------------------------------------------
@@ -197,8 +214,8 @@ class Fun {
   }
 
   get_fun(name) {
-    return this.name != name && (this.funs[name] ||
-      (this.scp_fun && this.scp_fun.get_fun(name)))
+    return this.name != name && (this.funs[name]
+      || (this.scp_fun && this.scp_fun.get_fun(name)))
   }
   add_fun(name) {
     var fun = this.get_fun(name)
@@ -358,7 +375,7 @@ class Fun {
 
       cel.draw = cfn.src_fun.draw
 
-      fu.forEach(car.pals, pal => pal.add_cel(cel))
+      fu.forEach(car.pars, par => par.add_cel(cel))
 
       return [cel]
     }
@@ -389,7 +406,7 @@ class Fun {
         cel.sel_cel = sel_cel
         cel.scl_name = name
 
-        fu.forEach(car.pals, pal => pal.add_cel(cel))
+        fu.forEach(car.pars, par => par.add_cel(cel))
 
         return [cel]
       }
@@ -407,7 +424,6 @@ class Fun {
         var far = car.src_far
 
         cel.far_bus = far.bus
-        cel.cfn_bus = 1
         cfn_bus = get_valid_bus(cfn_bus, 'cel cfn') || 1
 
         cel.cfn_bus = cfn_bus + idx > sel_cel.cfn_bus ?
@@ -418,9 +434,8 @@ class Fun {
         cel.sel_cel = sel_cel
         cel.scl_name = idx
 
-        fu.forlen(cel.cfn_bus,
-          cfn_idx => fu.forEach(car.pars[idx + cfn_idx].pals,
-            pal => pal.add_cel(cel)))
+        fu.forlen(cel.cfn_bus, cfn_idx =>
+          fu.forEach(sel_cel.pars[idx + cfn_idx].add_cel(cel)))
 
         return [cel]
       }
@@ -570,6 +585,8 @@ class Fal {
     this.id = rid_add(this,'Fal')
     this.src_far = src_far
     this.idx = idx
+
+    this.scp_fals = []
   }
 }
 
@@ -590,6 +607,7 @@ class Cel {
     this.draw = null
 
     this.idx_cels = {}
+    this.pars = []
     this.pals = []
 
     this.icels = {}
@@ -650,6 +668,7 @@ class Cel {
     g.fillText(name, this.proj.x,this.proj.y + 4)
   }
 }
+
 class Cfn {
   constructor(scp_fun, src_fun, bus) {
     this.id = rid_add(this,'Cfn')
@@ -936,6 +955,15 @@ class Par {
     delete this.pals[fal.idx]
     rid_rmv(pal.id)
   }
+
+  add_cel(cel) {
+    cel.pars.push(this)
+    fu.forEach(this.pals, pal => pal.add_cel(cel))
+    // TODO
+  }
+  rmv_cel(cel) {
+    // TODO
+  }
 }
 class Pal {
   constructor(src_par, src_cal) {
@@ -1072,6 +1100,7 @@ class Val {
 
     this.i = false
     this.o = false
+    this.f = false
   }
 }
 
@@ -1108,14 +1137,17 @@ class Val {
 function update_next(scp_fun, vals) {
   // check_vals()
   var new_vals = {}
-
   fu.forEach(vals, val => {
-    var src_pal = val.scp_pal && val.scp_pal.src_pal
-    if (src_pal) {
-      var src_val = src_pal.add_val(val.scp_vfn)
-      vals[src_val.id] = src_val
-    }
+    var pfn = val.scp_pal && val.scp_pal.src_pfn
+    var fals = val.src_fal.scp_fals
+    pfn && fals.length && fu.forEach(fals, fal => {
+      var pal = pfn.pals[fal.id]
+      var src_val = pal && pal.add_val(val.scp_vfn)
+      if (src_val) new_vals[src_val.id] = src_val
+    })
   })
+  fu.forEach(new_vals, val => vals[val.id] = val)
+  new_vals = {}
 
   // clear
   fu.forEach(vals, val => val.i = false)
@@ -1130,47 +1162,38 @@ function update_next(scp_fun, vals) {
   fu.forEach(vals, oval => oval.i = oval.i ||
     (oval.scp_pal && fu.trueif(oval.scp_pal.ipals, ipal => {
       var ival = ipal.get_val(oval.scp_vfn)
-      // log('rcv', ipal.id, oval.id, ival && ival.id)
       return ival && ival.o
     })) ||
     (oval.src_pal && fu.trueif(oval.src_pal.ipals, ipal => {
       var ival = ipal.get_val(oval.src_vfn)
-      // log('rcv', oval.id, ival && ival.id)
       return ival && ival.o
     })))
 
+  // don't do anything with o
+  fu.forEach(vals,
+    val => val.scp_pal && val.scp_pal.native && val.scp_pal.native(val))
+
   // set o
   fu.forEach(vals, val => {
-    // log(val.i)
+    if (val.f) new_vals[val.id] = val
+    if (val.i == val.o) return
 
-    var change = false
-
-    if (val.scp_pal && val.scp_pal.native) {
-      change = val.scp_pal.native(val)
-    }
-    else {
-      change = val.i != val.o
-      val.o = val.i
-    }
-
-    if (change) {
-      val.scp_pal && fu.forEach(val.scp_pal.opals, opal => {
-        var oval = opal.add_val(val.scp_vfn)
-        new_vals[oval.id] = oval
-
-      })
-      val.src_pal && fu.forEach(val.src_pal.opals, opal => {
-        var oval = opal.add_val(val.src_vfn)
-        new_vals[oval.id] = oval
-
-      })
-    }
+    val.o = val.i
+    val.scp_pal && fu.forEach(val.scp_pal.opals, opal => {
+      var oval = opal.add_val(val.scp_vfn)
+      new_vals[oval.id] = oval
+    })
+    val.src_pal && fu.forEach(val.src_pal.opals, opal => {
+      var oval = opal.add_val(val.src_vfn)
+      new_vals[oval.id] = oval
+    })
   })
 
   return new_vals
 }
 function update_all(scp_fun) {
   var vals = {}
+
   fu.forEach(scp_fun.pfns, pfn => {
     var vfn = pfn.get_vfn()
     vfn && vfn.get_vals(vals)
@@ -1296,21 +1319,25 @@ function tick(usrIO, sndMsg) {
     }
     else if (kydn['Shift']) {
       var scp_trc_tpl = fu.findif(scp_trc, tpl => mws_pt.s == tpl.string)
-      if (scp_trc_tpl) {
+      if (scp_trc_tpl && !scp_trc_tpl.fun.locked) {
         mws_moved = true
         fcs_cel = null
 
         scp_fun = scp_trc_tpl.fun
         sel_cels = []
         fcs_cels = []
+
+        scp_vals = update_all(scp_fun)
       }
-      else if (mws_cel) {
+      else if (mws_cel && !mws_cel.src_fun.locked) {
         mws_moved = true
         fcs_cel = null
 
         scp_fun = mws_cel.src_fun
         sel_cels = []
         fcs_cels = []
+
+        scp_vals = update_all(scp_fun)
       }
     }
 
@@ -1394,10 +1421,8 @@ function tick(usrIO, sndMsg) {
     }
   }
 
-  // ---------------------------------------------------------------------------
   // DRAW
-  // ---------------------------------------------------------------------------
-  {
+  try {
     var g = usrIO.dsply.g
     var mws = usrIO.mws
 
@@ -1466,11 +1491,80 @@ function tick(usrIO, sndMsg) {
         g.fillText(tpl.fun.name, tpl.proj.x, tpl.proj.y))
     }
   }
+  catch (e) {}
 }
 
 // -----------------------------------------------------------------------------
 // FILE I/O
 // -----------------------------------------------------------------------------
+
+function snd_R_rqst(i_far, pfn, t_val) {
+  var file_name = ''
+  var hex = 0
+  fu.forEach(i_far.fals, i_fal => {
+    var i_pal = pfn.pals[i_fal.id]
+    var i_val = i_pal && i_pal.get_val(t_val.scp_vfn)
+    hex += i_val && i_val.i ? 1 << (i_fal.idx & 3) : 0
+    if ( (i_fal.idx & 3) ^ 3 ) return
+    file_name += hex_alph[hex]
+    hex = 0
+  })
+
+  clnt_snd('R snd', [t_val.id, file_name])
+}
+function snd_R_rply(msg) {
+  var val_id = msg[0]
+  var file = msg[1]
+  try {
+    file += ` ${fs.readFileSync(`rs/${file}.txt`)}`
+    log(file)
+  }
+  catch (e) {
+    log(`could not find rs/${file}.txt`, e)
+  }
+  return [val_id, file]
+}
+function rcv_R_rply(msg) {
+  var val_id = msg[0]
+  var val = rid_objs[val_id]
+  if (!val) return
+  var msg = msg[1]
+  file = ''
+  var flag = true
+  fu.forEach(msg, c => {
+    var p_flag = flag
+    flag = c == '#' ? false : c == '\n' ? true : flag
+    if (flag) file += c
+    flag = (!p_flag && c == '#') || flag
+  })
+
+  file = file.split(/[;.,\s\n\t]+/)
+
+  var out = []
+  fu.forEach(file, hex => {
+    var n = []
+
+    fu.forlen(4, idx => {
+      var nib = alph_hex[hex[idx]] || 0
+      n.push(nib & 1 ? 1 : 0)
+      n.push(nib & 2 ? 1 : 0)
+      n.push(nib & 4 ? 1 : 0)
+      n.push(nib & 8 ? 1 : 0)
+    })
+    out.push(n)
+  })
+  rid_val_files[val_id] = [0,out]
+
+  log(msg, out)
+
+  scp_vals = update_all(scp_fun)
+}
+function prc_R_rply(hex, n_par, vfn_scp) {
+  fu.forEach(n_par.pals, pal => {
+    var val = pal.add_val(vfn_scp)
+    val.i = hex[pal.src_fal.idx]
+  })
+}
 
 function check_vals() {
   fu.forEach(rid_types.Val, val => {
@@ -1490,56 +1584,55 @@ function read_def(msg) {
   rid_obj_type = {}
   rid_types = {}
 
+  rid_val_files = {}
+
   scp_fun = main = new Fun(null, 'main')
 
   // Transistor
-  {
+  var m_Transistor = () => {
     var f = main.add_fun('+')
     var n_far = f.add_far('+', 1)
     var i_far = f.add_far('i', 1)
     var s_far = f.add_far('s', 1)
 
-    var n_id = n_far.fals[0].id
-    var i_id = i_far.fals[0].id
-    var s_id = s_far.fals[0].id
+    var n_fal = n_far.fals[0]
+    var i_fal = i_far.fals[0]
+    var s_fal = s_far.fals[0]
+
+    i_fal.scp_fals = [n_fal]
+    s_fal.scp_fals = [n_fal]
 
     f.native = (pfn, name) => {
-      if (name == 'i' || name == 's') {
-        var n = pfn.pals[n_id]
-        var i = pfn.pars[name].pal
-        if (i) {
-          n[name] = i
-          i.src_pal = n
-        }
-      }
-      else pfn.pals[n_id].native = val => {
-        if (val.i) {
-          var prev = val.o
-          val.o = true
-          return !prev
-        }
+
+      if (name != '+') return
+
+      pfn.pals[n_fal.id].native = val => {
+        if (val.i) return
 
         var pfn = val.scp_pal.src_pfn
-        var i = pfn.pals[i_id]
-        var s = pfn.pals[s_id]
+        var i = pfn.pals[i_fal.id]
+        var s = pfn.pals[s_fal.id]
 
         i = i && i.get_val(val.scp_vfn)
         s = s && s.get_val(val.scp_vfn)
 
-        var prev = val.o
-        val.o = (i && i.i) && !(s && s.i)
-        return prev != val.o
+        val.i = (i && i.i) && !(s && s.i)
       }
     }
 
     f.locked = true
   }
+  m_Transistor()
 
   // Display
-  {
+  var m_Display = () => {
     var f = main.add_fun('=')
     var n_far = f.add_far('=', 25)
     var i_far = f.add_far('i', 25)
+    var s_far = f.add_far('s', 1)
+    var s_fal = s_far.fals[0]
+
+    fu.forEach(i_far.fals, fal => fal.scp_fals = [n_far.fals[fal.idx]])
 
     f.draw = (g, cel) => {
       g.fillStyle = '#202040'
@@ -1552,54 +1645,108 @@ function read_def(msg) {
       var idx = 0
       var i_pals = i_par.pals
       var n_pals = n_par.pals
+      var s_pal = n_par.src_pfn.pals[s_fal.id]
+
+      g.fillStyle = s_pal && s_pal.is_active() ? '#FF2020' : '#404040'
+
       var p = pt.zero()
-
-      g.fillStyle = cel.is_active() && '#FF2020' || '#404040'
-
       for (p.y = -12; p.y <= 12; p.y += 6)
-        for (p.x = -12; p.x <= 12; p.x += 6, ++idx) {
+        for (p.x = -12; p.x <= 12; p.x += 6, ++idx)
           if (i_pals[idx].is_active())
             pt.fillRect(g, pt.sum(cel.proj, p), 3)
-        }
-
     }
     f.native = (pfn, name) => {
-      var n_par = pfn.pars['=']
+      if (name != '=') return
 
-      if (name == 'i') {
-        var i_par = pfn.pars.i
-        if (!i_par) return
+      fu.forEach(n_far.fals, n_fal => pfn.pals[n_fal.id].native = n_val => {
+        var i_fal = i_far.fals[n_fal.idx]
+        var i_pal = pfn.pals[i_fal.id]
+        var i_val = i_pal && i_pal.get_val(n_val.scp_vfn)
 
-        fu.forEach(i_par.pals, (i_pal, idx) => {
-          var n_pal = n_par.pals[idx]
-          i_pal.src_pal = n_pal
-        })
+        var s_pal = pfn.pals[s_fal.id]
+        var s_val = s_pal && s_pal.get_val(n_val.scp_vfn)
 
-        return
-      }
-
-      fu.forEach(n_par.pals, (n_pal, idx) => n_pal.native = n_val => {
-        var i_par = pfn.pars.i
-        if (!i_par) return false
-        var i_pal = i_par.pals[idx]
-        var i_val = i_pal.get_val(n_val.scp_vfn)
-        if (!i_val) return false
-
-        var prev = n_val.o
-        n_val.o = n_val.i && i_val.i
-        return prev != n_val.o
+        n_val.i = i_val && s_val && i_val.i && s_val.i
       })
     }
 
     f.locked = true
   }
+  m_Display()
 
   // Read
-  {
+  var m_Read = () => {
     var f = main.add_fun('R')
-    var n_far = f.add_far('R', 16)
 
+    // out fars
+    var n_far = f.add_far('R', 16) // word output
+    var s_far = f.add_far('s', 1) // out trigger
+
+    // in fars
+    var i_far = f.add_far('i', 16) // file address
+    var t_far = f.add_far('t', 1) // request trigger
+
+    var s_fal = s_far.fals[0]
+    var t_fal = t_far.fals[0]
+
+    t_fal.scp_fals = [s_fal]
+    fu.forEach(n_far.fals, n_fal => t_fal.scp_fals.push(n_fal))
+
+    f.native = (pfn, name) => {
+      if (name != 't') return
+
+      var t_pal = pfn.pals[t_fal.id]
+      t_pal.native = t_val => {
+
+        if (t_val.f) {
+          var msg = rid_val_files[t_val.id]
+          t_val.i = !msg
+
+          if (msg) {
+            var s_pal = pfn.pals[s_fal.id]
+            var s_val = s_pal && s_pal.add_val(t_val.scp_vfn)
+
+            var idx = msg[0]
+            var file = msg[1]
+
+            var n_par = pfn.pars[n_far.name]
+            if (idx < file.length && s_val && n_par) {
+              s_val.i = true
+              prc_R_rply(file[idx], n_par, t_val.scp_vfn)
+              ++msg[0]
+            }
+            else {
+              delete rid_val_files[t_val.id]
+              t_val.f = false
+              s_val && (s_val.i = false)
+            }
+          }
+        } else
+        if (t_val.i && !t_val.o) {
+          t_val.f = true
+          snd_R_rqst(i_far, pfn, t_val)
+        }
+      }
+    }
+    f.locked = true
   }
+  m_Read()
+
+  // Write
+  var m_Write = () => {
+    var f = main.add_fun('W')
+    var n_far = f.add_far('W', 16)
+    var i_far = f.add_far('i', 1)
+
+    f.native = (pfn, name) => {
+
+
+
+    }
+
+    f.locked = true
+  }
+  m_Write()
 
   rid_add('setup -----')
 

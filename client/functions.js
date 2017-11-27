@@ -309,7 +309,6 @@ var fu = module.exports = {
     v[b] = t
   },
 
-
   reqFrame: window => window.requestAnimationFrame || window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame || window.oRequestAnimationFrame ||
     window.msRequestAnimationFrame || ((callback) => window.setTimeout(callback, 30))
