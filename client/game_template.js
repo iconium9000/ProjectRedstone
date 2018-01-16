@@ -1,29 +1,6 @@
-// TEMPLATE
-var log = console.log
-log('game.js init')
+// template
 
-//
-//
-// module.exports = apInitA => {
-//   var fs = apInitA.fs
-//   var fu = apInitA.fu
-//   var pt = apInitA.pt
-//
-//   var apIO = apInitA.caleInit.apIO = {
-//     init: apInitB => {
-//
-//     },
-//     tick: usrIO => {
-//
-//     },
-//     apRcv: msg => {
-//
-//
-//
-//     }
-//   }
-//   apInitA.cale(apInitA.caleInit)
-// }
+console.log('game.js init')
 
 module.exports = apInitA => {
 
@@ -40,7 +17,6 @@ module.exports = apInitA => {
       msg: msg
     })
   }
-
   var apIO_init = apInitB => {
     plrIf.usr = apInitB.usrInfo.usr
 
@@ -54,8 +30,7 @@ module.exports = apInitA => {
     }
   }
 
-  var apIO_tick = usrIO => {
-  }
+  var apIO_tick = usrIO => {}
 
   var apIO_apRcv = rcvMsg => {
     var ky = rcvMsg.ky
@@ -73,7 +48,6 @@ module.exports = apInitA => {
     tick: apIO_tick,
     apRcv: apIO_apRcv
   }
-
   apInitA.cale(apInitA.caleInit)
 
 }

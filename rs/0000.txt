@@ -1,0 +1,69 @@
+# RULES #
+# denote comments
+  # text is ignored till the next #
+  # or the end of the line
+# words are comprised of exactly 4 digits
+  # words are deliminated by whitespace and punctuation
+  # digit : 0123456789ABCDEF
+    # any other characters will be treated as zero
+    # ex: Aa4f -> A040
+  # if a word is more than 4 digits long
+    # the trailing digits will be ignored
+    # ex: ABCDEf -> ABCD
+  # if a word is fewer than 4 digits long, ex : ABC
+    # the remaining digits will be assumed to be zero
+    # ex: ABC0
+
+# regs
+# 0 0000: zero
+# 1 1000: unit
+# 2 0100: temp1
+# 3 1100: temp2
+# 4 0010: var1
+# 5 1010: var2
+# 6 0110: var3
+# 7 1110: var4
+# 8 0001: return value1
+# 9 1001: return value2
+# A 0101: return address
+# B 1101: stack start
+# C 0011: stack
+# D 1011: program start
+# E 0111: program counter
+# F 1111: next instruction
+
+
+# for val -> r
+  # rB <- reg == D ? BEF : 6EE1
+  # BEF  1101011111110000
+  #        2 4       CDEF
+  # 6EE1 0110011101111000
+  #      0  34   8    DEF
+
+# memory
+# 0000-0001  Programs
+  # 0-FF0    Program 0 (Firmware)
+  # 001-FF1  Program 1 (OS)
+  # 002-FF2  Program 2 (main)
+  # 003-FF3  Program 3 (Function 1)
+  # 004-...
+# 0001-FFFE  Hardware
+
+# 0cab OR         rc = ra | rb
+# 1cab AND        rc = ra & rb
+# 2cab XOR        rc = ra ^ rb
+# 3cab SLL        rc = ra << b
+# 4cab SRL        rc = ra >>> b
+# 5cab SRA        rc = ra >> b
+# 6cab ADD        rc = ra + rb
+# 7cab SUB        rc = ra - rb
+# 8cab IF         ra != 0 ? rc = rb
+# 9abc LOW        ra[LOW] = bc
+# Aabc HIGH       ra[HIGH] = bc
+# Bba  READ       rb = mem[ra]
+# Cba  WRITE      mem[rb] = ra
+# Dba  DISC_READ  for i = 0, disc[ra], mem[rb + i] = disc[ra], ++i
+# Ecab DISC_WRITE for i = 0, i < rb, disc[rc] = mem[ra + i], ++i
+# F    END
+
+F F F

@@ -129,6 +129,36 @@ var pt = module.exports = {
     }
   },
 
+  mult: function(a, b) {
+    return {
+      x: a.x * b.x,
+      y: a.y * b.y,
+      z: a.z * b.z
+    }
+  },
+
+  multe: function(p, ps) {
+    p.x *= ps.x
+    p.y *= ps.y
+    p.z *= ps.z
+    return p
+  },
+
+  div: function(a, b) {
+    return {
+      x: a.x / b.x,
+      y: a.y / b.y,
+      z: a.z / b.z
+    }
+  },
+
+  dive: function(p, ps) {
+    p.x /= ps.x
+    p.y /= ps.y
+    p.z /= ps.z
+    return p
+  },
+
   scale: function(p, s) {
     return {
       x: p.x * s,
@@ -183,6 +213,13 @@ var pt = module.exports = {
       y: f(p.y),
       z: f(p.z)
     }
+  },
+
+  mathe: function(f, p) {
+    p.x = f(p.x)
+    p.y = f(p.y)
+    p.z = f(p.z)
+    return p
   },
 
   inverse: function(p) {

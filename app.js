@@ -1,4 +1,8 @@
-console.log('app.js init')
+log = console.log
+
+log('app.js init')
+
+log(process.argv)
 
 var pkgs = {
   fu: require('./client/functions.js'),

@@ -1,8 +1,23 @@
-console.log('functions.js init')
+log = console.log
+log('functions.js init')
+srfy = JSON.stringify
 
 // requries module to be defined
 
 var fu = module.exports = {
+  Mat: class Mat {
+    constructor() {
+      this.dim = arguments.slice(0,2)
+      if (this.dim.length != 2) throw 'invalid matrix size id'
+      var y = this.dim[0] = Math.floor(this.dim[0])
+      var x = this.dim[1] = Math.floor(this.dim[1])
+      if (y > 0 && x > 0) {
+        this.mat = arguments.slice(2, x * y)
+        if (this.mat.length != x * y) throw 'invalid matrix element size'
+      }
+    }
+  },
+
   IdEmitter: class IdEmitter {
     on(key, id, fun) {
       var a = this[key] = this[key] || {}
@@ -42,7 +57,6 @@ var fu = module.exports = {
       }
     }
   },
-
 
   seed: s => () => {
     s = Math.sin(s + Math.E) * 10000
@@ -111,7 +125,6 @@ var fu = module.exports = {
     f(data)
     g.putImageData(image, x, y)
   },
-
 
   /*
   factor[num]: round factor
@@ -242,10 +255,24 @@ var fu = module.exports = {
     }
   },
 
+  find: (ary, obj) => {
+    for (var i in ary)
+      if (ary[i] == obj)
+        return true
+    return false
+  },
+
   findif: (obj, foo) => {
     for (var i in obj)
       if (foo(obj[i], i))
         return obj[i]
+  },
+
+  returnif: (obj, foo) => {
+    for (var i in obj) {
+      var bla = foo(obj[i], i)
+      if (bla) return bla
+    }
   },
 
   trueif: (obj, foo) => {
@@ -272,6 +299,13 @@ var fu = module.exports = {
     for (var i in a) {
       f(a[i], i)
     }
+  },
+
+  sum: (a, s, f) => {
+    for (var i in a) {
+      s += f(a[i], i)
+    }
+    return s
   },
 
   first: obj => { for (var i in obj) return obj[i] },
@@ -313,5 +347,10 @@ var fu = module.exports = {
     window.mozRequestAnimationFrame || window.oRequestAnimationFrame ||
     window.msRequestAnimationFrame || ((callback) => window.setTimeout(callback, 30))
 }
-
 fu.randKey.array = []
+fu.rid = {
+  objs: {},
+  idx: 0,
+  add: obj => fu.rid.objs[obj.id = ++idx] = obj,
+  rmv: obj => delete fu.rid.objs[obj.id]
+}

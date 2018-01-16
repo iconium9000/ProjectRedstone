@@ -1,0 +1,114 @@
+<script> module = {} </script>
+<script src="client/functions.js"></script>
+<!-- <script src="client/point.js"></script> -->
+
+<div id='body'></div>
+<script>
+  log = console.log
+  sfy = JSON.stringify
+  fu = module.exports
+
+
+// S <string>
+// T <stat>
+// I <int>
+// # num ['#' I]
+// @ lex ['@' S]
+// o op ['o' S]
+// e matrix ['e' I I I [I...]]
+// V var ['V' T]
+// L const ['L' T]
+// A alph
+// N native function
+//   + add [+ ... ]
+//   - sub [- ... ]
+//   = set [= @ S]
+//   => lam [= @ S]
+function get_lex() {
+  var lex = {}
+  var nat = {}
+  var nat = (n,a) => {
+    lex[n] = ['L', ['N', n]]
+    nat[n] = a
+  }
+  nat('+', a => {
+
+  })
+  nat('-', a => {
+
+  })
+  return [lex, nat]
+}
+
+var lex = get_lex()
+var nat = lex[1]
+lex = lex[0]
+
+function get_top(a) { return a[a.length - 1] }
+function mat_reg(h, w, d) {
+  var i = 0
+  h = h > 1 ? Math.floor(h) : 1
+  w = w > 1 ? Math.floor(w) : 1
+  d = d > 1 ? Math.floor(d) : 1
+  var a = []
+  fu.forlen(h * w * d, i => a.push(i))
+  return ['e', h, w, d, a]
+}
+
+function parse(lex, mat, str) {
+  var a = []
+  {
+    var w = ''
+    var a = []
+    var s = []
+
+    var psh_w = () => {
+      if (!w) return
+      var l = lex[w]
+      if (l) a.push(l[1])
+      else if (isNaN(w)) a.push(['@',w])
+      else a.push(['#', parseFloat(w)])
+      w = ''
+    }
+    var psh_a = () => {
+      psh_w()
+      s.push(a)
+      a = []
+    }
+    var pop_a = () => {
+      psh_w()
+      if (a.length == 1) a = a[0]
+      var ta = s.pop()
+      if (ta) {
+        ta.push(a)
+        a = ta
+        return true
+      }
+      else return false
+    }
+
+    fu.forEach(str, c => {
+      if (fu.find('([{', c)) psh_a()
+      else if (fu.find(')]}', c)) pop_a()
+      else if (c == ' ') psh_w()
+      else w += c
+    })
+    while (pop_a());
+  }
+  log(mat)
+  return a
+}
+
+
+var cp = (mat, str) => {
+  try {
+    log(parse(lex, mat, str))
+  }
+  catch (e) {
+    log(e)
+  }
+}
+
+cp(mat_reg(2,3), '(+) -123s')
+
+</script>
